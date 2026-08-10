@@ -1,11 +1,10 @@
-import { Link } from 'react-router';
-import LogoIcon from '@/components/LogoIcon';
-
+import { Link } from "react-router";
+import LogoIcon from "@/components/LogoIcon";
 
 const Header = ({ onToggleSidebar, isSidebarOpen }) => {
-     return (
-        <header className="sticky top-0 z-30 w-full bg-[#111827]/90 backdrop-blur-md border-b border-[#1f2937] transition-all">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+  return (
+    <header className="sticky top-0 z-30 w-full bg-[#111827]/90 backdrop-blur-md border-b border-[#1f2937] transition-all">
+      <div className="px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
         {/* Left: Brand Logo & Title & Mobile Toggle */}
         <div className="flex items-center gap-3 sm:gap-4">
           {/* Mobile Sidebar Toggle Button */}
@@ -16,18 +15,41 @@ const Header = ({ onToggleSidebar, isSidebarOpen }) => {
             aria-label="Toggle Navigation Sidebar"
           >
             {isSidebarOpen ? (
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             ) : (
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
               </svg>
             )}
           </button>
           {/* Logo & Title */}
           <Link to="/" className="flex items-center gap-3 group shrink-0">
-            <LogoIcon size={34} className="group-hover:scale-105 transition-transform duration-200" />
+            <LogoIcon
+              size={34}
+              className="group-hover:scale-105 transition-transform duration-200"
+            />
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
                 <span className="font-bold text-base sm:text-lg tracking-tight text-white group-hover:text-indigo-400 transition-colors">
@@ -45,11 +67,6 @@ const Header = ({ onToggleSidebar, isSidebarOpen }) => {
         </div>
         {/* Right: Quick Links & Actions */}
         <div className="flex items-center gap-2 sm:gap-4">
-          {/* API Status Indicator */}
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>Sandbox Active</span>
-          </div>
           {/* GitHub Repo Link */}
           <a
             href="https://github.com/nileshcodehub/playground_api"
@@ -71,5 +88,5 @@ const Header = ({ onToggleSidebar, isSidebarOpen }) => {
       </div>
     </header>
   );
-}
+};
 export default Header;
