@@ -5,13 +5,37 @@ import DataTable from "@/components/DataTable";
 
 /* ─────────────────────────────────────────────────────────────── helpers */
 const SORT_FIELDS = ["id", "name", "username", "email"];
+const API_BASE = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "") ?? "";
 const EMPTY_FORM = {
   name: "",
   username: "",
   email: "",
   phone: "",
   website: "",
+  address_street: "",
+  address_city: "",
+  address_zipcode: "",
+  company_name: "",
+  company_catchPhrase: "",
 };
+
+/** Re-nests flat form state back to the nested shape the API expects. */
+const toApiBody = (form) => ({
+  name: form.name,
+  username: form.username,
+  email: form.email,
+  phone: form.phone,
+  website: form.website,
+  address: {
+    street: form.address_street,
+    city: form.address_city,
+    zipcode: form.address_zipcode,
+  },
+  company: {
+    name: form.company_name,
+    catchPhrase: form.company_catchPhrase,
+  },
+});
 
 function SandboxBadge({ value }) {
   if (!value) return null;
@@ -121,7 +145,7 @@ function Modal({ title, onClose, children }) {
   );
 }
 
-/* ─────────────────────────────────────────────── UserForm (Create / Edit) */
+/* ───────────────────────────────────────────── UserForm (Create / Edit) */
 function UserForm({
   initial = EMPTY_FORM,
   onSubmit,
@@ -131,66 +155,127 @@ function UserForm({
   const [form, setForm] = useState(initial);
   const set = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }));
 
-  const fields = [
+  const SECTIONS = [
     {
-      key: "name",
-      label: "Full Name",
-      placeholder: "Jane Doe",
-      required: true,
+      title: null,
+      fields: [
+        {
+          key: "name",
+          label: "Full Name",
+          placeholder: "Jane Doe",
+          required: true,
+        },
+        {
+          key: "username",
+          label: "Username",
+          placeholder: "janedoe",
+          required: true,
+        },
+        {
+          key: "email",
+          label: "Email",
+          placeholder: "jane@example.com",
+          required: true,
+          type: "email",
+        },
+        {
+          key: "phone",
+          label: "Phone",
+          placeholder: "+1-555-012-3456",
+          required: false,
+        },
+        {
+          key: "website",
+          label: "Website",
+          placeholder: "https://janedoe.dev",
+          required: false,
+        },
+      ],
     },
     {
-      key: "username",
-      label: "Username",
-      placeholder: "janedoe",
-      required: true,
+      title: "Address",
+      fields: [
+        {
+          key: "address_street",
+          label: "Street",
+          placeholder: "Kulas Light",
+          required: false,
+        },
+        {
+          key: "address_city",
+          label: "City",
+          placeholder: "Gwenborough",
+          required: false,
+        },
+        {
+          key: "address_zipcode",
+          label: "Zip Code",
+          placeholder: "92998-3874",
+          required: false,
+        },
+      ],
     },
     {
-      key: "email",
-      label: "Email",
-      placeholder: "jane@example.com",
-      required: true,
-      type: "email",
-    },
-    {
-      key: "phone",
-      label: "Phone",
-      placeholder: "+1-555-012-3456",
-      required: false,
-    },
-    {
-      key: "website",
-      label: "Website",
-      placeholder: "https://janedoe.dev",
-      required: false,
+      title: "Company",
+      fields: [
+        {
+          key: "company_name",
+          label: "Company Name",
+          placeholder: "Romaguera-Crona",
+          required: false,
+        },
+        {
+          key: "company_catchPhrase",
+          label: "Catch Phrase",
+          placeholder: "Multi-layered client-server neural-net",
+          required: false,
+        },
+      ],
     },
   ];
+
+  const inputCls =
+    "w-full bg-[#0b0f19] border border-[#374151] rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/40 transition-colors";
 
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        onSubmit(form);
+        onSubmit(toApiBody(form));
       }}
-      className="space-y-4"
+      className="space-y-5"
     >
-      {fields.map(({ key, label, placeholder, required, type = "text" }) => (
-        <div key={key} className="space-y-1">
-          <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-            {label}
-            {required && <span className="text-indigo-400 ml-0.5">*</span>}
-          </label>
-          <input
-            id={`user-form-${key}`}
-            type={type}
-            value={form[key] || ""}
-            onChange={set(key)}
-            required={required}
-            placeholder={placeholder}
-            className="w-full bg-[#0b0f19] border border-[#374151] rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/40 transition-colors"
-          />
+      {SECTIONS.map(({ title, fields }) => (
+        <div key={title ?? "main"} className="space-y-3">
+          {title && (
+            <p className="text-[10px] font-bold uppercase tracking-widest text-indigo-400 border-b border-[#1f2937] pb-1">
+              {title}
+            </p>
+          )}
+          {fields.map(
+            ({ key, label, placeholder, required, type = "text" }) => (
+              <div key={key} className="space-y-1">
+                <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                  {label}
+                  {required && (
+                    <span className="text-indigo-400 ml-0.5">*</span>
+                  )}
+                </label>
+                <input
+                  id={`user-form-${key}`}
+                  type={type}
+                  value={form[key] || ""}
+                  onChange={set(key)}
+                  required={required}
+                  placeholder={placeholder}
+                  className={inputCls}
+                />
+              </div>
+            ),
+          )}
         </div>
       ))}
-      <div className="pt-2">
+      <div className="pt-1">
         <button
           id="user-form-submit"
           type="submit"
@@ -205,38 +290,68 @@ function UserForm({
   );
 }
 
-/* ─────────────────────────────────────────────── UserDetail */
+/* ───────────────────────────────────────────── UserDetail */
 function UserDetail({ user }) {
+  const avatarSrc = user.avatar ? `${API_BASE}${user.avatar}` : null;
+
   const rows = [
     ["Username", user.username],
     ["Email", user.email],
     ["Phone", user.phone],
-    ["Website", user.website],
+    // ["Website", user.website],
     ["Street", user.address?.street],
     ["City", user.address?.city],
     ["Zip", user.address?.zipcode],
     ["Company", user.company?.name],
     ["Catch Phrase", user.company?.catchPhrase],
   ].filter(([, v]) => v);
+
   return (
     <div className="space-y-4">
+      {/* Header: real avatar + name */}
       <div className="flex items-center gap-4">
-        <Avatar name={user.name} size="lg" />
+        {avatarSrc ? (
+          <img
+            src={avatarSrc}
+            alt={user.name}
+            className="w-14 h-14 rounded-full object-cover shrink-0 ring-2 ring-indigo-500/40"
+            onError={(e) => {
+              e.currentTarget.style.display = "none";
+            }}
+          />
+        ) : (
+          <Avatar name={user.name} size="lg" />
+        )}
         <div>
           <p className="font-bold text-white text-lg leading-tight">
             {user.name}
           </p>
-          <p className="text-xs text-gray-400 font-mono">{user.id}</p>
+          <p className="text-xs text-gray-400 font-mono">ID: {user.id}</p>
+          {/* {user.website && (
+            <a
+              href={
+                user.website.startsWith("http")
+                  ? user.website
+                  : `https://${user.website}`
+              }
+              target="_blank"
+              rel="noreferrer"
+              className="text-xs text-indigo-400 hover:underline"
+            >
+              {user.website}
+            </a>
+          )} */}
           <SandboxBadge value={user._sandbox} />
         </div>
       </div>
+      {/* Field table */}
       <div className="divide-y divide-[#1f2937] rounded-xl border border-[#1f2937] overflow-hidden">
         {rows.map(([label, value]) => (
           <div
             key={label}
             className="flex items-start gap-3 px-4 py-3 bg-[#0b0f19]"
           >
-            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider w-24 shrink-0 pt-0.5">
+            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider w-28 shrink-0 pt-0.5">
               {label}
             </span>
             <span className="text-sm text-gray-200 break-all">{value}</span>
@@ -516,12 +631,31 @@ const Users = () => {
                 className="flex items-center gap-3 min-w-0 text-left hover:opacity-80 transition-opacity w-full"
                 title="View details"
               >
-                <Avatar name={user.name} />
+                {/* Real avatar from API, fallback to initials */}
+                {user.avatar ? (
+                  <img
+                    src={`${API_BASE}${user.avatar}`}
+                    alt={user.name}
+                    className="w-8 h-8 rounded-full object-cover shrink-0"
+                    onError={(e) => {
+                      e.currentTarget.replaceWith(
+                        Object.assign(document.createElement("div"), {
+                          className:
+                            "w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white text-xs font-bold shrink-0",
+                          textContent: user.name?.[0]?.toUpperCase() ?? "?",
+                        }),
+                      );
+                    }}
+                  />
+                ) : (
+                  <Avatar name={user.name} />
+                )}
                 <div className="min-w-0">
                   <p className="text-sm font-semibold text-white truncate leading-snug group-hover:text-indigo-300 transition-colors">
                     {user.name}
                   </p>
                   <p className="text-[11px] text-gray-500 font-mono truncate">
+                    {user.address?.city ? `${user.address.city} · ` : ""}
                     {String(user.id)}
                   </p>
                 </div>
@@ -562,8 +696,18 @@ const Users = () => {
                   onClick={() => setModal({ type: "edit", user })}
                   className="p-2 rounded-lg text-gray-400 hover:text-indigo-400 hover:bg-indigo-500/10 transition-colors"
                 >
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                    />
                   </svg>
                 </button>
                 <button
@@ -572,8 +716,18 @@ const Users = () => {
                   onClick={() => setModal({ type: "delete", user })}
                   className="p-2 rounded-lg text-gray-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
                 >
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                    />
                   </svg>
                 </button>
               </div>
@@ -610,11 +764,16 @@ const Users = () => {
         >
           <UserForm
             initial={{
-              name: modal.user.name,
-              username: modal.user.username,
-              email: modal.user.email,
+              name: modal.user.name || "",
+              username: modal.user.username || "",
+              email: modal.user.email || "",
               phone: modal.user.phone || "",
               website: modal.user.website || "",
+              address_street: modal.user.address?.street || "",
+              address_city: modal.user.address?.city || "",
+              address_zipcode: modal.user.address?.zipcode || "",
+              company_name: modal.user.company?.name || "",
+              company_catchPhrase: modal.user.company?.catchPhrase || "",
             }}
             onSubmit={handleEdit}
             loading={mutating}
