@@ -1,10 +1,19 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { usersApi } from "@/api/users";
 import Pagination from "@/components/Pagination";
 import DataTable from "@/components/DataTable";
+import Modal from "@/components/Modal";
+import ConfirmationModal from "@/components/ConfirmationModal";
+import SortDropdown from "@/components/SortDropdown";
+import SearchInput from "@/components/SearchInput";
 
 /* ─────────────────────────────────────────────────────────────── helpers */
-const SORT_FIELDS = ["id", "name", "username", "email"];
+const SORT_OPTIONS = [
+  { value: "id", label: "User ID" },
+  { value: "name", label: "Full Name" },
+  { value: "username", label: "Username" },
+  { value: "email", label: "Email Address" },
+];
 const API_BASE = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "") ?? "";
 const EMPTY_FORM = {
   name: "",
@@ -99,49 +108,6 @@ function Spinner({ className = "" }) {
         d="M4 12a8 8 0 018-8v8H4z"
       />
     </svg>
-  );
-}
-
-/* ─────────────────────────────────────────────── Modal */
-function Modal({ title, onClose, children }) {
-  const overlayRef = useRef(null);
-  useEffect(() => {
-    const onKey = (e) => e.key === "Escape" && onClose();
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
-  return (
-    <div
-      ref={overlayRef}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
-      onClick={(e) => e.target === overlayRef.current && onClose()}
-    >
-      <div className="w-full max-w-lg bg-[#111827] border border-[#1f2937] rounded-2xl shadow-2xl flex flex-col max-h-[90vh]">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#1f2937]">
-          <h2 className="font-bold text-white text-base">{title}</h2>
-          <button
-            onClick={onClose}
-            className="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-[#1f2937] transition-colors"
-            aria-label="Close modal"
-          >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
-        <div className="overflow-y-auto flex-1 p-6">{children}</div>
-      </div>
-    </div>
   );
 }
 
@@ -496,25 +462,11 @@ const Users = () => {
     }
   };
 
-  // ── Sort toggle — also resets to page 1 (done here, not in an effect) ─
-  const toggleSort = (field) => {
+  // ── Sort change handler — resets to page 1 ─
+  const handleSortChange = (field, order) => {
     setPage(1);
-    if (sortField === field)
-      setSortOrder((o) => (o === "asc" ? "desc" : "asc"));
-    else {
-      setSortField(field);
-      setSortOrder("asc");
-    }
-  };
-
-  const SortIcon = ({ field }) => {
-    if (sortField !== field)
-      return <span className="text-gray-600 ml-1">↕</span>;
-    return (
-      <span className="text-indigo-400 ml-1">
-        {sortOrder === "asc" ? "↑" : "↓"}
-      </span>
-    );
+    setSortField(field);
+    setSortOrder(order);
   };
 
   // ── Render ──────────────────────────────
@@ -567,51 +519,23 @@ const Users = () => {
       </div>
 
       {/* ── Search + Sort bar ── */}
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="relative flex-1">
-          <svg
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            />
-          </svg>
-          <input
-            id="users-search"
-            type="search"
-            value={search}
-            onChange={(e) => {
-              setPage(1);
-              setSearch(e.target.value);
-            }}
-            placeholder="Search name, username, email…"
-            className="w-full bg-[#111827] border border-[#1f2937] rounded-xl pl-9 pr-4 py-2.5 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/40 transition-colors"
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-gray-500 shrink-0">Sort by</span>
-          {SORT_FIELDS.map((f) => (
-            <button
-              key={f}
-              id={`sort-${f}`}
-              onClick={() => toggleSort(f)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-semibold transition-colors ${
-                sortField === f
-                  ? "bg-indigo-600/20 text-indigo-400 border border-indigo-500/40"
-                  : "bg-[#111827] text-gray-400 border border-[#1f2937] hover:border-indigo-500/40 hover:text-indigo-400"
-              }`}
-            >
-              {f}
-              <SortIcon field={f} />
-            </button>
-          ))}
-        </div>
+      <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+        <SearchInput
+          id="users-search"
+          className="flex-1"
+          placeholder="Search name, username, email…"
+          value={search}
+          onSearch={(term) => {
+            setPage(1);
+            setSearch(term);
+          }}
+        />
+        <SortDropdown
+          options={SORT_OPTIONS}
+          value={sortField}
+          order={sortOrder}
+          onSortChange={handleSortChange}
+        />
       </div>
 
       {/* ── Table ── */}
@@ -789,44 +713,35 @@ const Users = () => {
       )}
 
       {modal?.type === "delete" && (
-        <Modal title="Delete User" onClose={() => setModal(null)}>
-          <div className="space-y-5">
-            <div className="flex items-center gap-3 p-4 rounded-xl bg-rose-950/30 border border-rose-700/40">
-              <Avatar name={modal.user.name} />
-              <div>
-                <p className="font-semibold text-white text-sm">
-                  {modal.user.name}
-                </p>
-                <p className="text-xs text-gray-400">{modal.user.email}</p>
-              </div>
-            </div>
-            <p className="text-sm text-gray-300">
+        <ConfirmationModal
+          isOpen={true}
+          onClose={() => setModal(null)}
+          title="Delete User"
+          onAccept={handleDelete}
+          isLoading={mutating}
+          acceptLabel="Delete from Sandbox"
+          cancelLabel="Cancel"
+          variant="danger"
+          description={
+            <span>
               This will remove the user from your{" "}
               <span className="text-amber-400 font-semibold">
                 sandbox session only
               </span>
               . Global records remain unaffected for other visitors.
-            </p>
-            <div className="flex gap-3">
-              <button
-                id="confirm-delete-user"
-                onClick={handleDelete}
-                disabled={mutating}
-                className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 disabled:opacity-60 text-white text-sm font-semibold transition-colors"
-              >
-                {mutating && <Spinner className="w-4 h-4 text-white" />}
-                Delete from Sandbox
-              </button>
-              <button
-                id="cancel-delete-user"
-                onClick={() => setModal(null)}
-                className="flex-1 py-2.5 rounded-xl bg-[#1f2937] hover:bg-[#374151] text-gray-200 text-sm font-semibold transition-colors"
-              >
-                Cancel
-              </button>
+            </span>
+          }
+        >
+          <div className="flex items-center gap-3 p-4 rounded-xl bg-rose-950/30 border border-rose-700/40">
+            <Avatar name={modal.user.name} />
+            <div>
+              <p className="font-semibold text-white text-sm">
+                {modal.user.name}
+              </p>
+              <p className="text-xs text-gray-400">{modal.user.email}</p>
             </div>
           </div>
-        </Modal>
+        </ConfirmationModal>
       )}
 
       {/* ── Toast notifications ── */}
