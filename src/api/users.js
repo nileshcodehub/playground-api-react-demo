@@ -1,6 +1,9 @@
-const BASE = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '') ?? '';
+const BASE = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/+$/, '');
 
-const endpoint = (path = '') => `${BASE}/v1${path}`;
+const endpoint = (path = '') => {
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  return `${BASE}/v1${cleanPath}`;
+};
 
 const json = (res) => {
   if (!res.ok) throw new Error(`HTTP ${res.status} – ${res.statusText}`);
