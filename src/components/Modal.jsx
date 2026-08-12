@@ -5,18 +5,6 @@ const modalStack = [];
 
 /**
  * Reusable Modal component using React Portals.
- *
- * @param {object} props
- * @param {boolean} [props.isOpen=true] - Controls visibility.
- * @param {function} props.onClose - Function to handle closing.
- * @param {string|React.ReactNode} [props.title] - Optional modal header title.
- * @param {string|React.ReactNode} [props.description] - Optional modal header description.
- * @param {React.ReactNode} props.children - Modal body content.
- * @param {string} [props.size="md"] - Modal width (sm, md, lg, xl, 2xl, 3xl, 4xl, 5xl, 6xl, full).
- * @param {boolean} [props.closeOnOverlayClick=true] - Whether to close on backdrop click.
- * @param {string} [props.containerClassName=""] - Custom classes for the modal container.
- * @param {React.ReactNode} [props.leftIcon] - Left icon in header.
- * @param {string} [props.leftIconClassName=""] - Left icon classes.
  */
 const Modal = ({
   isOpen = true,
@@ -37,7 +25,6 @@ const Modal = ({
     if (!isOpen) return;
     const modalId = modalIdRef.current;
 
-    // Add current modal to stack
     modalStack.push(modalId);
 
     const handleEscape = (e) => {
@@ -50,19 +37,16 @@ const Modal = ({
     };
 
     document.addEventListener("keydown", handleEscape);
-    // Prevent scroll on body
     document.body.style.overflow = "hidden";
 
     return () => {
       document.removeEventListener("keydown", handleEscape);
-      // Remove modal from stack
       const index = modalStack.indexOf(modalId);
 
       if (index > -1) {
         modalStack.splice(index, 1);
       }
 
-      // Restore scroll only when no modals remain
       if (modalStack.length === 0) {
         document.body.style.overflow = "unset";
       }
@@ -94,7 +78,7 @@ const Modal = ({
 
       {/* Modal Container */}
       <div
-        className={`relative w-full bg-[#111827] rounded-2xl shadow-2xl border border-[#1f2937] overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 fade-in duration-300 ${
+        className={`relative w-full bg-[#0f172a] rounded-2xl shadow-2xl border border-[#1e293b] overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 fade-in duration-300 ${
           sizeStyles[size] || sizeStyles.md
         } ${containerClassName}`}
         onClick={(e) => e.stopPropagation()}
@@ -104,7 +88,7 @@ const Modal = ({
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-[#1f2937] transition-colors absolute right-4 top-4 z-10 opacity-70 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-[#1e293b] transition-colors absolute right-4 top-4 z-10 opacity-75 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer"
         >
           <svg
             className="w-4 h-4"
@@ -123,19 +107,19 @@ const Modal = ({
 
         {/* Modal Header */}
         {title && (
-          <div className="px-6 py-4 border-b border-[#1f2937] pr-12 shrink-0">
-            <div className="flex items-center gap-2">
+          <div className="px-6 py-4 border-b border-[#1e293b] pr-12 shrink-0">
+            <div className="flex items-center gap-2.5">
               {leftIcon && (
                 <span className={`shrink-0 ${leftIconClassName}`}>
                   {leftIcon}
                 </span>
               )}
-              <h2 className="text-base font-semibold text-white tracking-tight">
+              <h2 className="text-base font-bold text-white tracking-tight">
                 {title}
               </h2>
             </div>
             {description && (
-              <p className="text-xs text-gray-400 mt-0.5">{description}</p>
+              <p className="text-xs text-slate-400 mt-0.5">{description}</p>
             )}
           </div>
         )}

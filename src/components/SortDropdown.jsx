@@ -13,16 +13,6 @@ const formatLabel = (str) => {
  *
  * Manages sort field and sort direction (asc/desc) with internal state,
  * while allowing controlled override and notifying parent via onSortChange.
- *
- * @param {object} props
- * @param {Array<string|{value: string, label: string}>} props.options - Available sort fields
- * @param {string} [props.value] - Currently active sort field (optional, for controlled mode)
- * @param {"asc"|"desc"} [props.order="asc"] - Currently active sort order (optional, for controlled mode)
- * @param {function} props.onSortChange - Callback invoked when sorting changes: (field, order) => void
- * @param {string} [props.defaultField=""] - Initial field
- * @param {"asc"|"desc"} [props.defaultOrder="asc"] - Initial order
- * @param {string} [props.placeholder="Default Sort"] - Label when no field is sorted
- * @param {string} [props.className=""] - Custom classes for outer container
  */
 const SortDropdown = ({
   options = [],
@@ -135,13 +125,13 @@ const SortDropdown = ({
           aria-controls={menuId}
           className={`flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-sm font-medium border transition-all duration-200 ${
             currentField
-              ? "bg-[#111827] text-white border-indigo-500/50 shadow-sm shadow-indigo-500/10 hover:border-indigo-500"
-              : "bg-[#111827] text-gray-300 border-[#1f2937] hover:border-indigo-500/40 hover:text-white"
+              ? "bg-[#0f172a] text-white border-amber-500/60 shadow-xs shadow-amber-500/10 hover:border-amber-500"
+              : "bg-[#0f172a] text-slate-300 border-[#1e293b] hover:border-amber-500/40 hover:text-white"
           }`}
         >
           {/* Sort Icon */}
           <svg
-            className={`w-4 h-4 transition-colors ${currentField ? "text-indigo-400" : "text-gray-400"}`}
+            className={`w-4 h-4 transition-colors ${currentField ? "text-amber-400" : "text-slate-400"}`}
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -155,7 +145,7 @@ const SortDropdown = ({
           </svg>
 
           {/* Label */}
-          <span className="text-xs font-medium text-gray-400 hidden sm:inline">
+          <span className="text-xs font-medium text-slate-400 hidden sm:inline">
             Sort:
           </span>
           <span className="text-xs sm:text-sm font-semibold truncate max-w-32.5">
@@ -168,10 +158,10 @@ const SortDropdown = ({
               type="button"
               onClick={handleToggleOrder}
               title={`Order: ${currentOrder === "asc" ? "Ascending" : "Descending"} (Click to flip)`}
-              className="ml-0.5 px-1.5 py-0.5 rounded text-[11px] font-mono font-bold bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500/30 transition-colors flex items-center gap-0.5"
+              className="ml-0.5 px-1.5 py-0.5 rounded text-[11px] font-mono font-bold bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 border border-amber-500/30 transition-colors flex items-center gap-0.5"
             >
               <span>{currentOrder === "asc" ? "ASC" : "DESC"}</span>
-              <span className="text-indigo-400">
+              <span className="text-amber-400">
                 {currentOrder === "asc" ? "↑" : "↓"}
               </span>
             </button>
@@ -179,8 +169,8 @@ const SortDropdown = ({
 
           {/* Chevron */}
           <svg
-            className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-200 ${
-              isOpen ? "rotate-180 text-indigo-400" : ""
+            className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${
+              isOpen ? "rotate-180 text-amber-400" : ""
             }`}
             fill="none"
             viewBox="0 0 24 24"
@@ -200,18 +190,18 @@ const SortDropdown = ({
       {isOpen && (
         <div
           id={menuId}
-          className="absolute right-0 mt-2 w-56 origin-top-right rounded-2xl bg-[#111827] border border-[#1f2937] shadow-2xl shadow-black/80 py-2 z-40 animate-in fade-in zoom-in-95 duration-150 focus:outline-none"
+          className="absolute right-0 mt-2 w-56 origin-top-right rounded-2xl bg-[#0f172a] border border-[#1e293b] shadow-2xl shadow-black/80 py-2 z-40 animate-in fade-in zoom-in-95 duration-150 focus:outline-none"
         >
           {/* Header */}
-          <div className="px-4 py-2 border-b border-[#1f2937] flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400">
-              Sort Options
+          <div className="px-4 py-2 border-b border-[#1e293b] flex items-center justify-between">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+              Sort Fields
             </span>
             {currentField && (
               <button
                 type="button"
                 onClick={handleClear}
-                className="text-[11px] text-gray-400 hover:text-rose-400 font-medium transition-colors"
+                className="text-[11px] text-slate-400 hover:text-rose-400 font-medium transition-colors"
               >
                 Reset
               </button>
@@ -230,13 +220,13 @@ const SortDropdown = ({
                   onClick={() => handleSelectField(option.value)}
                   className={`w-full flex items-center justify-between px-4 py-2.5 text-sm transition-colors ${
                     isSelected
-                      ? "bg-indigo-600/15 text-indigo-300 font-semibold"
-                      : "text-gray-300 hover:bg-[#1a2333] hover:text-white"
+                      ? "bg-amber-500/15 text-amber-300 font-semibold"
+                      : "text-slate-300 hover:bg-[#1e293b] hover:text-white"
                   }`}
                 >
                   <span className="truncate">{option.label}</span>
                   {isSelected && (
-                    <span className="flex items-center gap-1 text-xs text-indigo-400 font-mono font-bold bg-indigo-500/20 px-1.5 py-0.5 rounded">
+                    <span className="flex items-center gap-1 text-xs text-amber-400 font-mono font-bold bg-amber-500/20 px-1.5 py-0.5 rounded">
                       {currentOrder === "asc" ? "ASC ↑" : "DESC ↓"}
                     </span>
                   )}
@@ -247,8 +237,8 @@ const SortDropdown = ({
 
           {/* Quick Order Toggle Footer (when a field is active) */}
           {currentField && (
-            <div className="px-3 pt-2 pb-1 border-t border-[#1f2937]">
-              <div className="flex items-center gap-1.5 bg-[#0b0f19] p-1 rounded-xl border border-[#1f2937]">
+            <div className="px-3 pt-2 pb-1 border-t border-[#1e293b]">
+              <div className="flex items-center gap-1.5 bg-[#080e1a] p-1 rounded-xl border border-[#1e293b]">
                 <button
                   type="button"
                   onClick={(e) => {
@@ -258,8 +248,8 @@ const SortDropdown = ({
                   }}
                   className={`flex-1 py-1 px-2 rounded-lg text-xs font-semibold transition-colors flex items-center justify-center gap-1 ${
                     currentOrder === "asc"
-                      ? "bg-indigo-600 text-white shadow-xs"
-                      : "text-gray-400 hover:text-white"
+                      ? "bg-amber-500 text-slate-950 font-bold shadow-xs"
+                      : "text-slate-400 hover:text-white"
                   }`}
                 >
                   <span>Ascending</span>
@@ -274,8 +264,8 @@ const SortDropdown = ({
                   }}
                   className={`flex-1 py-1 px-2 rounded-lg text-xs font-semibold transition-colors flex items-center justify-center gap-1 ${
                     currentOrder === "desc"
-                      ? "bg-indigo-600 text-white shadow-xs"
-                      : "text-gray-400 hover:text-white"
+                      ? "bg-amber-500 text-slate-950 font-bold shadow-xs"
+                      : "text-slate-400 hover:text-white"
                   }`}
                 >
                   <span>Descending</span>

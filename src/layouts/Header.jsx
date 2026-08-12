@@ -1,17 +1,28 @@
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import LogoIcon from "@/components/LogoIcon";
 
 const Header = ({ onToggleSidebar, isSidebarOpen }) => {
+  const location = useLocation();
+
+  // Compute breadcrumb trail from pathname
+  const currentPath = location.pathname;
+  let pageTitle = "Dashboard";
+  if (currentPath.startsWith("/users")) pageTitle = "Users Directory";
+  else if (currentPath.startsWith("/posts")) pageTitle = "Posts Registry";
+  else if (currentPath.startsWith("/comments"))
+    pageTitle = "Comments Moderation";
+  else if (currentPath.startsWith("/todos")) pageTitle = "Task Engine";
+
   return (
-    <header className="sticky top-0 z-30 w-full bg-[#111827]/90 backdrop-blur-md border-b border-[#1f2937] transition-all">
+    <header className="sticky top-0 z-30 w-full bg-[#0f172a]/95 backdrop-blur-md border-b border-[#1e293b] shadow-xs transition-all">
       <div className="px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-        {/* Left: Brand Logo & Title & Mobile Toggle */}
-        <div className="flex items-center gap-3 sm:gap-4">
-          {/* Mobile Sidebar Toggle Button */}
+        {/* Left: Brand & Breadcrumb */}
+        <div className="flex items-center gap-3 sm:gap-5">
+          {/* Mobile Sidebar Toggle */}
           <button
             type="button"
             onClick={onToggleSidebar}
-            className="p-2 rounded-lg bg-[#1f2937] text-gray-300 hover:text-white hover:bg-[#374151] border border-[#374151] lg:hidden transition-colors cursor-pointer"
+            className="p-2 rounded-xl bg-[#1e293b] text-slate-300 hover:text-white hover:bg-[#283852] border border-[#283852] lg:hidden transition-colors cursor-pointer"
             aria-label="Toggle Navigation Sidebar"
           >
             {isSidebarOpen ? (
@@ -44,38 +55,68 @@ const Header = ({ onToggleSidebar, isSidebarOpen }) => {
               </svg>
             )}
           </button>
-          {/* Logo & Title */}
+
+          {/* Logo & Workspace Title */}
           <Link to="/" className="flex items-center gap-3 group shrink-0">
             <LogoIcon
-              size={34}
+              size={36}
               className="group-hover:scale-105 transition-transform duration-200"
             />
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
-                <span className="font-bold text-base sm:text-lg tracking-tight text-white group-hover:text-indigo-400 transition-colors">
-                  Playground API
-                </span>
-                <span className="text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 font-mono">
-                  React Demo
+                <span className="font-bold text-base sm:text-lg tracking-tight text-white group-hover:text-amber-400 transition-colors">
+                  Directory Studio
                 </span>
               </div>
-              <span className="text-[11px] text-gray-400 hidden sm:inline">
-                Stateful Mock REST & GraphQL Service
+              <span className="text-[11px] text-slate-400 hidden sm:inline">
+                Enterprise Mock Console
               </span>
             </div>
           </Link>
+
+          {/* Divider */}
+          <span className="hidden md:inline-block w-px h-6 bg-[#1e293b]" />
+
+          {/* Breadcrumb Path */}
+          <nav
+            aria-label="Breadcrumb"
+            className="hidden md:flex items-center gap-2 text-xs text-slate-400"
+          >
+            <span className="text-slate-500">Console</span>
+            <span>/</span>
+            <span className="text-amber-400/90 font-medium">{pageTitle}</span>
+          </nav>
         </div>
-        {/* Right: Quick Links & Actions */}
-        <div className="flex items-center gap-2 sm:gap-4">
+
+        {/* Right: Live Sandbox Status & Links */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* Live Sandbox Status Pill */}
+          <div className="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#080e1a] border border-[#1e293b] text-xs font-mono">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+            </span>
+            <span className="text-slate-300 hidden sm:inline">
+              Sandbox Active
+            </span>
+            <span className="text-slate-400 text-[10px] hidden lg:inline">
+              · Session Isolated
+            </span>
+          </div>
+
           {/* GitHub Repo Link */}
           <a
             href="https://github.com/nileshcodehub/playground_api"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#1f2937] hover:bg-[#374151] border border-[#374151] text-gray-300 hover:text-white text-xs sm:text-sm font-medium transition-all"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#1e293b] hover:bg-[#283852] border border-[#283852] text-slate-200 hover:text-white text-xs sm:text-sm font-medium transition-all"
             title="GitHub Repository"
           >
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+            <svg
+              className="w-4 h-4 text-slate-300"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path
                 fillRule="evenodd"
                 clipRule="evenodd"

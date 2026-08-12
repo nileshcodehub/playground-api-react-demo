@@ -8,59 +8,60 @@ export function LogoIcon({ className = 'w-8 h-8', size = 32 }) {
       className={className}
     >
       <defs>
-        <linearGradient id="demoBgGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+        <linearGradient id="fintechBg" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#0f172a" />
-          <stop offset="50%" stopColor="#1e1b4b" />
-          <stop offset="100%" stopColor="#0f172a" />
+          <stop offset="50%" stopColor="#1e293b" />
+          <stop offset="100%" stopColor="#080e1a" />
         </linearGradient>
-        <linearGradient id="demoPrimaryGlow" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#a855f7" />
-          <stop offset="50%" stopColor="#6366f1" />
-          <stop offset="100%" stopColor="#06b6d4" />
+        <linearGradient id="fintechGold" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#fbbf24" />
+          <stop offset="50%" stopColor="#f59e0b" />
+          <stop offset="100%" stopColor="#d97706" />
         </linearGradient>
-        <linearGradient id="demoAccentGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+        <linearGradient id="fintechBlue" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#38bdf8" />
-          <stop offset="100%" stopColor="#818cf8" />
+          <stop offset="100%" stopColor="#0284c7" />
         </linearGradient>
-        <filter id="demoGlowEffect" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="12" result="blur" />
-          <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        <filter id="fintechShadow" x="-10%" y="-10%" width="120%" height="120%">
+          <feDropShadow dx="0" dy="8" stdDeviation="16" floodColor="#f59e0b" floodOpacity="0.2" />
         </filter>
       </defs>
       {/* Container Box */}
       <rect
         width="512"
         height="512"
-        rx="112"
-        fill="url(#demoBgGlow)"
-        stroke="url(#demoPrimaryGlow)"
-        strokeWidth="12"
+        rx="128"
+        fill="url(#fintechBg)"
+        stroke="url(#fintechGold)"
+        strokeWidth="10"
       />
-      <g filter="url(#demoGlowEffect)">
-        {/* Left Bracket < */}
-        <path
-          d="M 180 160 L 100 256 L 180 352"
-          fill="none"
-          stroke="url(#demoPrimaryGlow)"
-          strokeWidth="36"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+      {/* Inner Geometry */}
+      <g filter="url(#fintechShadow)">
+        {/* Left Column Bar */}
+        <rect
+          x="120"
+          y="180"
+          width="48"
+          height="160"
+          rx="24"
+          fill="url(#fintechBlue)"
         />
-        {/* Right Bracket > */}
-        <path
-          d="M 332 160 L 412 256 L 332 352"
-          fill="none"
-          stroke="url(#demoPrimaryGlow)"
-          strokeWidth="36"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+        {/* Middle Tall Bar */}
+        <rect
+          x="200"
+          y="120"
+          width="48"
+          height="280"
+          rx="24"
+          fill="url(#fintechGold)"
         />
-        {/* Center Play Icon Triangle ▶ */}
+        {/* Right Forward Chevron / Diamond */}
         <path
-          d="M 220 185 L 310 256 L 220 327 Z"
-          fill="url(#demoAccentGlow)"
-          stroke="url(#demoPrimaryGlow)"
-          strokeWidth="12"
+          d="M 285 160 L 390 256 L 285 352"
+          fill="none"
+          stroke="url(#fintechGold)"
+          strokeWidth="32"
+          strokeLinecap="round"
           strokeLinejoin="round"
         />
       </g>

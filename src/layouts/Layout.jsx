@@ -4,7 +4,7 @@ import Header from './Header';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
 
-const Layout = ({children}) => {
+const Layout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
@@ -14,8 +14,9 @@ const Layout = ({children}) => {
   const closeSidebar = () => {
     setIsSidebarOpen(false);
   };
+
   return (
-    <div className="min-h-screen flex flex-col bg-[#0b0f19] text-gray-100 antialiased selection:bg-indigo-500 selection:text-white">
+    <div className="min-h-screen flex flex-col bg-[#080e1a] text-slate-100 antialiased selection:bg-amber-500 selection:text-slate-950">
       {/* Top Header */}
       <Header onToggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} />
       {/* Main Body Area: Sidebar + Main Content Container */}
@@ -27,20 +28,20 @@ const Layout = ({children}) => {
           <div className="fixed inset-0 z-40 lg:hidden flex">
             {/* Backdrop */}
             <div
-              className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
+              className="fixed inset-0 bg-black/75 backdrop-blur-xs transition-opacity"
               onClick={closeSidebar}
               aria-hidden="true"
             />
             {/* Drawer Content */}
-            <div className="relative flex-1 flex flex-col max-w-xs w-full bg-[#111827] z-50 shadow-2xl">
-              <div className="flex items-center justify-between p-4 border-b border-[#1f2937]">
-                <span className="text-sm font-bold text-gray-200 uppercase tracking-wider">
-                  Navigation
+            <div className="relative flex-1 flex flex-col max-w-xs w-full bg-[#0f172a] z-50 shadow-2xl border-r border-[#1e293b]">
+              <div className="flex items-center justify-between p-4 border-b border-[#1e293b]">
+                <span className="text-xs font-bold text-slate-200 uppercase tracking-wider">
+                  Navigation Menu
                 </span>
                 <button
                   type="button"
                   onClick={closeSidebar}
-                  className="p-1 rounded-lg text-gray-400 hover:text-white hover:bg-[#1f2937] transition-colors"
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-[#1e293b] transition-colors"
                 >
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -62,5 +63,5 @@ const Layout = ({children}) => {
       <Footer />
     </div>
   );
-}
+};
 export default Layout;

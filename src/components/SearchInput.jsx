@@ -6,27 +6,14 @@ import { useDebounce } from "@/hooks/useDebounce";
  *
  * Manages local typing state for snappy responsiveness, while returning
  * the debounced value to the parent component via `onSearch` or `onChange`.
- *
- * @param {object} props
- * @param {string} [props.value] - Controlled search term value (optional)
- * @param {string} [props.defaultValue=""] - Default initial search term
- * @param {function} props.onSearch - Callback invoked with the debounced search term: (term: string) => void
- * @param {function} [props.onChange] - Alias for onSearch
- * @param {number} [props.delay=400] - Debounce delay in milliseconds
- * @param {string} [props.placeholder="Search..."] - Input placeholder text
- * @param {string} [props.className=""] - Wrapper container class
- * @param {string} [props.inputClassName=""] - Input element class
- * @param {string} [props.id="search-input"] - Input element id
- * @param {boolean} [props.disabled=false] - Whether input is disabled
- * @param {boolean} [props.autoFocus=false] - Whether input should autofocus
  */
 const SearchInput = ({
   value,
   defaultValue = "",
   onSearch,
   onChange,
-  delay = 400,
-  placeholder = "Search...",
+  delay = 350,
+  placeholder = "Search records…",
   className = "",
   inputClassName = "",
   id = "search-input",
@@ -73,7 +60,6 @@ const SearchInput = ({
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      // Immediate submission on Enter
       const callback = onSearch || onChange;
       callback?.(searchTerm);
     } else if (e.key === "Escape" && searchTerm) {
@@ -85,7 +71,7 @@ const SearchInput = ({
     <div className={`relative flex items-center ${className}`}>
       {/* Search Icon */}
       <svg
-        className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none transition-colors peer-focus:text-indigo-400"
+        className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none transition-colors peer-focus:text-amber-400"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -110,7 +96,7 @@ const SearchInput = ({
         placeholder={placeholder}
         disabled={disabled}
         autoFocus={autoFocus}
-        className={`peer w-full bg-[#111827] border border-[#1f2937] rounded-xl pl-10 pr-10 py-2.5 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/40 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${inputClassName}`}
+        className={`peer w-full bg-[#0f172a] border border-[#1e293b] rounded-xl pl-10 pr-10 py-2.5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${inputClassName}`}
       />
 
       {/* Clear Button */}
@@ -120,7 +106,7 @@ const SearchInput = ({
           onClick={handleClear}
           title="Clear search"
           aria-label="Clear search"
-          className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-md text-gray-400 hover:text-white hover:bg-[#1f2937] transition-colors focus:outline-none focus:ring-1 focus:ring-indigo-500"
+          className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-md text-slate-400 hover:text-white hover:bg-[#1e293b] transition-colors focus:outline-none focus:ring-1 focus:ring-amber-500"
         >
           <svg
             className="w-3.5 h-3.5"

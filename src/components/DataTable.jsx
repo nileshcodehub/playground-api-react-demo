@@ -1,5 +1,5 @@
 /**
- * DataTable — generic, reusable data table.
+ * DataTable — generic, reusable enterprise data table.
  *
  * Props:
  *   columns  {Array}   – Column definitions (see below)
@@ -59,10 +59,10 @@ const DataTable = ({
   };
 
   return (
-    <div className={`rounded-2xl border border-[#1f2937] overflow-hidden bg-[#111827] shadow-xl ${className}`}>
+    <div className={`rounded-2xl border border-[#1e293b] overflow-hidden bg-[#0f172a] shadow-xl ${className}`}>
       {/* ── Header ── */}
       <div
-        className="hidden md:grid gap-x-4 px-5 py-3 bg-[#0b0f19] border-b border-[#1f2937] text-[11px] font-bold uppercase tracking-wider text-gray-500"
+        className="hidden md:grid gap-x-4 px-5 py-3.5 bg-[#080e1a] border-b border-[#1e293b] text-[11px] font-bold uppercase tracking-wider text-slate-400"
         style={{ gridTemplateColumns: gridTemplate }}
       >
         {columns.map((col) => (
@@ -77,18 +77,18 @@ const DataTable = ({
 
       {/* ── Body ── */}
       {loading ? (
-        <div className="flex items-center justify-center py-20 gap-3 text-gray-500">
-          <Spinner className="w-6 h-6 text-indigo-400" />
-          <span className="text-sm">Loading…</span>
+        <div className="flex items-center justify-center py-20 gap-3 text-slate-400">
+          <Spinner className="w-6 h-6 text-amber-400" />
+          <span className="text-sm font-medium">Synchronizing records…</span>
         </div>
       ) : data.length === 0 ? (
-        <div className="py-20 text-center text-gray-500 text-sm">{empty}</div>
+        <div className="py-20 text-center text-slate-400 text-sm">{empty}</div>
       ) : (
-        <ul className="divide-y divide-[#1f2937]">
+        <ul className="divide-y divide-[#1e293b]">
           {data.map((row) => (
             <li
               key={row[keyField]}
-              className="group hover:bg-[#0d1526] transition-colors"
+              className="group hover:bg-[#131d33] transition-colors"
             >
               {/* Desktop: grid row (same template as header) */}
               <div
@@ -101,7 +101,7 @@ const DataTable = ({
                     className={`min-w-0 ${ALIGN_CLASSES[col.align ?? "left"]} ${col.className ?? ""}`}
                   >
                     {col.render ? col.render(row) : (
-                      <span className="text-sm text-gray-300 truncate block">
+                      <span className="text-sm text-slate-300 truncate block">
                         {row[col.key]}
                       </span>
                     )}
@@ -110,17 +110,17 @@ const DataTable = ({
               </div>
 
               {/* Mobile: stacked card (first column full width, rest below) */}
-              <div className="md:hidden px-4 py-3 space-y-1">
+              <div className="md:hidden px-4 py-3.5 space-y-2">
                 {columns.map((col, i) => (
                   <div key={col.key} className={i === 0 ? "" : "flex items-center gap-2"}>
                     {i !== 0 && (
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-gray-600 w-20 shrink-0">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 w-20 shrink-0">
                         {col.header}
                       </span>
                     )}
                     <div className="min-w-0 flex-1">
                       {col.render ? col.render(row) : (
-                        <span className="text-sm text-gray-300 truncate block">
+                        <span className="text-sm text-slate-300 truncate block">
                           {row[col.key]}
                         </span>
                       )}

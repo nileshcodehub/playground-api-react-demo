@@ -2,18 +2,6 @@ import { usePagination, DOTS } from "@/hooks/usePagination";
 
 /**
  * Reusable, fully-controlled Pagination component.
- *
- * Props mirror the reference Pagination component so the API is consistent
- * across any future pages (Posts, Todos, Comments, etc.).
- *
- * @param {function} props.onPageChange  - Called with the new page number
- * @param {number}   props.totalCount    - Total number of records
- * @param {number}   props.currentPage   - Active page (1-indexed, controlled by parent)
- * @param {number}   props.pageSize      - Records per page
- * @param {number}   [props.siblingCount=1] - Page buttons shown on each side of current
- * @param {string}   [props.prevLabel=""] - Optional text shown next to ← icon
- * @param {string}   [props.nextLabel=""] - Optional text shown next to → icon
- * @param {string}   [props.className=""] - Extra classes for the root container
  */
 const Pagination = ({
   onPageChange,
@@ -32,7 +20,6 @@ const Pagination = ({
     pageSize,
   });
 
-  // Don't render if there's only 1 page or no data (matches reference exactly)
   if (currentPage === 0 || !paginationRange || paginationRange.length < 2) {
     return null;
   }
@@ -48,26 +35,26 @@ const Pagination = ({
 
   // Style constants
   const btnBase =
-    "h-8 min-w-[2rem] px-2 rounded-lg text-sm font-semibold transition-colors";
-  const btnActive = "bg-indigo-600 text-white shadow-md";
+    "h-8 min-w-[2rem] px-2 rounded-xl text-sm font-semibold transition-colors";
+  const btnActive = "bg-amber-500 text-slate-950 font-bold shadow-xs shadow-amber-500/20";
   const btnIdle =
-    "bg-[#111827] text-gray-400 border border-[#1f2937] hover:border-indigo-500/40 hover:text-indigo-400";
+    "bg-[#0f172a] text-slate-300 border border-[#1e293b] hover:border-amber-500/50 hover:text-amber-400";
   const btnNav =
-    "flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm text-gray-400 bg-[#111827] border border-[#1f2937] hover:border-indigo-500/40 hover:text-indigo-400 disabled:opacity-40 disabled:cursor-not-allowed transition-colors";
+    "flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm text-slate-300 bg-[#0f172a] border border-[#1e293b] hover:border-amber-500/50 hover:text-amber-400 disabled:opacity-30 disabled:cursor-not-allowed transition-colors font-medium";
 
   return (
     <div className={`flex items-center justify-between flex-wrap gap-3 ${className}`}>
       {/* Record range label */}
-      <span className="text-xs text-gray-500">
+      <span className="text-xs text-slate-400 font-mono">
         Showing{" "}
-        <span className="text-gray-300 font-medium">
+        <span className="text-slate-200 font-semibold">
           {from}–{to}
         </span>{" "}
-        of <span className="text-gray-300 font-medium">{totalCount}</span>
+        of <span className="text-slate-200 font-semibold">{totalCount}</span> records
       </span>
 
       {/* Controls */}
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-1.5">
         {/* Previous */}
         <button
           id="page-prev"
@@ -85,7 +72,7 @@ const Pagination = ({
             return (
               <span
                 key={`dots-${index}`}
-                className="flex items-center justify-center w-8 h-8 text-gray-600 text-sm select-none"
+                className="flex items-center justify-center w-8 h-8 text-slate-600 text-sm select-none"
               >
                 &#8230;
               </span>
