@@ -1,11 +1,26 @@
-import { useState } from 'react';
-import { Outlet } from 'react-router';
+import { useState, useEffect } from 'react';
+import { Outlet, useLocation } from 'react-router';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
 
+const PAGE_TITLES = {
+  '/': 'Workspace Overview | Directory Studio — Playground API',
+  '/users': 'Users Directory & Intelligence | Directory Studio — Playground API',
+  '/posts': 'Posts Registry | Directory Studio — Playground API',
+  '/comments': 'Comments Moderation | Directory Studio — Playground API',
+  '/todos': 'Task Engine | Directory Studio — Playground API',
+};
+
 const Layout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const location = useLocation();
+
+  // Dynamic SEO page title update on route change
+  useEffect(() => {
+    const title = PAGE_TITLES[location.pathname] || 'Directory Studio — Enterprise Mock Sandbox';
+    document.title = title;
+  }, [location.pathname]);
 
   const toggleSidebar = () => {
     setIsSidebarOpen((prev) => !prev);
