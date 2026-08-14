@@ -7,6 +7,10 @@ import Modal from "@/components/Modal";
 import ConfirmationModal from "@/components/ConfirmationModal";
 import SortDropdown from "@/components/SortDropdown";
 import SearchInput from "@/components/SearchInput";
+import {
+  PostCardSkeletonGrid,
+  CommentsSkeletonList,
+} from "@/components/Skeletons";
 
 /* ─────────────────────────────────────────────────────────────── constants & helpers */
 const SORT_OPTIONS = [
@@ -54,7 +58,12 @@ function AuthorAvatar({ name, size = "md" }) {
     "from-cyan-500 to-blue-700 text-white",
   ];
   const colour = palette[(name || "").charCodeAt(0) % palette.length];
-  const sz = size === "lg" ? "w-12 h-12 text-base" : size === "sm" ? "w-6 h-6 text-[10px]" : "w-8 h-8 text-xs";
+  const sz =
+    size === "lg"
+      ? "w-12 h-12 text-base"
+      : size === "sm"
+        ? "w-6 h-6 text-[10px]"
+        : "w-8 h-8 text-xs";
   return (
     <div
       className={`${sz} rounded-xl bg-linear-to-br ${colour} flex items-center justify-center font-bold shrink-0 shadow-xs ring-1 ring-white/10`}
@@ -66,9 +75,24 @@ function AuthorAvatar({ name, size = "md" }) {
 
 function Spinner({ className = "" }) {
   return (
-    <svg className={`animate-spin ${className}`} viewBox="0 0 24 24" fill="none">
-      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+    <svg
+      className={`animate-spin ${className}`}
+      viewBox="0 0 24 24"
+      fill="none"
+    >
+      <circle
+        className="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        strokeWidth="4"
+      />
+      <path
+        className="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8v8H4z"
+      />
     </svg>
   );
 }
@@ -139,7 +163,11 @@ function PostForm({
           >
             {users.length > 0 ? (
               users.map((u) => (
-                <option key={u.id} value={u.id} className="bg-[#0f172a] text-white">
+                <option
+                  key={u.id}
+                  value={u.id}
+                  className="bg-[#0f172a] text-white"
+                >
                   #{u.id} — {u.name} (@{u.username})
                 </option>
               ))
@@ -155,7 +183,8 @@ function PostForm({
         <div className="space-y-1.5">
           <label className="text-xs font-semibold text-slate-300 flex items-center justify-between">
             <span>
-              Publication Content / Body <span className="text-amber-400">*</span>
+              Publication Content / Body{" "}
+              <span className="text-amber-400">*</span>
             </span>
             <span className="text-[11px] text-slate-500 font-mono">
               {form.body.split(/\s+/).filter(Boolean).length} words
@@ -265,20 +294,37 @@ function PostInspectorDrawer({ post, author, onClose, onEdit, onDelete }) {
               onClick={onClose}
               className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-[#1e293b] transition-colors cursor-pointer shrink-0"
             >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>
 
           {/* Author Badge */}
           <div className="flex items-center gap-2.5 p-2.5 rounded-xl bg-[#0f172a] border border-[#1e293b]">
-            <AuthorAvatar name={author?.name || `User ${post.user_id}`} size="sm" />
+            <AuthorAvatar
+              name={author?.name || `User ${post.user_id}`}
+              size="sm"
+            />
             <div className="min-w-0 text-xs">
               <span className="text-slate-400">Authored by </span>
-              <span className="text-white font-semibold">{author?.name || `User #${post.user_id}`}</span>
+              <span className="text-white font-semibold">
+                {author?.name || `User #${post.user_id}`}
+              </span>
               {author?.username && (
-                <span className="text-slate-500 font-mono ml-1">(@{author.username})</span>
+                <span className="text-slate-500 font-mono ml-1">
+                  (@{author.username})
+                </span>
               )}
             </div>
           </div>
@@ -313,7 +359,9 @@ function PostInspectorDrawer({ post, author, onClose, onEdit, onDelete }) {
               {/* Publication Content */}
               <div className="p-5 rounded-2xl bg-[#080e1a] border border-[#1e293b] space-y-3">
                 <div className="flex items-center justify-between text-xs text-slate-400 border-b border-[#1e293b] pb-2.5">
-                  <span className="font-bold uppercase tracking-wider text-[11px]">Publication Body</span>
+                  <span className="font-bold uppercase tracking-wider text-[11px]">
+                    Publication Body
+                  </span>
                   <div className="flex items-center gap-3 font-mono text-[11px]">
                     <span>{wordCount} words</span>
                     <span>•</span>
@@ -328,12 +376,18 @@ function PostInspectorDrawer({ post, author, onClose, onEdit, onDelete }) {
               {/* Author Overview Box */}
               {author && (
                 <div className="p-4 rounded-2xl bg-[#080e1a] border border-[#1e293b] space-y-2.5">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Author Dossier</span>
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                    Author Dossier
+                  </span>
                   <div className="flex items-center gap-3">
                     <AuthorAvatar name={author.name} size="md" />
                     <div className="min-w-0">
-                      <p className="text-sm font-bold text-white">{author.name}</p>
-                      <p className="text-xs text-slate-400 font-mono">{author.email}</p>
+                      <p className="text-sm font-bold text-white">
+                        {author.name}
+                      </p>
+                      <p className="text-xs text-slate-400 font-mono">
+                        {author.email}
+                      </p>
                     </div>
                   </div>
                   {author.company?.name && (
@@ -341,7 +395,9 @@ function PostInspectorDrawer({ post, author, onClose, onEdit, onDelete }) {
                       <span className="text-amber-400">🏢</span>
                       <span>{author.company.name}</span>
                       {author.company.catchPhrase && (
-                        <span className="text-slate-500 italic truncate">— "{author.company.catchPhrase}"</span>
+                        <span className="text-slate-500 italic truncate">
+                          — "{author.company.catchPhrase}"
+                        </span>
                       )}
                     </div>
                   )}
@@ -349,9 +405,13 @@ function PostInspectorDrawer({ post, author, onClose, onEdit, onDelete }) {
               )}
 
               <div className="p-4 rounded-2xl bg-[#080e1a] border border-[#1e293b] space-y-1.5">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Isolation Details</span>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                  Isolation Details
+                </span>
                 <p className="text-xs text-slate-400 leading-relaxed">
-                  Post record ID <span className="font-mono text-amber-300">{post.id}</span> is isolated to your active browser sandbox session.
+                  Post record ID{" "}
+                  <span className="font-mono text-amber-300">{post.id}</span> is
+                  isolated to your active browser sandbox session.
                 </p>
               </div>
             </div>
@@ -369,10 +429,7 @@ function PostInspectorDrawer({ post, author, onClose, onEdit, onDelete }) {
               </div>
 
               {loadingComments ? (
-                <div className="p-8 text-center space-y-2">
-                  <Spinner className="w-6 h-6 text-amber-400 mx-auto" />
-                  <p className="text-xs text-slate-400">Loading relational comments…</p>
-                </div>
+                <CommentsSkeletonList count={3} />
               ) : comments.length === 0 ? (
                 <div className="p-6 rounded-2xl bg-[#080e1a] border border-[#1e293b] text-center text-slate-400 text-xs">
                   No comments attached to this publication yet.
@@ -388,11 +445,17 @@ function PostInspectorDrawer({ post, author, onClose, onEdit, onDelete }) {
                         <div className="flex items-center gap-2 min-w-0">
                           <AuthorAvatar name={c.name} size="sm" />
                           <div className="min-w-0">
-                            <p className="text-xs font-bold text-white truncate">{c.name}</p>
-                            <p className="text-[11px] text-slate-400 font-mono truncate">{c.email}</p>
+                            <p className="text-xs font-bold text-white truncate">
+                              {c.name}
+                            </p>
+                            <p className="text-[11px] text-slate-400 font-mono truncate">
+                              {c.email}
+                            </p>
                           </div>
                         </div>
-                        <span className="text-[10px] font-mono text-slate-500 shrink-0">#{c.id}</span>
+                        <span className="text-[10px] font-mono text-slate-500 shrink-0">
+                          #{c.id}
+                        </span>
                       </div>
                       <p className="text-xs text-slate-300 leading-relaxed pl-8">
                         {c.body}
@@ -407,7 +470,9 @@ function PostInspectorDrawer({ post, author, onClose, onEdit, onDelete }) {
           {activeTab === "json" && (
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Live JSON Payload</span>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                  Live JSON Payload
+                </span>
                 <button
                   type="button"
                   onClick={handleCopyJson}
@@ -545,7 +610,16 @@ const Posts = () => {
     return () => {
       cancelled = true;
     };
-  }, [queryKey, toast, page, search, authorFilter, sortField, sortOrder, refreshKey]);
+  }, [
+    queryKey,
+    toast,
+    page,
+    search,
+    authorFilter,
+    sortField,
+    sortOrder,
+    refreshKey,
+  ]);
 
   // ── CRUD handlers ───────────────────────
   const handleCreate = async (form) => {
@@ -628,7 +702,10 @@ const Posts = () => {
     return posts;
   }, [posts, filterMode]);
 
-  const mutatedCount = useMemo(() => posts.filter((p) => p._sandbox).length, [posts]);
+  const mutatedCount = useMemo(
+    () => posts.filter((p) => p._sandbox).length,
+    [posts],
+  );
   const uniqueAuthorsInPage = useMemo(() => {
     const set = new Set(posts.map((p) => p.user_id).filter(Boolean));
     return set.size;
@@ -639,27 +716,49 @@ const Posts = () => {
       {/* ── Executive Metric Strip ── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="p-4 sm:p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-1 shadow-xs">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Total Publications</div>
-          <div className="text-xl sm:text-2xl font-extrabold text-white font-mono">{pagination.total ?? 0}</div>
-          <div className="text-[11px] text-slate-400">Global & overlay items</div>
+          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            Total Publications
+          </div>
+          <div className="text-xl sm:text-2xl font-extrabold text-white font-mono">
+            {pagination.total ?? 0}
+          </div>
+          <div className="text-[11px] text-slate-400">
+            Global & overlay items
+          </div>
         </div>
         <div className="p-4 sm:p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-1 shadow-xs">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Session Overlays</div>
-          <div className="text-xl sm:text-2xl font-extrabold text-amber-400 font-mono">{mutatedCount} Active</div>
-          <div className="text-[11px] text-slate-400">Local browser mutations</div>
+          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            Session Overlays
+          </div>
+          <div className="text-xl sm:text-2xl font-extrabold text-amber-400 font-mono">
+            {mutatedCount} Active
+          </div>
+          <div className="text-[11px] text-slate-400">
+            Local browser mutations
+          </div>
         </div>
         <div className="p-4 sm:p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-1 shadow-xs">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Active Authors</div>
-          <div className="text-xl sm:text-2xl font-extrabold text-sky-400 font-mono">{users.length || uniqueAuthorsInPage} Contributors</div>
-          <div className="text-[11px] text-slate-400">Relational authors linked</div>
+          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            Active Authors
+          </div>
+          <div className="text-xl sm:text-2xl font-extrabold text-sky-400 font-mono">
+            {users.length || uniqueAuthorsInPage} Contributors
+          </div>
+          <div className="text-[11px] text-slate-400">
+            Relational authors linked
+          </div>
         </div>
         <div className="p-4 sm:p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-1 shadow-xs">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Gateway Status</div>
+          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            Gateway Status
+          </div>
           <div className="text-xl sm:text-2xl font-extrabold text-emerald-400 font-mono flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
             100% Synced
           </div>
-          <div className="text-[11px] text-slate-400">REST v1 schema connected</div>
+          <div className="text-[11px] text-slate-400">
+            REST v1 schema connected
+          </div>
         </div>
       </div>
 
@@ -684,7 +783,7 @@ const Posts = () => {
                 setPage(1);
                 setAuthorFilter(e.target.value);
               }}
-              className="bg-[#080e1a] border border-[#1e293b] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500 cursor-pointer min-w-[150px]"
+              className="bg-[#080e1a] border border-[#1e293b] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500 cursor-pointer min-w-37.5"
             >
               <option value="">All Authors</option>
               {users.map((u) => (
@@ -716,8 +815,18 @@ const Posts = () => {
                 }`}
                 title="Data Table View"
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M4 6h16M4 10h16M4 14h16M4 18h16"
+                  />
                 </svg>
                 <span className="hidden sm:inline">Table</span>
               </button>
@@ -731,8 +840,18 @@ const Posts = () => {
                 }`}
                 title="Card Grid View"
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+                  />
                 </svg>
                 <span className="hidden sm:inline">Cards</span>
               </button>
@@ -744,8 +863,18 @@ const Posts = () => {
               onClick={() => setModal({ type: "create" })}
               className="flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-sm font-bold transition-all shadow-md shadow-amber-500/10 shrink-0 cursor-pointer"
             >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 4v16m8-8H4"
+                />
               </svg>
               <span>New Publication</span>
             </button>
@@ -754,7 +883,9 @@ const Posts = () => {
 
         {/* Filter Chips Bar */}
         <div className="flex items-center gap-2 pt-2 border-t border-[#1e293b] text-xs">
-          <span className="text-slate-500 font-semibold uppercase text-[10px] tracking-wider mr-1">Filter:</span>
+          <span className="text-slate-500 font-semibold uppercase text-[10px] tracking-wider mr-1">
+            Filter:
+          </span>
           {[
             { key: "all", label: `All Posts (${pagination.total ?? 0})` },
             { key: "mutated", label: `Sandbox Overlays (${mutatedCount})` },
@@ -780,6 +911,7 @@ const Posts = () => {
       {viewMode === "table" ? (
         <DataTable
           loading={loading}
+          skeletonRows={pagination.limit ?? 10}
           data={displayedPosts}
           empty="No publication records matching the query."
           columns={[
@@ -822,13 +954,18 @@ const Posts = () => {
                 const author = userMap.get(Number(post.user_id));
                 return (
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <AuthorAvatar name={author?.name || `User ${post.user_id}`} size="sm" />
+                    <AuthorAvatar
+                      name={author?.name || `User ${post.user_id}`}
+                      size="sm"
+                    />
                     <div className="min-w-0">
                       <span className="text-sm text-slate-200 font-medium truncate block">
                         {author?.name || `Author #${post.user_id}`}
                       </span>
                       <span className="text-[11px] text-slate-400 font-mono truncate block">
-                        {author?.username ? `@${author.username}` : `ID: ${post.user_id}`}
+                        {author?.username
+                          ? `@${author.username}`
+                          : `ID: ${post.user_id}`}
                       </span>
                     </div>
                   </div>
@@ -848,9 +985,23 @@ const Posts = () => {
                     onClick={() => handleOpenDrawer(post)}
                     className="p-1.5 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors cursor-pointer"
                   >
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      />
                     </svg>
                   </button>
                   <button
@@ -859,8 +1010,18 @@ const Posts = () => {
                     onClick={() => setModal({ type: "edit", post })}
                     className="p-1.5 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors cursor-pointer"
                   >
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                      />
                     </svg>
                   </button>
                   <button
@@ -869,8 +1030,18 @@ const Posts = () => {
                     onClick={() => setModal({ type: "delete", post })}
                     className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
                   >
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      />
                     </svg>
                   </button>
                 </div>
@@ -878,6 +1049,12 @@ const Posts = () => {
             },
           ]}
         />
+      ) : loading ? (
+        <PostCardSkeletonGrid count={pagination.limit ?? 10} />
+      ) : displayedPosts.length === 0 ? (
+        <div className="p-12 rounded-2xl bg-[#0f172a] border border-[#1e293b] text-center text-slate-400 text-sm">
+          No publication records matching the query.
+        </div>
       ) : (
         /* Card Grid View */
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -892,7 +1069,10 @@ const Posts = () => {
                   {/* Card Top Strip */}
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <AuthorAvatar name={author?.name || `User ${post.user_id}`} size="md" />
+                      <AuthorAvatar
+                        name={author?.name || `User ${post.user_id}`}
+                        size="md"
+                      />
                       <div className="min-w-0">
                         <p className="text-xs font-bold text-white truncate group-hover:text-amber-400 transition-colors">
                           {author?.name || `Author #${post.user_id}`}
@@ -933,8 +1113,18 @@ const Posts = () => {
                       className="p-1.5 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-[#1e293b] transition-colors cursor-pointer"
                       title="Edit"
                     >
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                        />
                       </svg>
                     </button>
                     <button
@@ -943,8 +1133,18 @@ const Posts = () => {
                       className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-[#1e293b] transition-colors cursor-pointer"
                       title="Delete"
                     >
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
                       </svg>
                     </button>
                   </div>
@@ -984,7 +1184,11 @@ const Posts = () => {
 
       {/* ── Create / Edit Modals ── */}
       {modal?.type === "create" && (
-        <Modal title="Create New Publication" onClose={() => setModal(null)} size="lg">
+        <Modal
+          title="Create New Publication"
+          onClose={() => setModal(null)}
+          size="lg"
+        >
           <PostForm
             users={users}
             onSubmit={handleCreate}
@@ -995,7 +1199,11 @@ const Posts = () => {
       )}
 
       {modal?.type === "edit" && (
-        <Modal title={`Edit Publication — ${modal.post.title}`} onClose={() => setModal(null)} size="lg">
+        <Modal
+          title={`Edit Publication — ${modal.post.title}`}
+          onClose={() => setModal(null)}
+          size="lg"
+        >
           <PostForm
             initial={{
               title: modal.post.title || "",
@@ -1028,9 +1236,12 @@ const Posts = () => {
               📄
             </div>
             <div className="min-w-0">
-              <p className="font-bold text-white text-sm line-clamp-1">{modal.post.title}</p>
+              <p className="font-bold text-white text-sm line-clamp-1">
+                {modal.post.title}
+              </p>
               <p className="text-xs text-slate-400 font-mono">
-                #PST-{String(modal.post.id).padStart(4, "0")} • Author #{modal.post.user_id}
+                #PST-{String(modal.post.id).padStart(4, "0")} • Author #
+                {modal.post.user_id}
               </p>
             </div>
           </div>

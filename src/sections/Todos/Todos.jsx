@@ -7,6 +7,7 @@ import Modal from "@/components/Modal";
 import ConfirmationModal from "@/components/ConfirmationModal";
 import SortDropdown from "@/components/SortDropdown";
 import SearchInput from "@/components/SearchInput";
+import { TodoCardSkeletonGrid } from "@/components/Skeletons";
 
 /* ─────────────────────────────────────────────────────────────── constants & helpers */
 const SORT_OPTIONS = [
@@ -71,7 +72,12 @@ function AuthorAvatar({ name, size = "md" }) {
     "from-purple-500 to-indigo-700 text-white",
   ];
   const colour = palette[(name || "").charCodeAt(0) % palette.length];
-  const sz = size === "lg" ? "w-12 h-12 text-base" : size === "sm" ? "w-6 h-6 text-[10px]" : "w-8 h-8 text-xs";
+  const sz =
+    size === "lg"
+      ? "w-12 h-12 text-base"
+      : size === "sm"
+        ? "w-6 h-6 text-[10px]"
+        : "w-8 h-8 text-xs";
   return (
     <div
       className={`${sz} rounded-xl bg-linear-to-br ${colour} flex items-center justify-center font-bold shrink-0 shadow-xs ring-1 ring-white/10`}
@@ -83,9 +89,24 @@ function AuthorAvatar({ name, size = "md" }) {
 
 function Spinner({ className = "" }) {
   return (
-    <svg className={`animate-spin ${className}`} viewBox="0 0 24 24" fill="none">
-      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+    <svg
+      className={`animate-spin ${className}`}
+      viewBox="0 0 24 24"
+      fill="none"
+    >
+      <circle
+        className="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        strokeWidth="4"
+      />
+      <path
+        className="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8v8H4z"
+      />
     </svg>
   );
 }
@@ -161,7 +182,11 @@ function TodoForm({
           >
             {users.length > 0 ? (
               users.map((u) => (
-                <option key={u.id} value={u.id} className="bg-[#0f172a] text-white">
+                <option
+                  key={u.id}
+                  value={u.id}
+                  className="bg-[#0f172a] text-white"
+                >
                   #{u.id} — {u.name} (@{u.username})
                 </option>
               ))
@@ -176,7 +201,10 @@ function TodoForm({
         {/* Completion Toggle */}
         <div className="p-4 rounded-xl bg-[#080e1a] border border-[#1e293b] flex items-center justify-between">
           <div>
-            <label htmlFor="todo-form-completed" className="text-xs font-bold text-white block cursor-pointer">
+            <label
+              htmlFor="todo-form-completed"
+              className="text-xs font-bold text-white block cursor-pointer"
+            >
               Execution Status
             </label>
             <span className="text-[11px] text-slate-400">
@@ -209,7 +237,14 @@ function TodoForm({
 }
 
 /* ───────────────────────────────────────────── Slide-Over Inspector Drawer */
-function TodoInspectorDrawer({ todo, author, onClose, onEdit, onDelete, onToggle }) {
+function TodoInspectorDrawer({
+  todo,
+  author,
+  onClose,
+  onEdit,
+  onDelete,
+  onToggle,
+}) {
   const [copied, setCopied] = useState(false);
 
   if (!todo) return null;
@@ -261,15 +296,27 @@ function TodoInspectorDrawer({ todo, author, onClose, onEdit, onDelete, onToggle
               onClick={onClose}
               className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-[#1e293b] transition-colors cursor-pointer shrink-0"
             >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>
 
           {/* Quick Toggle Banner */}
           <div className="p-3 rounded-xl bg-[#0f172a] border border-[#1e293b] flex items-center justify-between">
-            <span className="text-xs text-slate-300 font-medium">Quick Status Action:</span>
+            <span className="text-xs text-slate-300 font-medium">
+              Quick Status Action:
+            </span>
             <button
               type="button"
               onClick={() => onToggle(todo)}
@@ -288,7 +335,9 @@ function TodoInspectorDrawer({ todo, author, onClose, onEdit, onDelete, onToggle
         <div className="p-6 overflow-y-auto flex-1 space-y-6">
           {/* Task Info Dossier */}
           <div className="p-5 rounded-2xl bg-[#080e1a] border border-[#1e293b] space-y-3">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Task Scope</span>
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+              Task Scope
+            </span>
             <p className="text-sm font-semibold text-white leading-relaxed">
               {todo.title}
             </p>
@@ -297,12 +346,16 @@ function TodoInspectorDrawer({ todo, author, onClose, onEdit, onDelete, onToggle
           {/* Assignee Box */}
           {author && (
             <div className="p-4 rounded-2xl bg-[#080e1a] border border-[#1e293b] space-y-2.5">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Assigned Contributor</span>
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                Assigned Contributor
+              </span>
               <div className="flex items-center gap-3">
                 <AuthorAvatar name={author.name} size="md" />
                 <div className="min-w-0">
                   <p className="text-sm font-bold text-white">{author.name}</p>
-                  <p className="text-xs text-slate-400 font-mono">@{author.username} • {author.email}</p>
+                  <p className="text-xs text-slate-400 font-mono">
+                    @{author.username} • {author.email}
+                  </p>
                 </div>
               </div>
               {author.company?.name && (
@@ -316,16 +369,22 @@ function TodoInspectorDrawer({ todo, author, onClose, onEdit, onDelete, onToggle
 
           {/* Sandbox Context */}
           <div className="p-4 rounded-2xl bg-[#080e1a] border border-[#1e293b] space-y-1.5">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Isolation Context</span>
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+              Isolation Context
+            </span>
             <p className="text-xs text-slate-400 leading-relaxed">
-              Task ID <span className="font-mono text-amber-300">{todo.id}</span> is isolated to your current browser session sandbox.
+              Task ID{" "}
+              <span className="font-mono text-amber-300">{todo.id}</span> is
+              isolated to your current browser session sandbox.
             </p>
           </div>
 
           {/* JSON Payload */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Live REST Payload</span>
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                Live REST Payload
+              </span>
               <button
                 type="button"
                 onClick={handleCopyJson}
@@ -464,7 +523,17 @@ const Todos = () => {
     return () => {
       cancelled = true;
     };
-  }, [queryKey, toast, page, search, statusFilter, authorFilter, sortField, sortOrder, refreshKey]);
+  }, [
+    queryKey,
+    toast,
+    page,
+    search,
+    statusFilter,
+    authorFilter,
+    sortField,
+    sortOrder,
+    refreshKey,
+  ]);
 
   // ── Search handler ───────────────────────
   const handleSearch = useCallback((term) => {
@@ -515,7 +584,7 @@ const Todos = () => {
         item.completed
           ? "Task marked as pending."
           : "Task marked as completed! ✓",
-        item.completed ? "warn" : "success"
+        item.completed ? "warn" : "success",
       );
       if (inspectingTodo?.id === item.id) {
         setInspectingTodo((prev) => ({ ...prev, completed: !item.completed }));
@@ -566,37 +635,63 @@ const Todos = () => {
     return todos;
   }, [todos, filterMode]);
 
-  const mutatedCount = useMemo(() => todos.filter((t) => t._sandbox).length, [todos]);
-  const completedInView = useMemo(() => todos.filter((t) => t.completed).length, [todos]);
+  const mutatedCount = useMemo(
+    () => todos.filter((t) => t._sandbox).length,
+    [todos],
+  );
+  const completedInView = useMemo(
+    () => todos.filter((t) => t.completed).length,
+    [todos],
+  );
 
   return (
     <div className="space-y-6">
       {/* ── Executive Metric Strip ── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="p-4 sm:p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-1 shadow-xs">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Total Tasks</div>
-          <div className="text-xl sm:text-2xl font-extrabold text-white font-mono">{pagination.total ?? 0}</div>
-          <div className="text-[11px] text-slate-400">Across all session views</div>
+          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            Total Tasks
+          </div>
+          <div className="text-xl sm:text-2xl font-extrabold text-white font-mono">
+            {pagination.total ?? 0}
+          </div>
+          <div className="text-[11px] text-slate-400">
+            Across all session views
+          </div>
         </div>
         <div className="p-4 sm:p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-1 shadow-xs">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Completed Rate</div>
+          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            Completed Rate
+          </div>
           <div className="text-xl sm:text-2xl font-extrabold text-emerald-400 font-mono">
-            {pagination.total ? `${Math.round((completedInView / todos.length) * 100 || 0)}%` : "0%"}
+            {pagination.total
+              ? `${Math.round((completedInView / todos.length) * 100 || 0)}%`
+              : "0%"}
           </div>
           <div className="text-[11px] text-slate-400">In current page set</div>
         </div>
         <div className="p-4 sm:p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-1 shadow-xs">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Session Overlays</div>
-          <div className="text-xl sm:text-2xl font-extrabold text-amber-400 font-mono">{mutatedCount} Active</div>
-          <div className="text-[11px] text-slate-400">Local browser mutations</div>
+          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            Session Overlays
+          </div>
+          <div className="text-xl sm:text-2xl font-extrabold text-amber-400 font-mono">
+            {mutatedCount} Active
+          </div>
+          <div className="text-[11px] text-slate-400">
+            Local browser mutations
+          </div>
         </div>
         <div className="p-4 sm:p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-1 shadow-xs">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Gateway Status</div>
+          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            Gateway Status
+          </div>
           <div className="text-xl sm:text-2xl font-extrabold text-emerald-400 font-mono flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
             100% Synced
           </div>
-          <div className="text-[11px] text-slate-400">REST v1 schema connected</div>
+          <div className="text-[11px] text-slate-400">
+            REST v1 schema connected
+          </div>
         </div>
       </div>
 
@@ -621,7 +716,7 @@ const Todos = () => {
                 setPage(1);
                 setStatusFilter(e.target.value);
               }}
-              className="bg-[#080e1a] border border-[#1e293b] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500 cursor-pointer min-w-[130px]"
+              className="bg-[#080e1a] border border-[#1e293b] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500 cursor-pointer min-w-32.5"
             >
               <option value="">All Statuses</option>
               <option value="false">⏳ Pending</option>
@@ -636,7 +731,7 @@ const Todos = () => {
                 setPage(1);
                 setAuthorFilter(e.target.value);
               }}
-              className="bg-[#080e1a] border border-[#1e293b] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500 cursor-pointer min-w-[140px]"
+              className="bg-[#080e1a] border border-[#1e293b] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500 cursor-pointer min-w-35"
             >
               <option value="">All Assignees</option>
               {users.map((u) => (
@@ -668,8 +763,18 @@ const Todos = () => {
                 }`}
                 title="Data Table View"
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M4 6h16M4 10h16M4 14h16M4 18h16"
+                  />
                 </svg>
                 <span className="hidden sm:inline">Table</span>
               </button>
@@ -683,8 +788,18 @@ const Todos = () => {
                 }`}
                 title="Card Grid View"
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+                  />
                 </svg>
                 <span className="hidden sm:inline">Cards</span>
               </button>
@@ -696,8 +811,18 @@ const Todos = () => {
               onClick={() => setModal({ type: "create" })}
               className="flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-sm font-bold transition-all shadow-md shadow-amber-500/10 shrink-0 cursor-pointer"
             >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 4v16m8-8H4"
+                />
               </svg>
               <span>New Task</span>
             </button>
@@ -706,7 +831,9 @@ const Todos = () => {
 
         {/* Filter Chips Bar */}
         <div className="flex items-center gap-2 pt-2 border-t border-[#1e293b] text-xs">
-          <span className="text-slate-500 font-semibold uppercase text-[10px] tracking-wider mr-1">Filter:</span>
+          <span className="text-slate-500 font-semibold uppercase text-[10px] tracking-wider mr-1">
+            Filter:
+          </span>
           {[
             { key: "all", label: `All Tasks (${pagination.total ?? 0})` },
             { key: "mutated", label: `Sandbox Overlays (${mutatedCount})` },
@@ -732,6 +859,7 @@ const Todos = () => {
       {viewMode === "table" ? (
         <DataTable
           loading={loading}
+          skeletonRows={pagination.limit ?? 10}
           data={displayedTodos}
           empty="No task assignment records matching the query."
           columns={[
@@ -746,7 +874,9 @@ const Todos = () => {
                     type="checkbox"
                     checked={Boolean(todo.completed)}
                     onChange={() => handleToggle(todo)}
-                    title={todo.completed ? "Mark as pending" : "Mark as completed"}
+                    title={
+                      todo.completed ? "Mark as pending" : "Mark as completed"
+                    }
                     className="w-4 h-4 accent-amber-500 rounded cursor-pointer shrink-0"
                   />
                   <button
@@ -759,12 +889,16 @@ const Todos = () => {
                       <div className="flex items-center gap-2">
                         <p
                           className={`text-sm font-bold truncate leading-snug group-hover:text-amber-400 transition-colors ${
-                            todo.completed ? "line-through text-slate-400" : "text-white"
+                            todo.completed
+                              ? "line-through text-slate-400"
+                              : "text-white"
                           }`}
                         >
                           {todo.title}
                         </p>
-                        {todo._sandbox && <SandboxBadge value={todo._sandbox} />}
+                        {todo._sandbox && (
+                          <SandboxBadge value={todo._sandbox} />
+                        )}
                       </div>
                       <p className="text-[10px] text-slate-500 font-mono mt-0.5">
                         #TSK-{String(todo.id).padStart(4, "0")}
@@ -788,13 +922,18 @@ const Todos = () => {
                 const author = userMap.get(Number(todo.user_id));
                 return (
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <AuthorAvatar name={author?.name || `User ${todo.user_id}`} size="sm" />
+                    <AuthorAvatar
+                      name={author?.name || `User ${todo.user_id}`}
+                      size="sm"
+                    />
                     <div className="min-w-0">
                       <span className="text-sm text-slate-200 font-medium truncate block">
                         {author?.name || `Assignee #${todo.user_id}`}
                       </span>
                       <span className="text-[11px] text-slate-400 font-mono truncate block">
-                        {author?.username ? `@${author.username}` : `ID: ${todo.user_id}`}
+                        {author?.username
+                          ? `@${author.username}`
+                          : `ID: ${todo.user_id}`}
                       </span>
                     </div>
                   </div>
@@ -814,9 +953,23 @@ const Todos = () => {
                     onClick={() => handleOpenDrawer(todo)}
                     className="p-1.5 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors cursor-pointer"
                   >
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      />
                     </svg>
                   </button>
                   <button
@@ -825,8 +978,18 @@ const Todos = () => {
                     onClick={() => setModal({ type: "edit", todo })}
                     className="p-1.5 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors cursor-pointer"
                   >
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                      />
                     </svg>
                   </button>
                   <button
@@ -835,8 +998,18 @@ const Todos = () => {
                     onClick={() => setModal({ type: "delete", todo })}
                     className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
                   >
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      />
                     </svg>
                   </button>
                 </div>
@@ -844,6 +1017,12 @@ const Todos = () => {
             },
           ]}
         />
+      ) : loading ? (
+        <TodoCardSkeletonGrid count={pagination.limit ?? 10} />
+      ) : displayedTodos.length === 0 ? (
+        <div className="p-12 rounded-2xl bg-[#0f172a] border border-[#1e293b] text-center text-slate-400 text-sm">
+          No task assignment records matching the query.
+        </div>
       ) : (
         /* Card Grid View */
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -868,7 +1047,10 @@ const Todos = () => {
                         onChange={() => handleToggle(todo)}
                         className="w-4 h-4 accent-amber-500 rounded cursor-pointer shrink-0"
                       />
-                      <AuthorAvatar name={author?.name || `User ${todo.user_id}`} size="sm" />
+                      <AuthorAvatar
+                        name={author?.name || `User ${todo.user_id}`}
+                        size="sm"
+                      />
                       <div className="min-w-0">
                         <p className="text-xs font-bold text-white truncate group-hover:text-amber-400 transition-colors">
                           {author?.name || `Assignee #${todo.user_id}`}
@@ -885,7 +1067,9 @@ const Todos = () => {
                   <div className="space-y-2">
                     <h3
                       className={`font-bold text-sm leading-snug ${
-                        todo.completed ? "line-through text-slate-400" : "text-white group-hover:text-amber-400"
+                        todo.completed
+                          ? "line-through text-slate-400"
+                          : "text-white group-hover:text-amber-400"
                       }`}
                     >
                       {todo.title}
@@ -913,8 +1097,18 @@ const Todos = () => {
                       className="p-1.5 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-[#1e293b] transition-colors cursor-pointer"
                       title="Edit"
                     >
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                        />
                       </svg>
                     </button>
                     <button
@@ -923,8 +1117,18 @@ const Todos = () => {
                       className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-[#1e293b] transition-colors cursor-pointer"
                       title="Delete"
                     >
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
                       </svg>
                     </button>
                   </div>
@@ -965,7 +1169,11 @@ const Todos = () => {
 
       {/* ── Create / Edit Modals ── */}
       {modal?.type === "create" && (
-        <Modal title="Create New Task Assignment" onClose={() => setModal(null)} size="lg">
+        <Modal
+          title="Create New Task Assignment"
+          onClose={() => setModal(null)}
+          size="lg"
+        >
           <TodoForm
             users={users}
             onSubmit={handleCreate}
@@ -976,7 +1184,11 @@ const Todos = () => {
       )}
 
       {modal?.type === "edit" && (
-        <Modal title={`Edit Task — #${modal.todo.id}`} onClose={() => setModal(null)} size="lg">
+        <Modal
+          title={`Edit Task — #${modal.todo.id}`}
+          onClose={() => setModal(null)}
+          size="lg"
+        >
           <TodoForm
             initial={{
               title: modal.todo.title || "",
@@ -1009,9 +1221,12 @@ const Todos = () => {
               ⏳
             </div>
             <div className="min-w-0">
-              <p className="font-bold text-white text-sm line-clamp-1">{modal.todo.title}</p>
+              <p className="font-bold text-white text-sm line-clamp-1">
+                {modal.todo.title}
+              </p>
               <p className="text-xs text-slate-400 font-mono">
-                #TSK-{String(modal.todo.id).padStart(4, "0")} • Owner #{modal.todo.user_id}
+                #TSK-{String(modal.todo.id).padStart(4, "0")} • Owner #
+                {modal.todo.user_id}
               </p>
             </div>
           </div>

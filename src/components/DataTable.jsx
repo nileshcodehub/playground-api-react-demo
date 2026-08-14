@@ -1,33 +1,17 @@
+import { TableSkeletonRows } from "@/components/Skeletons";
+
 /**
  * DataTable — generic, reusable enterprise data table.
  *
  * Props:
- *   columns  {Array}   – Column definitions (see below)
- *   data     {Array}   – Row data array
- *   keyField {string}  – Field name used as React key (default "id")
- *   loading  {boolean} – Show skeleton/spinner when true
- *   empty    {string}  – Empty-state message (default "No records found.")
- *   className {string} – Extra classes for the outer wrapper
- *
- * Column definition shape:
- *   {
- *     key:       string,            // unique column key
- *     header:    string,            // header label
- *     width:     string,            // CSS flex/grid width token e.g. "2fr", "1.5fr", "auto"
- *     align:     "left"|"right"|"center",  // default "left"
- *     render:    (row) => ReactNode // custom cell renderer (optional)
- *     className: string             // extra classes for the <td> cell (optional)
- *   }
+ *   columns      {Array}   – Column definitions (see below)
+ *   data         {Array}   – Row data array
+ *   keyField     {string}  – Field name used as React key (default "id")
+ *   loading      {boolean} – Show skeleton when true
+ *   skeletonRows {number}  – Exact count of skeleton rows to render (default 10)
+ *   empty        {string}  – Empty-state message (default "No records found.")
+ *   className    {string}  – Extra classes for the outer wrapper
  */
-
-function Spinner({ className = "" }) {
-  return (
-    <svg className={`animate-spin ${className}`} viewBox="0 0 24 24" fill="none">
-      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
-    </svg>
-  );
-}
 
 const ALIGN_CLASSES = {
   left:   "text-left",
@@ -37,7 +21,6 @@ const ALIGN_CLASSES = {
 
 /**
  * Build a CSS grid-template-columns string from the columns array.
- * e.g. ["2fr", "1.5fr", "2fr", "auto"] → "2fr 1.5fr 2fr auto"
  */
 const buildGridCols = (columns) =>
   columns.map((c) => c.width ?? "1fr").join(" ");
@@ -47,6 +30,7 @@ const DataTable = ({
   data = [],
   keyField = "id",
   loading = false,
+  skeletonRows = 10,
   empty = "No records found.",
   className = "",
 }) => {
@@ -77,10 +61,7 @@ const DataTable = ({
 
       {/* ── Body ── */}
       {loading ? (
-        <div className="flex items-center justify-center py-20 gap-3 text-slate-400">
-          <Spinner className="w-6 h-6 text-amber-400" />
-          <span className="text-sm font-medium">Synchronizing records…</span>
-        </div>
+        <TableSkeletonRows columns={columns} rows={skeletonRows} />
       ) : data.length === 0 ? (
         <div className="py-20 text-center text-slate-400 text-sm">{empty}</div>
       ) : (

@@ -6,6 +6,7 @@ import Modal from "@/components/Modal";
 import ConfirmationModal from "@/components/ConfirmationModal";
 import SortDropdown from "@/components/SortDropdown";
 import SearchInput from "@/components/SearchInput";
+import { UserCardSkeletonGrid } from "@/components/Skeletons";
 
 /* ─────────────────────────────────────────────────────────────── constants & helpers */
 const SORT_OPTIONS = [
@@ -690,6 +691,7 @@ const Users = () => {
       {viewMode === "table" ? (
         <DataTable
           loading={loading}
+          skeletonRows={pagination.limit ?? 10}
           data={displayedUsers}
           empty="No profile records matching the query."
           columns={[
@@ -796,6 +798,12 @@ const Users = () => {
             },
           ]}
         />
+      ) : loading ? (
+        <UserCardSkeletonGrid count={pagination.limit ?? 10} />
+      ) : displayedUsers.length === 0 ? (
+        <div className="p-12 rounded-2xl bg-[#0f172a] border border-[#1e293b] text-center text-slate-400 text-sm">
+          No profile records matching the query.
+        </div>
       ) : (
         /* Card Grid View */
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
