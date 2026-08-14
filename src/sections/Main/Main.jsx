@@ -19,11 +19,11 @@ const Main = () => {
     },
     {
       title: 'Articles & Posts',
-      path: '/users',
+      path: '/posts',
       count: '100 Records',
       desc: 'Relational editorial items linked with user author IDs, tags, and body content payloads.',
-      badge: 'Relational',
-      primary: false,
+      badge: 'Active Module',
+      primary: true,
     },
     {
       title: 'Comments Moderation',

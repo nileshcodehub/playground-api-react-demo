@@ -35,17 +35,27 @@ const SearchInput = ({
   const debouncedTerm = useDebounce(searchTerm, delay);
   const inputRef = useRef(null);
   const isInitialMount = useRef(true);
+  const prevDebouncedTerm = useRef(debouncedTerm);
 
-  // Trigger callback when debounced term updates
+  const callbackRef = useRef(onSearch || onChange);
+  useEffect(() => {
+    callbackRef.current = onSearch || onChange;
+  });
+
+  // Trigger callback only when debounced term actually changes
   useEffect(() => {
     if (isInitialMount.current) {
       isInitialMount.current = false;
       return;
     }
 
-    const callback = onSearch || onChange;
-    callback?.(debouncedTerm);
-  }, [debouncedTerm, onSearch, onChange]);
+    if (prevDebouncedTerm.current === debouncedTerm) {
+      return;
+    }
+
+    prevDebouncedTerm.current = debouncedTerm;
+    callbackRef.current?.(debouncedTerm);
+  }, [debouncedTerm]);
 
   const handleInputChange = (e) => {
     setSearchTerm(e.target.value);
@@ -53,15 +63,15 @@ const SearchInput = ({
 
   const handleClear = () => {
     setSearchTerm("");
-    const callback = onSearch || onChange;
-    callback?.("");
+    prevDebouncedTerm.current = "";
+    callbackRef.current?.("");
     inputRef.current?.focus();
   };
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      const callback = onSearch || onChange;
-      callback?.(searchTerm);
+      prevDebouncedTerm.current = searchTerm;
+      callbackRef.current?.(searchTerm);
     } else if (e.key === "Escape" && searchTerm) {
       handleClear();
     }

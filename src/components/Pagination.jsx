@@ -5,42 +5,54 @@ import { usePagination, DOTS } from "@/hooks/usePagination";
  */
 const Pagination = ({
   onPageChange,
-  totalCount,
-  currentPage,
-  pageSize,
+  totalCount = 0,
+  currentPage = 1,
+  pageSize = 10,
   siblingCount = 1,
   prevLabel = "",
   nextLabel = "",
   className = "",
 }) => {
+  const safeCurrentPage = Number(currentPage) || 1;
+  const safePageSize = Number(pageSize) || 10;
+  const safeTotalCount = Number(totalCount) || 0;
+  const totalPages = Math.max(1, Math.ceil(safeTotalCount / safePageSize));
+
   const paginationRange = usePagination({
-    currentPage,
-    totalCount,
+    currentPage: safeCurrentPage,
+    totalCount: safeTotalCount,
     siblingCount,
-    pageSize,
+    pageSize: safePageSize,
   });
 
-  if (currentPage === 0 || !paginationRange || paginationRange.length < 2) {
+  if (safeTotalCount === 0) {
     return null;
   }
 
-  const onNext = () => onPageChange(currentPage + 1);
-  const onPrevious = () => onPageChange(currentPage - 1);
+  const onNext = () => {
+    if (safeCurrentPage < totalPages) {
+      onPageChange(safeCurrentPage + 1);
+    }
+  };
 
-  const lastPage = paginationRange[paginationRange.length - 1];
+  const onPrevious = () => {
+    if (safeCurrentPage > 1) {
+      onPageChange(safeCurrentPage - 1);
+    }
+  };
 
   // Derived range label
-  const from = Math.min((currentPage - 1) * pageSize + 1, totalCount);
-  const to = Math.min(currentPage * pageSize, totalCount);
+  const from = Math.min((safeCurrentPage - 1) * safePageSize + 1, safeTotalCount);
+  const to = Math.min(safeCurrentPage * safePageSize, safeTotalCount);
 
   // Style constants
   const btnBase =
-    "h-8 min-w-[2rem] px-2 rounded-xl text-sm font-semibold transition-colors";
+    "h-8 min-w-[2rem] px-2 rounded-xl text-sm font-semibold transition-colors cursor-pointer";
   const btnActive = "bg-amber-500 text-slate-950 font-bold shadow-xs shadow-amber-500/20";
   const btnIdle =
     "bg-[#0f172a] text-slate-300 border border-[#1e293b] hover:border-amber-500/50 hover:text-amber-400";
   const btnNav =
-    "flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm text-slate-300 bg-[#0f172a] border border-[#1e293b] hover:border-amber-500/50 hover:text-amber-400 disabled:opacity-30 disabled:cursor-not-allowed transition-colors font-medium";
+    "flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm text-slate-300 bg-[#0f172a] border border-[#1e293b] hover:border-amber-500/50 hover:text-amber-400 disabled:opacity-30 disabled:cursor-not-allowed transition-colors font-medium cursor-pointer";
 
   return (
     <div className={`flex items-center justify-between flex-wrap gap-3 ${className}`}>
@@ -50,15 +62,16 @@ const Pagination = ({
         <span className="text-slate-200 font-semibold">
           {from}–{to}
         </span>{" "}
-        of <span className="text-slate-200 font-semibold">{totalCount}</span> records
+        of <span className="text-slate-200 font-semibold">{safeTotalCount}</span> records
       </span>
 
       {/* Controls */}
       <div className="flex items-center gap-1.5">
         {/* Previous */}
         <button
+          type="button"
           id="page-prev"
-          disabled={currentPage === 1}
+          disabled={safeCurrentPage <= 1}
           onClick={onPrevious}
           className={btnNav}
           aria-label="Previous page"
@@ -67,7 +80,7 @@ const Pagination = ({
         </button>
 
         {/* Page numbers + DOTS */}
-        {paginationRange.map((pageNumber, index) => {
+        {paginationRange?.map((pageNumber, index) => {
           if (pageNumber === DOTS) {
             return (
               <span
@@ -79,12 +92,13 @@ const Pagination = ({
             );
           }
 
-          const isActive = pageNumber === currentPage;
+          const isActive = pageNumber === safeCurrentPage;
           return (
             <button
+              type="button"
               key={pageNumber}
               id={`page-${pageNumber}`}
-              onClick={() => onPageChange(pageNumber)}
+              onClick={() => onPageChange(Number(pageNumber))}
               aria-current={isActive ? "page" : undefined}
               className={`${btnBase} ${isActive ? btnActive : btnIdle}`}
             >
@@ -95,8 +109,9 @@ const Pagination = ({
 
         {/* Next */}
         <button
+          type="button"
           id="page-next"
-          disabled={currentPage === lastPage}
+          disabled={safeCurrentPage >= totalPages}
           onClick={onNext}
           className={btnNav}
           aria-label="Next page"

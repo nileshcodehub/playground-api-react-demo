@@ -536,6 +536,14 @@ const Users = () => {
     }
   };
 
+  const handleSearch = useCallback((term) => {
+    setSearch((prev) => {
+      if (prev === term) return prev;
+      setPage(1);
+      return term;
+    });
+  }, []);
+
   const handleSortChange = (field, order) => {
     setPage(1);
     setSortField(field);
@@ -594,10 +602,7 @@ const Users = () => {
               className="flex-1"
               placeholder="Search by name, handle, or email…"
               value={search}
-              onSearch={(term) => {
-                setPage(1);
-                setSearch(term);
-              }}
+              onSearch={handleSearch}
             />
             <SortDropdown
               options={SORT_OPTIONS}
