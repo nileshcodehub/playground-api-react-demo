@@ -35,11 +35,11 @@ const Main = () => {
     },
     {
       title: 'Task & Todo Engine',
-      path: '/users',
+      path: '/todos',
       count: '125 Records',
       desc: 'Task assignment records with binary completion flags, user ownership, and category tags.',
-      badge: 'Stateful',
-      primary: false,
+      badge: 'Active Module',
+      primary: true,
     },
   ];
 
