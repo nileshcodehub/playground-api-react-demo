@@ -20,12 +20,50 @@ const AVATAR_PRESETS = [
 ];
 
 const THUMBNAIL_PRESETS = [
-  { seed: "react-19-guide", text: "React 19 Deep Dive", width: 1200, height: 630 },
-  { seed: "graphql-mastery", text: "GraphQL API Sandbox", width: 1200, height: 630 },
-  { seed: "cloud-architecture", text: "Cloud Microservices", width: 800, height: 450 },
-  { seed: "database-indexing", text: "PostgreSQL & Prisma Indexing", width: 600, height: 400 },
-  { seed: "typescript-enterprise", text: "Enterprise TypeScript 5.8", width: 600, height: 400 },
-  { seed: "sandbox-isolation", text: "Session State Isolation", width: 600, height: 400 },
+  {
+    seed: "react-19-guide",
+    text: "React 19 Deep Dive",
+    description: "Server Actions, Optimistic UI & Streaming Masterclass",
+    width: 1200,
+    height: 630,
+  },
+  {
+    seed: "graphql-mastery",
+    text: "GraphQL API Sandbox",
+    description:
+      "Query and Mutation Schema Gateway with Realtime Subscriptions",
+    width: 1200,
+    height: 630,
+  },
+  {
+    seed: "cloud-architecture",
+    text: "Cloud Microservices",
+    description:
+      "Distributed Systems, Event Streaming & Kubernetes Deployments",
+    width: 800,
+    height: 450,
+  },
+  {
+    seed: "database-indexing",
+    text: "PostgreSQL & Prisma Indexing",
+    description: "High-throughput Query Optimization and B-Tree Tuning",
+    width: 600,
+    height: 400,
+  },
+  {
+    seed: "typescript-enterprise",
+    text: "Enterprise TypeScript 5.8",
+    description: "Zero-latency Type Inference and Strict Mode Patterns",
+    width: 600,
+    height: 400,
+  },
+  {
+    seed: "sandbox-isolation",
+    text: "Session State Isolation",
+    description: "Stateless HMAC Identity Tokens with Zero Cross-talk",
+    width: 600,
+    height: 400,
+  },
 ];
 
 const SIZE_PRESETS = [32, 64, 96, 128, 256, 512];
@@ -62,26 +100,92 @@ const Media = () => {
   const [activeTab, setActiveTab] = useState("avatars"); // "avatars" | "thumbnails" | "gallery" | "specs"
   const [toast, setToast] = useState(null);
 
-  // Avatar state
+  // Avatar state: Draft vs Committed
+  const [avatarDraftSeed, setAvatarDraftSeed] = useState("nilesh_developer");
+  const [avatarDraftSize, setAvatarDraftSize] = useState(160);
+  const [avatarDraftRounded, setAvatarDraftRounded] = useState(true);
+
   const [avatarSeed, setAvatarSeed] = useState("nilesh_developer");
   const [avatarSize, setAvatarSize] = useState(160);
   const [avatarRounded, setAvatarRounded] = useState(true);
   const [avatarCodeTab, setAvatarCodeTab] = useState("url"); // "url" | "html" | "jsx" | "markdown" | "svg"
   const [avatarRawSvg, setAvatarRawSvg] = useState("");
 
-  // Thumbnail state
+  const isAvatarDirty =
+    avatarDraftSeed !== avatarSeed ||
+    avatarDraftSize !== avatarSize ||
+    avatarDraftRounded !== avatarRounded;
+
+  // Thumbnail state: Draft vs Committed
+  const [thumbDraftSeed, setThumbDraftSeed] = useState("react-19-mastery");
+  const [thumbDraftText, setThumbDraftText] = useState("React 19 Server Components");
+  const [thumbDraftDescription, setThumbDraftDescription] = useState(
+    "Comprehensive guide to fullstack architecture & state machines",
+  );
+  const [thumbDraftWidth, setThumbDraftWidth] = useState(1200);
+  const [thumbDraftHeight, setThumbDraftHeight] = useState(630);
+
   const [thumbSeed, setThumbSeed] = useState("react-19-mastery");
   const [thumbText, setThumbText] = useState("React 19 Server Components");
+  const [thumbDescription, setThumbDescription] = useState(
+    "Comprehensive guide to fullstack architecture & state machines",
+  );
   const [thumbWidth, setThumbWidth] = useState(1200);
   const [thumbHeight, setThumbHeight] = useState(630);
   const [thumbCodeTab, setThumbCodeTab] = useState("url");
   const [thumbRawSvg, setThumbRawSvg] = useState("");
 
+  const isThumbDirty =
+    thumbDraftSeed !== thumbSeed ||
+    thumbDraftText !== thumbText ||
+    thumbDraftDescription !== thumbDescription ||
+    thumbDraftWidth !== thumbWidth ||
+    thumbDraftHeight !== thumbHeight;
+
   const showToast = (message, type = "success") => {
     setToast({ message, type });
   };
 
-  // Compute live URLs
+  // Generate / Apply Actions
+  const handleGenerateAvatar = (customSeed, customSize, customRounded) => {
+    const nextSeed = (customSeed !== undefined ? customSeed : avatarDraftSeed).trim() || "user";
+    const nextSize = customSize !== undefined ? customSize : avatarDraftSize;
+    const nextRounded = customRounded !== undefined ? customRounded : avatarDraftRounded;
+
+    setAvatarDraftSeed(nextSeed);
+    setAvatarDraftSize(nextSize);
+    setAvatarDraftRounded(nextRounded);
+
+    setAvatarSeed(nextSeed);
+    setAvatarSize(nextSize);
+    setAvatarRounded(nextRounded);
+
+    showToast("Avatar generated!");
+  };
+
+  const handleGenerateThumbnail = (customSeed, customText, customDesc, customWidth, customHeight) => {
+    const nextSeed = (customSeed !== undefined ? customSeed : thumbDraftSeed).trim() || "post";
+    const nextText = customText !== undefined ? customText : thumbDraftText;
+    const nextDesc = customDesc !== undefined ? customDesc : thumbDraftDescription;
+    const nextWidth = customWidth !== undefined ? customWidth : thumbDraftWidth;
+    const nextHeight = customHeight !== undefined ? customHeight : thumbDraftHeight;
+
+    setThumbDraftSeed(nextSeed);
+    setThumbDraftText(nextText);
+    setThumbDraftDescription(nextDesc);
+    setThumbDraftWidth(nextWidth);
+    setThumbDraftHeight(nextHeight);
+
+    setThumbSeed(nextSeed);
+    setThumbText(nextText);
+    setThumbDescription(nextDesc);
+    setThumbWidth(nextWidth);
+    setThumbHeight(nextHeight);
+
+    showToast("Thumbnail generated!");
+  };
+
+  // Compute live URLs from committed states (rate-limit safe)
   const avatarUrl = useMemo(() => {
     return mediaApi.getAvatarUrl(avatarSeed, {
       size: avatarSize,
@@ -94,8 +198,9 @@ const Media = () => {
       width: thumbWidth,
       height: thumbHeight,
       text: thumbText,
+      description: thumbDescription,
     });
-  }, [thumbSeed, thumbWidth, thumbHeight, thumbText]);
+  }, [thumbSeed, thumbWidth, thumbHeight, thumbText, thumbDescription]);
 
   // Load avatar raw SVG when code tab is active
   useEffect(() => {
@@ -131,6 +236,7 @@ const Media = () => {
           width: thumbWidth,
           height: thumbHeight,
           text: thumbText,
+          description: thumbDescription,
         });
         if (active) setThumbRawSvg(svg);
       } catch {
@@ -142,7 +248,14 @@ const Media = () => {
     return () => {
       active = false;
     };
-  }, [thumbSeed, thumbWidth, thumbHeight, thumbText, thumbCodeTab]);
+  }, [
+    thumbSeed,
+    thumbWidth,
+    thumbHeight,
+    thumbText,
+    thumbDescription,
+    thumbCodeTab,
+  ]);
 
   const copyToClipboard = async (text, label) => {
     try {
@@ -154,9 +267,9 @@ const Media = () => {
   };
 
   const rollRandomAvatarSeed = () => {
-    const pool = AVATAR_PRESETS.filter((s) => s !== avatarSeed);
+    const pool = AVATAR_PRESETS.filter((s) => s !== avatarDraftSeed);
     const chosen = pool[Math.floor(Math.random() * pool.length)];
-    setAvatarSeed(chosen);
+    handleGenerateAvatar(chosen, avatarDraftSize, avatarDraftRounded);
   };
 
   const handleDownloadAvatar = () => {
@@ -186,8 +299,8 @@ const Media = () => {
             </h1>
             <p className="text-sm text-slate-400 leading-relaxed">
               Generate crisp, scalable vector SVG avatars and landscape cover
-              thumbnails with deterministic gradient color hashing, zero external
-              dependencies, and edge cache headers.
+              thumbnails with deterministic gradient color hashing, zero
+              external dependencies, and edge cache headers.
             </p>
           </div>
 
@@ -213,7 +326,9 @@ const Media = () => {
           <div className="text-xl sm:text-2xl font-extrabold text-white font-mono">
             100% SVG
           </div>
-          <div className="text-[11px] text-slate-400">Infinite crisp scaling</div>
+          <div className="text-[11px] text-slate-400">
+            Infinite crisp scaling
+          </div>
         </div>
         <div className="p-4 sm:p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-1 shadow-xs">
           <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
@@ -231,7 +346,9 @@ const Media = () => {
           <div className="text-xl sm:text-2xl font-extrabold text-sky-400 font-mono">
             &lt; 5ms
           </div>
-          <div className="text-[11px] text-slate-400">Pure procedural generation</div>
+          <div className="text-[11px] text-slate-400">
+            Pure procedural generation
+          </div>
         </div>
         <div className="p-4 sm:p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-1 shadow-xs">
           <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
@@ -241,7 +358,9 @@ const Media = () => {
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
             2 Generators
           </div>
-          <div className="text-[11px] text-slate-400">/avatars & /thumbnails</div>
+          <div className="text-[11px] text-slate-400">
+            /avatars & /thumbnails
+          </div>
         </div>
       </div>
 
@@ -305,21 +424,38 @@ const Media = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Controls Form */}
           <div className="lg:col-span-5 space-y-6 p-6 rounded-2xl bg-[#0f172a] border border-[#1e293b] shadow-xl">
-            <div className="border-b border-[#1e293b] pb-4">
-              <h2 className="text-base font-bold text-white flex items-center gap-2">
-                <span>🎨</span>
-                <span>Avatar Parameters</span>
-              </h2>
-              <p className="text-xs text-slate-400 mt-1">
-                Customize seed identifier, pixel dimensions, and shape mask.
-              </p>
+            <div className="border-b border-[#1e293b] pb-4 flex items-center justify-between">
+              <div>
+                <h2 className="text-base font-bold text-white flex items-center gap-2">
+                  <span>🎨</span>
+                  <span>Avatar Parameters</span>
+                </h2>
+                <p className="text-xs text-slate-400 mt-1">
+                  Customize seed identifier, pixel dimensions, and shape mask.
+                </p>
+              </div>
+              <span
+                className={`px-2.5 py-1 rounded-lg text-xs font-mono font-semibold flex items-center gap-1.5 ${
+                  isAvatarDirty
+                    ? "bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse"
+                    : "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                }`}
+              >
+                <span
+                  className={`w-1.5 h-1.5 rounded-full ${
+                    isAvatarDirty ? "bg-amber-400" : "bg-emerald-400"
+                  }`}
+                />
+                {isAvatarDirty ? "Pending" : "Active"}
+              </span>
             </div>
 
             {/* Seed Input */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <label className="text-xs font-semibold text-slate-300">
-                  Seed String / Identifier <span className="text-amber-400">*</span>
+                  Seed String / Identifier{" "}
+                  <span className="text-amber-400">*</span>
                 </label>
                 <button
                   type="button"
@@ -331,13 +467,16 @@ const Media = () => {
               </div>
               <input
                 type="text"
-                value={avatarSeed}
-                onChange={(e) => setAvatarSeed(e.target.value)}
+                value={avatarDraftSeed}
+                onChange={(e) => setAvatarDraftSeed(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleGenerateAvatar();
+                }}
                 placeholder="e.g. bret, alice, user-10"
                 className="w-full bg-[#080e1a] border border-[#1e293b] rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500 font-mono transition-colors"
               />
               <p className="text-[11px] text-slate-500">
-                Determines deterministic gradient hash and rendered initials.
+                Determines deterministic gradient hash and rendered initials. Press Enter to generate.
               </p>
             </div>
 
@@ -351,7 +490,7 @@ const Media = () => {
                   <button
                     key={preset}
                     type="button"
-                    onClick={() => setAvatarSeed(preset)}
+                    onClick={() => handleGenerateAvatar(preset, avatarDraftSize, avatarDraftRounded)}
                     className={`px-2 py-1 rounded-lg text-xs font-mono transition-colors cursor-pointer ${
                       avatarSeed === preset
                         ? "bg-amber-500/20 text-amber-300 border border-amber-500/40"
@@ -367,9 +506,11 @@ const Media = () => {
             {/* Size Slider & Presets */}
             <div className="space-y-2 pt-2 border-t border-[#1e293b]">
               <div className="flex items-center justify-between text-xs">
-                <label className="font-semibold text-slate-300">Dimension Size</label>
+                <label className="font-semibold text-slate-300">
+                  Dimension Size
+                </label>
                 <span className="font-mono text-amber-400 font-bold">
-                  {avatarSize} × {avatarSize} px
+                  {avatarDraftSize} × {avatarDraftSize} px
                 </span>
               </div>
               <input
@@ -377,8 +518,8 @@ const Media = () => {
                 min="32"
                 max="512"
                 step="8"
-                value={avatarSize}
-                onChange={(e) => setAvatarSize(Number(e.target.value))}
+                value={avatarDraftSize}
+                onChange={(e) => setAvatarDraftSize(Number(e.target.value))}
                 className="w-full accent-amber-500 cursor-pointer"
               />
               <div className="flex items-center gap-1.5 pt-1">
@@ -386,9 +527,9 @@ const Media = () => {
                   <button
                     key={sz}
                     type="button"
-                    onClick={() => setAvatarSize(sz)}
+                    onClick={() => handleGenerateAvatar(avatarDraftSeed, sz, avatarDraftRounded)}
                     className={`flex-1 py-1 rounded-lg text-[11px] font-mono transition-colors cursor-pointer ${
-                      avatarSize === sz
+                      avatarDraftSize === sz
                         ? "bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold"
                         : "bg-[#080e1a] text-slate-400 hover:text-white border border-[#1e293b]"
                     }`}
@@ -407,9 +548,9 @@ const Media = () => {
               <div className="grid grid-cols-2 gap-3">
                 <button
                   type="button"
-                  onClick={() => setAvatarRounded(true)}
+                  onClick={() => setAvatarDraftRounded(true)}
                   className={`p-3 rounded-xl border text-xs font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer ${
-                    avatarRounded
+                    avatarDraftRounded
                       ? "bg-amber-500/15 border-amber-500/40 text-amber-300 font-bold shadow-xs"
                       : "bg-[#080e1a] border-[#1e293b] text-slate-400 hover:text-white"
                   }`}
@@ -419,9 +560,9 @@ const Media = () => {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setAvatarRounded(false)}
+                  onClick={() => setAvatarDraftRounded(false)}
                   className={`p-3 rounded-xl border text-xs font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer ${
-                    !avatarRounded
+                    !avatarDraftRounded
                       ? "bg-amber-500/15 border-amber-500/40 text-amber-300 font-bold shadow-xs"
                       : "bg-[#080e1a] border-[#1e293b] text-slate-400 hover:text-white"
                   }`}
@@ -433,29 +574,49 @@ const Media = () => {
             </div>
 
             {/* Actions Bar */}
-            <div className="pt-4 border-t border-[#1e293b] flex items-center gap-3">
+            <div className="pt-4 border-t border-[#1e293b] space-y-3">
+              {/* On-Demand Generate Button */}
               <button
                 type="button"
-                onClick={() => copyToClipboard(avatarUrl, "Direct Avatar URL")}
-                className="flex-1 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition-all shadow-md shadow-amber-500/10 cursor-pointer flex items-center justify-center gap-2"
+                onClick={() => handleGenerateAvatar()}
+                className={`w-full py-3 px-4 rounded-xl text-xs font-bold transition-all shadow-lg cursor-pointer flex items-center justify-center gap-2 ${
+                  isAvatarDirty
+                    ? "bg-linear-to-r from-amber-500 to-amber-400 text-slate-950 shadow-amber-500/20 hover:brightness-110 ring-2 ring-amber-400/50"
+                    : "bg-slate-800 text-slate-200 hover:bg-slate-700 border border-[#1e293b]"
+                }`}
               >
-                <span>🔗 Copy Direct URL</span>
+                <span>⚡</span>
+                <span>
+                  {isAvatarDirty
+                    ? "Generate Avatar (Changes Pending)"
+                    : "Regenerate Avatar"}
+                </span>
               </button>
-              <button
-                type="button"
-                onClick={handleDownloadAvatar}
-                className="px-4 py-2.5 rounded-xl bg-[#080e1a] hover:bg-[#131d33] border border-[#1e293b] text-slate-200 text-xs font-semibold transition-colors cursor-pointer flex items-center gap-1.5"
-                title="Download SVG"
-              >
-                <span>⬇ Download SVG</span>
-              </button>
+
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => copyToClipboard(avatarUrl, "Direct Avatar URL")}
+                  className="flex-1 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition-all shadow-md shadow-amber-500/10 cursor-pointer flex items-center justify-center gap-2"
+                >
+                  <span>🔗 Copy Direct URL</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDownloadAvatar}
+                  className="px-4 py-2.5 rounded-xl bg-[#080e1a] hover:bg-[#131d33] border border-[#1e293b] text-slate-200 text-xs font-semibold transition-colors cursor-pointer flex items-center gap-1.5"
+                  title="Download SVG"
+                >
+                  <span>⬇ Download SVG</span>
+                </button>
+              </div>
             </div>
           </div>
 
           {/* Live Preview & Code Generator */}
           <div className="lg:col-span-7 space-y-6">
             {/* Live Canvas Box */}
-            <div className="p-6 sm:p-8 rounded-2xl bg-[#0f172a] border border-[#1e293b] shadow-xl flex flex-col items-center justify-center min-h-[320px] relative overflow-hidden group">
+            <div className="p-6 sm:p-8 rounded-2xl bg-[#0f172a] border border-[#1e293b] shadow-xl flex flex-col items-center justify-center min-h-80 relative overflow-hidden group">
               {/* Subtle background grid pattern */}
               <div
                 className="absolute inset-0 opacity-10 pointer-events-none"
@@ -486,7 +647,8 @@ const Media = () => {
                     seed: "{avatarSeed}"
                   </div>
                   <div className="text-xs text-slate-400 font-mono">
-                    {avatarSize} × {avatarSize} px · {avatarRounded ? "Circular" : "Squircle"}
+                    {avatarSize} × {avatarSize} px ·{" "}
+                    {avatarRounded ? "Circular" : "Squircle"}
                   </div>
                 </div>
               </div>
@@ -561,14 +723,31 @@ const Media = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Controls Form */}
           <div className="lg:col-span-5 space-y-6 p-6 rounded-2xl bg-[#0f172a] border border-[#1e293b] shadow-xl">
-            <div className="border-b border-[#1e293b] pb-4">
-              <h2 className="text-base font-bold text-white flex items-center gap-2">
-                <span>🖼️</span>
-                <span>Cover Thumbnail Parameters</span>
-              </h2>
-              <p className="text-xs text-slate-400 mt-1">
-                Landscape vector image placeholders with mesh gradients and custom labels.
-              </p>
+            <div className="border-b border-[#1e293b] pb-4 flex items-center justify-between">
+              <div>
+                <h2 className="text-base font-bold text-white flex items-center gap-2">
+                  <span>🖼️</span>
+                  <span>Cover Thumbnail Parameters</span>
+                </h2>
+                <p className="text-xs text-slate-400 mt-1">
+                  Landscape vector image placeholders with mesh gradients and
+                  custom labels.
+                </p>
+              </div>
+              <span
+                className={`px-2.5 py-1 rounded-lg text-xs font-mono font-semibold flex items-center gap-1.5 ${
+                  isThumbDirty
+                    ? "bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse"
+                    : "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                }`}
+              >
+                <span
+                  className={`w-1.5 h-1.5 rounded-full ${
+                    isThumbDirty ? "bg-amber-400" : "bg-emerald-400"
+                  }`}
+                />
+                {isThumbDirty ? "Pending" : "Active"}
+              </span>
             </div>
 
             {/* Seed Input */}
@@ -578,8 +757,11 @@ const Media = () => {
               </label>
               <input
                 type="text"
-                value={thumbSeed}
-                onChange={(e) => setThumbSeed(e.target.value)}
+                value={thumbDraftSeed}
+                onChange={(e) => setThumbDraftSeed(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleGenerateThumbnail();
+                }}
                 placeholder="e.g. post-1, react-course, rust-engine"
                 className="w-full bg-[#080e1a] border border-[#1e293b] rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500 font-mono transition-colors"
               />
@@ -591,17 +773,43 @@ const Media = () => {
             {/* Custom Headline Label */}
             <div className="space-y-2">
               <label className="text-xs font-semibold text-slate-300">
-                Custom Headline Label (Optional)
+                Custom Headline Title (Optional)
               </label>
               <input
                 type="text"
-                value={thumbText}
-                onChange={(e) => setThumbText(e.target.value)}
+                value={thumbDraftText}
+                onChange={(e) => setThumbDraftText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleGenerateThumbnail();
+                }}
                 placeholder="e.g. Building Modern Fullstack Apps"
                 className="w-full bg-[#080e1a] border border-[#1e293b] rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors"
               />
               <p className="text-[11px] text-slate-500">
-                Leave blank to auto-format from the seed string.
+                Multilined automatically with smart word-wrapping.
+              </p>
+            </div>
+
+            {/* Subtitle / Description Text */}
+            <div className="space-y-2">
+              <label className="text-xs font-semibold text-slate-300">
+                Subtitle / Description Text (Optional)
+              </label>
+              <textarea
+                rows={2}
+                value={thumbDraftDescription}
+                onChange={(e) => setThumbDraftDescription(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    handleGenerateThumbnail();
+                  }
+                }}
+                placeholder="e.g. Comprehensive walkthrough of server components and edge computing"
+                className="w-full bg-[#080e1a] border border-[#1e293b] rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-amber-500 transition-colors resize-none"
+              />
+              <p className="text-[11px] text-slate-500">
+                Rendered beneath title in elegant secondary typography. Press Enter to generate.
               </p>
             </div>
 
@@ -616,17 +824,26 @@ const Media = () => {
                     key={dp.label}
                     type="button"
                     onClick={() => {
-                      setThumbWidth(dp.width);
-                      setThumbHeight(dp.height);
+                      handleGenerateThumbnail(
+                        thumbDraftSeed,
+                        thumbDraftText,
+                        thumbDraftDescription,
+                        dp.width,
+                        dp.height,
+                      );
                     }}
                     className={`p-2.5 rounded-xl border text-left text-xs font-medium transition-all cursor-pointer ${
-                      thumbWidth === dp.width && thumbHeight === dp.height
+                      thumbDraftWidth === dp.width && thumbDraftHeight === dp.height
                         ? "bg-amber-500/15 border-amber-500/40 text-amber-300 font-bold"
                         : "bg-[#080e1a] border-[#1e293b] text-slate-400 hover:text-white"
                     }`}
                   >
-                    <div className="text-white font-semibold">{dp.width} × {dp.height}</div>
-                    <div className="text-[10px] text-slate-500">{dp.label.split("(")[1]?.replace(")", "") || ""}</div>
+                    <div className="text-white font-semibold">
+                      {dp.width} × {dp.height}
+                    </div>
+                    <div className="text-[10px] text-slate-500">
+                      {dp.label.split("(")[1]?.replace(")", "") || ""}
+                    </div>
                   </button>
                 ))}
               </div>
@@ -637,51 +854,77 @@ const Media = () => {
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-semibold text-slate-400">Width</span>
-                  <span className="font-mono text-amber-400">{thumbWidth}px</span>
+                  <span className="font-mono text-amber-400">
+                    {thumbDraftWidth}px
+                  </span>
                 </div>
                 <input
                   type="range"
                   min="200"
                   max="1600"
                   step="20"
-                  value={thumbWidth}
-                  onChange={(e) => setThumbWidth(Number(e.target.value))}
+                  value={thumbDraftWidth}
+                  onChange={(e) => setThumbDraftWidth(Number(e.target.value))}
                   className="w-full accent-amber-500 cursor-pointer"
                 />
               </div>
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-semibold text-slate-400">Height</span>
-                  <span className="font-mono text-amber-400">{thumbHeight}px</span>
+                  <span className="font-mono text-amber-400">
+                    {thumbDraftHeight}px
+                  </span>
                 </div>
                 <input
                   type="range"
                   min="100"
                   max="1000"
                   step="20"
-                  value={thumbHeight}
-                  onChange={(e) => setThumbHeight(Number(e.target.value))}
+                  value={thumbDraftHeight}
+                  onChange={(e) => setThumbDraftHeight(Number(e.target.value))}
                   className="w-full accent-amber-500 cursor-pointer"
                 />
               </div>
             </div>
 
             {/* Actions Bar */}
-            <div className="pt-4 border-t border-[#1e293b] flex items-center gap-3">
+            <div className="pt-4 border-t border-[#1e293b] space-y-3">
+              {/* On-Demand Generate Button */}
               <button
                 type="button"
-                onClick={() => copyToClipboard(thumbUrl, "Direct Thumbnail URL")}
-                className="flex-1 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition-all shadow-md shadow-amber-500/10 cursor-pointer flex items-center justify-center gap-2"
+                onClick={() => handleGenerateThumbnail()}
+                className={`w-full py-3 px-4 rounded-xl text-xs font-bold transition-all shadow-lg cursor-pointer flex items-center justify-center gap-2 ${
+                  isThumbDirty
+                    ? "bg-linear-to-r from-amber-500 to-amber-400 text-slate-950 shadow-amber-500/20 hover:brightness-110 ring-2 ring-amber-400/50"
+                    : "bg-slate-800 text-slate-200 hover:bg-slate-700 border border-[#1e293b]"
+                }`}
               >
-                <span>🔗 Copy Direct URL</span>
+                <span>⚡</span>
+                <span>
+                  {isThumbDirty
+                    ? "Generate Thumbnail (Changes Pending)"
+                    : "Regenerate Thumbnail"}
+                </span>
               </button>
-              <button
-                type="button"
-                onClick={handleDownloadThumbnail}
-                className="px-4 py-2.5 rounded-xl bg-[#080e1a] hover:bg-[#131d33] border border-[#1e293b] text-slate-200 text-xs font-semibold transition-colors cursor-pointer flex items-center gap-1.5"
-              >
-                <span>⬇ Download SVG</span>
-              </button>
+
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() =>
+                    copyToClipboard(thumbUrl, "Direct Thumbnail URL")
+                  }
+                  className="flex-1 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition-all shadow-md shadow-amber-500/10 cursor-pointer flex items-center justify-center gap-2"
+                >
+                  <span>🔗 Copy Direct URL</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDownloadThumbnail}
+                  className="px-4 py-2.5 rounded-xl bg-[#080e1a] hover:bg-[#131d33] border border-[#1e293b] text-slate-200 text-xs font-semibold transition-colors cursor-pointer flex items-center gap-1.5"
+                >
+                  <span>⬇ Download SVG</span>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -698,7 +941,9 @@ const Media = () => {
               </div>
 
               <div className="mt-4 flex items-center gap-4 text-xs font-mono text-slate-400">
-                <span>{thumbWidth} × {thumbHeight} px</span>
+                <span>
+                  {thumbWidth} × {thumbHeight} px
+                </span>
                 <span>•</span>
                 <span>seed: "{thumbSeed}"</span>
               </div>
@@ -775,9 +1020,12 @@ const Media = () => {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-base font-bold text-white">Curated User Personas</h3>
+                <h3 className="text-base font-bold text-white">
+                  Curated User Personas
+                </h3>
                 <p className="text-xs text-slate-400">
-                  Ready-to-use vector user avatars for UI prototypes and test suites.
+                  Ready-to-use vector user avatars for UI prototypes and test
+                  suites.
                 </p>
               </div>
               <span className="text-xs font-mono text-amber-400">
@@ -787,7 +1035,10 @@ const Media = () => {
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
               {AVATAR_PRESETS.map((preset) => {
-                const url = mediaApi.getAvatarUrl(preset, { size: 128, rounded: true });
+                const url = mediaApi.getAvatarUrl(preset, {
+                  size: 128,
+                  rounded: true,
+                });
                 return (
                   <div
                     key={preset}
@@ -799,14 +1050,18 @@ const Media = () => {
                       className="w-16 h-16 rounded-full object-contain group-hover:scale-110 transition-transform shadow-md"
                     />
                     <div className="w-full min-w-0">
-                      <p className="text-xs font-bold text-white truncate">{preset}</p>
-                      <p className="text-[10px] text-slate-500 font-mono">128 × 128</p>
+                      <p className="text-xs font-bold text-white truncate">
+                        {preset}
+                      </p>
+                      <p className="text-[10px] text-slate-500 font-mono">
+                        128 × 128
+                      </p>
                     </div>
                     <div className="w-full flex items-center gap-1 pt-1 border-t border-[#1e293b]">
                       <button
                         type="button"
                         onClick={() => {
-                          setAvatarSeed(preset);
+                          handleGenerateAvatar(preset, avatarDraftSize, avatarDraftRounded);
                           setActiveTab("avatars");
                         }}
                         className="flex-1 py-1 rounded-md bg-[#080e1a] text-slate-300 hover:text-amber-300 text-[11px] font-semibold transition-colors cursor-pointer"
@@ -832,9 +1087,12 @@ const Media = () => {
           <div className="space-y-4 pt-6 border-t border-[#1e293b]">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-base font-bold text-white">Editorial Cover Gallery</h3>
+                <h3 className="text-base font-bold text-white">
+                  Editorial Cover Gallery
+                </h3>
                 <p className="text-xs text-slate-400">
-                  Pre-configured landscape cards for blog publications and media headers.
+                  Pre-configured landscape cards for blog publications and media
+                  headers.
                 </p>
               </div>
               <span className="text-xs font-mono text-amber-400">
@@ -848,6 +1106,7 @@ const Media = () => {
                   width: item.width,
                   height: item.height,
                   text: item.text,
+                  description: item.description,
                 });
                 return (
                   <div
@@ -865,7 +1124,12 @@ const Media = () => {
                       <h4 className="text-sm font-bold text-white line-clamp-1">
                         {item.text}
                       </h4>
-                      <p className="text-[11px] text-slate-400 font-mono">
+                      {item.description && (
+                        <p className="text-xs text-slate-400 line-clamp-1">
+                          {item.description}
+                        </p>
+                      )}
+                      <p className="text-[11px] text-slate-500 font-mono">
                         {item.width} × {item.height} px · seed: {item.seed}
                       </p>
                     </div>
@@ -873,10 +1137,13 @@ const Media = () => {
                       <button
                         type="button"
                         onClick={() => {
-                          setThumbSeed(item.seed);
-                          setThumbText(item.text);
-                          setThumbWidth(item.width);
-                          setThumbHeight(item.height);
+                          handleGenerateThumbnail(
+                            item.seed,
+                            item.text,
+                            item.description || "",
+                            item.width,
+                            item.height,
+                          );
                           setActiveTab("thumbnails");
                         }}
                         className="text-xs text-amber-400 hover:text-amber-300 font-semibold cursor-pointer"
@@ -908,7 +1175,8 @@ const Media = () => {
               <span>Vector Media REST Endpoints Specification</span>
             </h3>
             <p className="text-xs text-slate-400 leading-relaxed">
-              These endpoints generate and serve standard SVG markup dynamically directly over HTTP with high-performance edge cache headers.
+              These endpoints generate and serve standard SVG markup dynamically
+              directly over HTTP with high-performance edge cache headers.
             </p>
 
             <div className="space-y-4 pt-2">
@@ -923,23 +1191,34 @@ const Media = () => {
                       /api/v1/avatars/:seed
                     </span>
                   </div>
-                  <span className="text-xs text-slate-400">Content-Type: image/svg+xml</span>
+                  <span className="text-xs text-slate-400">
+                    Content-Type: image/svg+xml
+                  </span>
                 </div>
                 <p className="text-xs text-slate-300">
-                  Generates deterministic gradient SVG avatar with centered user initials based on the provided string seed.
+                  Generates deterministic gradient SVG avatar with centered user
+                  initials based on the provided string seed.
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2 text-xs font-mono">
                   <div className="p-2.5 rounded-xl bg-[#0f172a] border border-[#1e293b]">
                     <span className="text-amber-400 font-bold">:seed</span>
-                    <p className="text-slate-400 text-[11px] font-sans mt-0.5">Required URL parameter</p>
+                    <p className="text-slate-400 text-[11px] font-sans mt-0.5">
+                      Required URL parameter
+                    </p>
                   </div>
                   <div className="p-2.5 rounded-xl bg-[#0f172a] border border-[#1e293b]">
                     <span className="text-sky-400 font-bold">?size=128</span>
-                    <p className="text-slate-400 text-[11px] font-sans mt-0.5">Integer pixels (default: 128)</p>
+                    <p className="text-slate-400 text-[11px] font-sans mt-0.5">
+                      Integer pixels (default: 128)
+                    </p>
                   </div>
                   <div className="p-2.5 rounded-xl bg-[#0f172a] border border-[#1e293b]">
-                    <span className="text-purple-400 font-bold">?rounded=true</span>
-                    <p className="text-slate-400 text-[11px] font-sans mt-0.5">Circle vs squircle border</p>
+                    <span className="text-purple-400 font-bold">
+                      ?rounded=true
+                    </span>
+                    <p className="text-slate-400 text-[11px] font-sans mt-0.5">
+                      Circle vs squircle border
+                    </p>
                   </div>
                 </div>
               </div>
@@ -955,27 +1234,47 @@ const Media = () => {
                       /api/v1/thumbnails/:seed
                     </span>
                   </div>
-                  <span className="text-xs text-slate-400">Content-Type: image/svg+xml</span>
+                  <span className="text-xs text-slate-400">
+                    Content-Type: image/svg+xml
+                  </span>
                 </div>
                 <p className="text-xs text-slate-300">
-                  Generates landscape thumbnail SVG cover cards with mesh gradient background and headline text.
+                  Generates landscape thumbnail SVG cover cards with mesh
+                  gradient background, multiline word-wrapping, and optional
+                  subtitle/description typography.
                 </p>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-3 pt-2 text-xs font-mono">
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-3 pt-2 text-xs font-mono">
                   <div className="p-2.5 rounded-xl bg-[#0f172a] border border-[#1e293b]">
                     <span className="text-amber-400 font-bold">:seed</span>
-                    <p className="text-slate-400 text-[11px] font-sans mt-0.5">Required URL seed</p>
+                    <p className="text-slate-400 text-[11px] font-sans mt-0.5">
+                      Required URL seed
+                    </p>
                   </div>
                   <div className="p-2.5 rounded-xl bg-[#0f172a] border border-[#1e293b]">
                     <span className="text-sky-400 font-bold">?width=600</span>
-                    <p className="text-slate-400 text-[11px] font-sans mt-0.5">Width in px (default: 600)</p>
+                    <p className="text-slate-400 text-[11px] font-sans mt-0.5">
+                      Width in px (default: 600)
+                    </p>
                   </div>
                   <div className="p-2.5 rounded-xl bg-[#0f172a] border border-[#1e293b]">
                     <span className="text-sky-400 font-bold">?height=400</span>
-                    <p className="text-slate-400 text-[11px] font-sans mt-0.5">Height in px (default: 400)</p>
+                    <p className="text-slate-400 text-[11px] font-sans mt-0.5">
+                      Height in px (default: 400)
+                    </p>
                   </div>
                   <div className="p-2.5 rounded-xl bg-[#0f172a] border border-[#1e293b]">
                     <span className="text-purple-400 font-bold">?text=...</span>
-                    <p className="text-slate-400 text-[11px] font-sans mt-0.5">Custom title label</p>
+                    <p className="text-slate-400 text-[11px] font-sans mt-0.5">
+                      Multiline wrapped title
+                    </p>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-[#0f172a] border border-[#1e293b]">
+                    <span className="text-emerald-400 font-bold">
+                      ?description=...
+                    </span>
+                    <p className="text-slate-400 text-[11px] font-sans mt-0.5">
+                      Optional subtitle description
+                    </p>
                   </div>
                 </div>
               </div>

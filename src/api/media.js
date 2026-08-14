@@ -38,15 +38,18 @@ export const mediaApi = {
    * @param {Object} options
    * @param {number} [options.width=600] - Width in px
    * @param {number} [options.height=400] - Height in px
-   * @param {string} [options.text=''] - Custom label override
+   * @param {string} [options.text=''] - Custom title override
+   * @param {string} [options.description=''] - Subtitle / description line override
    * @returns {string} Fully-qualified SVG URL
    */
-  getThumbnailUrl: (seed = 'post', { width = 600, height = 400, text = '' } = {}) => {
+  getThumbnailUrl: (seed = 'post', { width = 600, height = 400, text = '', description = '', desc = '' } = {}) => {
     const cleanSeed = encodeURIComponent(String(seed || 'post').trim());
     const params = new URLSearchParams();
     if (width && width !== 600) params.set('width', String(width));
     if (height && height !== 400) params.set('height', String(height));
     if (text && text.trim()) params.set('text', text.trim());
+    const finalDesc = (description || desc || '').trim();
+    if (finalDesc) params.set('description', finalDesc);
     const qs = params.toString();
     return `${cleanBase}/thumbnails/${cleanSeed}${qs ? `?${qs}` : ''}`;
   },
