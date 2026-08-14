@@ -41,6 +41,14 @@ const Main = () => {
       badge: 'Active Module',
       primary: true,
     },
+    {
+      title: 'Media & Avatar Studio',
+      path: '/media',
+      count: 'Vector Engine',
+      desc: 'Dynamic procedural SVG avatar & landscape cover thumbnail generator with gradient hashing.',
+      badge: 'Active Module',
+      primary: true,
+    },
   ];
 
   return (
