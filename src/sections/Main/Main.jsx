@@ -49,6 +49,22 @@ const Main = () => {
       badge: 'Active Module',
       primary: true,
     },
+    {
+      title: 'Authentication Gateway',
+      path: '/auth',
+      count: 'JWT Gate',
+      desc: 'Stateless JWT simulation with 1-click test personas, token rotation, and claims inspection.',
+      badge: 'Auth Hub',
+      primary: true,
+    },
+    {
+      title: 'E-Commerce Products Hub',
+      path: '/products',
+      count: 'Custom API',
+      desc: 'Protected dynamic custom resource catalog with 1-click store seeding, inventory, and full CRUD.',
+      badge: 'Protected',
+      primary: true,
+    },
   ];
 
   return (

@@ -223,3 +223,50 @@ export function CommentsSkeletonList({ count = 3 }) {
     </div>
   );
 }
+
+/**
+ * Product Cards Grid Skeleton for Custom Products collection
+ */
+export function ProductCardSkeletonGrid({ count = 8 }) {
+  return (
+    <div
+      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 select-none"
+      aria-hidden="true"
+    >
+      {Array.from({ length: count }).map((_, i) => (
+        <div
+          key={i}
+          className="p-4 rounded-2xl bg-[#0f172a] border border-[#1e293b] flex flex-col justify-between space-y-4 shadow-md animate-pulse"
+        >
+          <div className="space-y-3">
+            {/* Image Placeholder */}
+            <div className="w-full h-40 rounded-xl bg-slate-800/80 border border-slate-700/30" />
+
+            {/* Category & Badge */}
+            <div className="flex items-center justify-between">
+              <div className="w-20 h-4 bg-slate-800 rounded-md" />
+              <div className="w-16 h-4 bg-slate-800/70 rounded-md" />
+            </div>
+
+            {/* Title & Desc */}
+            <div className="space-y-1.5">
+              <div className="h-4 bg-slate-800 rounded w-4/5" />
+              <div className="h-3 bg-slate-800/60 rounded w-full" />
+              <div className="h-3 bg-slate-800/50 rounded w-2/3" />
+            </div>
+          </div>
+
+          {/* Footer: Price + Actions */}
+          <div className="pt-3 border-t border-[#1e293b] flex items-center justify-between">
+            <div className="w-16 h-5 bg-slate-800 rounded-md" />
+            <div className="flex items-center gap-1.5">
+              <div className="w-7 h-7 bg-slate-800 rounded-lg" />
+              <div className="w-7 h-7 bg-slate-800 rounded-lg" />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+

@@ -9,9 +9,13 @@ const Header = ({ onToggleSidebar, isSidebarOpen }) => {
   let pageTitle = "Dashboard";
   if (currentPath.startsWith("/users")) pageTitle = "Users Directory";
   else if (currentPath.startsWith("/posts")) pageTitle = "Posts Registry";
-  else if (currentPath.startsWith("/comments"))
-    pageTitle = "Comments Moderation";
+  else if (currentPath.startsWith("/comments")) pageTitle = "Comments Moderation";
   else if (currentPath.startsWith("/todos")) pageTitle = "Task Engine";
+  else if (currentPath.startsWith("/media")) pageTitle = "Vector Media Studio";
+  else if (currentPath.startsWith("/auth")) pageTitle = "Authentication Hub";
+  else if (currentPath.startsWith("/products")) pageTitle = "E-Commerce Catalog";
+  else if (currentPath.startsWith("/cart")) pageTitle = "Shopping Cart";
+  else if (currentPath.startsWith("/wishlist")) pageTitle = "Saved Wishlist";
 
   return (
     <header className="sticky top-0 z-30 w-full bg-[#0f172a]/95 backdrop-blur-md border-b border-[#1e293b] shadow-xs transition-all">
