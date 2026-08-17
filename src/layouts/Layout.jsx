@@ -3,80 +3,83 @@ import { Outlet, useLocation } from 'react-router';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
+import LiveApiInspector from '@/components/common/LiveApiInspector';
 
 const PAGE_TITLES = {
-  '/': 'Workspace Overview | Directory Studio — Playground API',
-  '/users': 'Users Directory & Intelligence | Directory Studio — Playground API',
-  '/posts': 'Posts Registry | Directory Studio — Playground API',
-  '/comments': 'Comments Moderation | Directory Studio — Playground API',
-  '/todos': 'Task Engine | Directory Studio — Playground API',
+  '/': 'Pulse Studio — Showcase App for Playground API',
+  '/products': 'E-Commerce Store & Custom Schema | Pulse Studio',
+  '/cart': 'Shopping Cart | Pulse Studio',
+  '/wishlist': 'Saved Wishlist | Pulse Studio',
+  '/posts': 'Social Discussions & Stateful CRUD | Pulse Studio',
+  '/users': 'Team Directory & SVG Avatars | Pulse Studio',
+  '/todos': 'Task Engine & Live Mutations | Pulse Studio',
+  '/media': 'Vector Media Studio | Pulse Studio',
+  '/auth': 'JWT Authentication Hub | Pulse Studio',
 };
 
 const Layout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const location = useLocation();
 
-  // Dynamic SEO page title update on route change
   useEffect(() => {
-    const title = PAGE_TITLES[location.pathname] || 'Directory Studio — Enterprise Mock Sandbox';
+    const title = PAGE_TITLES[location.pathname] || 'Pulse Studio — Powered by Playground API';
     document.title = title;
   }, [location.pathname]);
 
-  const toggleSidebar = () => {
-    setIsSidebarOpen((prev) => !prev);
-  };
-
-  const closeSidebar = () => {
-    setIsSidebarOpen(false);
-  };
+  const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
+  const closeSidebar = () => setIsSidebarOpen(false);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#080e1a] text-slate-100 antialiased selection:bg-amber-500 selection:text-slate-950">
+    <div className="min-h-screen flex flex-col bg-[#0c0e14] text-slate-100 antialiased selection:bg-emerald-500 selection:text-white">
       {/* Top Header */}
       <Header onToggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} />
-      {/* Main Body Area: Sidebar + Main Content Container */}
+
+      {/* Main Body: Sidebar + Content */}
       <div className="flex-1 flex w-full relative">
         {/* Desktop Sticky Sidebar */}
         <Sidebar className="hidden lg:flex" />
-        {/* Mobile Slide-Over Sidebar Drawer */}
+
+        {/* Mobile Slide-Over Sidebar */}
         {isSidebarOpen && (
           <div className="fixed inset-0 z-40 lg:hidden flex">
-            {/* Backdrop */}
             <div
-              className="fixed inset-0 bg-black/75 backdrop-blur-xs transition-opacity"
+              className="fixed inset-0 bg-black/80 backdrop-blur-xs transition-opacity"
               onClick={closeSidebar}
               aria-hidden="true"
             />
-            {/* Drawer Content */}
-            <div className="relative flex-1 flex flex-col max-w-xs w-full bg-[#0f172a] z-50 shadow-2xl border-r border-[#1e293b]">
-              <div className="flex items-center justify-between p-4 border-b border-[#1e293b]">
+            <div className="relative flex-1 flex flex-col max-w-xs w-full bg-[#12151d] z-50 shadow-2xl border-r border-white/10">
+              <div className="flex items-center justify-between p-4 border-b border-white/10">
                 <span className="text-xs font-bold text-slate-200 uppercase tracking-wider">
                   Navigation Menu
                 </span>
                 <button
                   type="button"
                   onClick={closeSidebar}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-[#1e293b] transition-colors"
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
                 >
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
+                  ✕
                 </button>
               </div>
               <Sidebar onCloseMobile={closeSidebar} className="border-r-0 flex-1" />
             </div>
           </div>
         )}
-        {/* Main Content Container */}
-        <main className="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 overflow-y-auto">
+
+        {/* Main Content Area */}
+        <main className="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 overflow-y-auto pb-24">
           <div className="max-w-7xl mx-auto w-full">
             {children || <Outlet />}
           </div>
         </main>
       </div>
+
+      {/* Persistent Live API Inspector Floating Dock */}
+      <LiveApiInspector />
+
       {/* Footer */}
       <Footer />
     </div>
   );
 };
+
 export default Layout;

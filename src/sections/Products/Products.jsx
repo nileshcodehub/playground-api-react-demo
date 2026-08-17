@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router";
 import { productsApi } from "@/api/products";
 import { mediaApi } from "@/api/media";
@@ -9,6 +9,7 @@ import SearchInput from "@/components/SearchInput";
 import Pagination from "@/components/Pagination";
 import DataTable from "@/components/DataTable";
 import { ProductCardSkeletonGrid } from "@/components/Skeletons";
+import HowItWorksBanner from "@/components/common/HowItWorksBanner";
 
 const CATEGORIES = [
   { id: "all", label: "All Items", icon: "✨" },
@@ -30,7 +31,7 @@ function Toast({ message, type = "success", onClose }) {
     type === "success"
       ? "bg-emerald-500/20 border-emerald-500/40 text-emerald-300"
       : type === "warn"
-        ? "bg-amber-500/20 border-amber-500/40 text-amber-300"
+        ? "bg-amber-500/20 border-emerald-500/40 text-emerald-300"
         : "bg-rose-500/20 border-rose-500/40 text-rose-300";
 
   return (
@@ -44,13 +45,7 @@ function Toast({ message, type = "success", onClose }) {
 }
 
 const Products = () => {
-  const {
-    addToCart,
-    setIsCartOpen,
-    totalItems,
-    total,
-    items: cartItems,
-  } = useCart();
+  const { addToCart, setIsCartOpen, totalItems, items: cartItems } = useCart();
   const { toggleWishlist, isInWishlist, totalWishlistItems } = useWishlist();
 
   const [products, setProducts] = useState([]);
@@ -269,19 +264,6 @@ const Products = () => {
     });
   };
 
-  // Metric computations
-  const metrics = useMemo(() => {
-    const total = pagination.total || products.length;
-    const inStock = products.filter((p) => (p.stock || 0) > 0).length;
-    const avgPrice = products.length
-      ? Math.round(
-          products.reduce((acc, p) => acc + (Number(p.price) || 0), 0) /
-            products.length,
-        )
-      : 0;
-    return { total, inStock, avgPrice };
-  }, [pagination.total, products]);
-
   // Table Column Definitions
   const tableColumns = [
     {
@@ -299,7 +281,7 @@ const Products = () => {
                 text: p.category || displayName,
               })}
               alt={displayName}
-              className="w-12 h-8 rounded-lg object-cover border border-[#1e293b] shrink-0"
+              className="w-12 h-8 rounded-lg object-cover border border-[rgba(255,255,255,0.08)] shrink-0"
             />
             <div className="min-w-0">
               <p className="text-sm font-bold text-white truncate">
@@ -318,7 +300,7 @@ const Products = () => {
       key: "category",
       width: "1.2fr",
       render: (p) => (
-        <span className="px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-300 border border-amber-500/20 text-xs font-semibold font-mono">
+        <span className="px-2.5 py-1 rounded-lg bg-amber-500/10 text-emerald-300 border border-emerald-500/20 text-xs font-semibold font-mono">
           {p.category || "General"}
         </span>
       ),
@@ -343,7 +325,7 @@ const Products = () => {
           qty > 15
             ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
             : qty > 0
-              ? "text-amber-400 bg-amber-500/10 border-amber-500/20"
+              ? "text-emerald-400 bg-amber-500/10 border-emerald-500/20"
               : "text-rose-400 bg-rose-500/10 border-rose-500/20";
         return (
           <span
@@ -376,8 +358,8 @@ const Products = () => {
               }}
               className={`p-1.5 rounded-lg border text-xs transition-colors cursor-pointer ${
                 qty <= 0
-                  ? "opacity-40 cursor-not-allowed bg-[#080e1a] border-[#1e293b] text-slate-500"
-                  : "bg-amber-500/10 hover:bg-amber-500 hover:text-slate-950 text-amber-300 border-amber-500/30"
+                  ? "opacity-40 cursor-not-allowed bg-[#0c0e14] border-[rgba(255,255,255,0.08)] text-slate-500"
+                  : "bg-amber-500/10 hover:bg-amber-500 hover:text-white text-emerald-300 border-emerald-500/30"
               }`}
               title={qty <= 0 ? "Out of stock" : "Add to cart"}
             >
@@ -386,7 +368,7 @@ const Products = () => {
             <button
               type="button"
               onClick={() => setInspectingProduct(p)}
-              className="p-1.5 rounded-lg bg-[#080e1a] hover:bg-[#131d33] text-slate-300 hover:text-white border border-[#1e293b] text-xs transition-colors cursor-pointer"
+              className="p-1.5 rounded-lg bg-[#0c0e14] hover:bg-[#131d33] text-slate-300 hover:text-white border border-[rgba(255,255,255,0.08)] text-xs transition-colors cursor-pointer"
               title="Inspect JSON"
             >
               👁️
@@ -394,7 +376,7 @@ const Products = () => {
             <button
               type="button"
               onClick={() => openEditModal(p)}
-              className="p-1.5 rounded-lg bg-[#080e1a] hover:bg-amber-500/10 text-amber-400 border border-[#1e293b] hover:border-amber-500/30 text-xs transition-colors cursor-pointer"
+              className="p-1.5 rounded-lg bg-[#0c0e14] hover:bg-amber-500/10 text-emerald-400 border border-[rgba(255,255,255,0.08)] hover:border-emerald-500/30 text-xs transition-colors cursor-pointer"
               title="Edit Product"
             >
               ✏️
@@ -402,7 +384,7 @@ const Products = () => {
             <button
               type="button"
               onClick={() => setDeletingProduct(p)}
-              className="p-1.5 rounded-lg bg-[#080e1a] hover:bg-rose-500/10 text-rose-400 border border-[#1e293b] hover:border-rose-500/30 text-xs transition-colors cursor-pointer"
+              className="p-1.5 rounded-lg bg-[#0c0e14] hover:bg-rose-500/10 text-rose-400 border border-[rgba(255,255,255,0.08)] hover:border-rose-500/30 text-xs transition-colors cursor-pointer"
               title="Delete Product"
             >
               🗑️
@@ -414,148 +396,103 @@ const Products = () => {
   ];
 
   return (
-    <div className="space-y-8">
-      {/* ── Executive Header Banner ── */}
-      <div className="p-6 sm:p-8 rounded-2xl bg-[#0f172a] border border-[#1e293b] shadow-xl relative overflow-hidden">
-        <div className="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-amber-500 via-purple-500 to-sky-500 opacity-80" />
-
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-          <div className="max-w-2xl space-y-2.5">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-amber-500/10 border border-amber-500/25 text-amber-400 text-xs font-semibold">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-              Protected Dynamic Resource /custom/products
-            </div>
+    <div className="space-y-6">
+      {/* ── Sleek Unified Page Header ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
-              E-Commerce Products Hub
+              Store & Custom Products
             </h1>
-            <p className="text-sm text-slate-400 leading-relaxed">
-              Explore dynamic overlay mutation collections. Seed e-commerce mock
-              inventories, test full CRUD cycles, search, and category filtering
-              in your private sandbox.
-            </p>
+            <span className="px-2 py-0.5 rounded-md text-[11px] font-mono font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              /custom/products
+            </span>
           </div>
+          <p className="text-xs sm:text-sm text-slate-400">
+            Create, search, filter, and modify custom product records stored in
+            your private session overlay.
+          </p>
+        </div>
 
-          {/* Action Toolbar */}
-          <div className="flex flex-wrap xl:flex-nowrap items-center gap-2.5 shrink-0">
-            {/* Quick Access Badges (Wishlist + Cart) */}
-            <div className="flex items-center gap-1 p-1 bg-[#080e1a] rounded-xl border border-[#1e293b] shadow-xs">
-              <Link
-                to="/wishlist"
-                className="px-3 py-1.5 rounded-lg hover:bg-rose-500/10 text-rose-300 text-xs font-semibold transition-all flex items-center gap-1.5"
-                title="View Saved Wishlist"
-              >
-                <span>❤️</span>
-                <span className="font-medium">Wishlist</span>
-                <span className="px-1.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 font-mono text-[10px] font-extrabold border border-rose-500/30">
-                  {totalWishlistItems}
-                </span>
-              </Link>
+        <div className="flex items-center gap-2.5 shrink-0 flex-wrap">
+          <Link
+            to="/wishlist"
+            className="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-semibold border border-white/10 flex items-center gap-1.5 transition-colors"
+          >
+            <span>❤️</span>
+            <span>Wishlist</span>
+            <span className="px-1.5 py-0.2 rounded-full bg-rose-500/20 text-rose-300 text-[10px] font-mono font-bold">
+              {totalWishlistItems}
+            </span>
+          </Link>
 
-              <div className="w-px h-4 bg-[#1e293b]" />
+          <button
+            type="button"
+            onClick={() => setIsCartOpen(true)}
+            className="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-semibold border border-white/10 flex items-center gap-1.5 transition-colors cursor-pointer"
+          >
+            <span>🛒</span>
+            <span>Cart</span>
+            <span className="px-1.5 py-0.2 rounded-full bg-emerald-600 text-white text-[10px] font-mono font-bold">
+              {totalItems}
+            </span>
+          </button>
 
-              <button
-                type="button"
-                onClick={() => setIsCartOpen(true)}
-                className="px-3 py-1.5 rounded-lg hover:bg-amber-500/10 text-amber-300 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5"
-                title="Open Cart Drawer"
-              >
-                <span>🛒</span>
-                <span className="font-medium">Cart</span>
-                <span className="px-1.5 py-0.5 rounded-full bg-amber-500 text-slate-950 font-mono text-[10px] font-extrabold">
-                  {totalItems}
-                </span>
-                {totalItems > 0 && (
-                  <span className="text-emerald-400 font-mono text-[11px] hidden sm:inline">
-                    ${total.toFixed(0)}
-                  </span>
-                )}
-              </button>
-            </div>
+          <button
+            type="button"
+            onClick={handleSeedStore}
+            disabled={seeding}
+            className="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 text-xs font-semibold transition-colors cursor-pointer flex items-center gap-1.5 disabled:opacity-50"
+          >
+            {seeding ? "Seeding..." : "⚡ Seed Demo Data"}
+          </button>
 
-            {/* Catalog Actions */}
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={handleSeedStore}
-                disabled={seeding}
-                className="px-3.5 py-2 rounded-xl bg-[#080e1a] hover:bg-[#131d33] border border-[#1e293b] text-amber-400 text-xs font-bold transition-all shadow-xs cursor-pointer flex items-center gap-1.5 disabled:opacity-50 shrink-0"
-              >
-                {seeding ? (
-                  <>
-                    <span className="w-3.5 h-3.5 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
-                    <span>Seeding...</span>
-                  </>
-                ) : (
-                  <>
-                    <span>⚡</span>
-                    <span>Reseed Catalog</span>
-                  </>
-                )}
-              </button>
-
-              <button
-                type="button"
-                onClick={openCreateModal}
-                className="px-4 py-2 rounded-xl bg-linear-to-r from-amber-500 to-amber-400 hover:brightness-110 text-slate-950 text-xs font-extrabold transition-all shadow-md shadow-amber-500/15 cursor-pointer flex items-center gap-1.5 shrink-0"
-              >
-                <span>+</span>
-                <span>Add Product</span>
-              </button>
-            </div>
-          </div>
+          <button
+            type="button"
+            onClick={openCreateModal}
+            className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-md shadow-emerald-600/20 cursor-pointer flex items-center gap-1.5"
+          >
+            <span>+</span>
+            <span>New Product</span>
+          </button>
         </div>
       </div>
 
-      {/* ── Metric Strip ── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-1 shadow-xs">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-            Total Products
-          </div>
-          <div className="text-xl sm:text-2xl font-extrabold text-white font-mono">
-            {metrics.total}
-          </div>
-          <div className="text-[11px] text-slate-400">
-            In session collection
-          </div>
-        </div>
+      {/* ── API Feature Explainer Banner ── */}
+      <HowItWorksBanner
+        title="Dynamic Schema-less Collections (/custom/products)"
+        subtitle="This entire store is backed by Playground API's dynamic custom resource system. You can create custom products, search, sort by price, filter by category, and update inventory. All mutations persist exclusively in your private session overlay!"
+        badge="Playground API Superpower"
+        endpoint="POST /api/v1/custom/products"
+        codeSnippet={`// 1. Fetch products with search, category & price sorting
+const res = await fetch('https://playground-api-xi.vercel.app/api/v1/custom/products?category=Electronics&_sort=price&_order=asc', {
+  credentials: 'include',
+});
+const { data } = await res.json();
 
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-1 shadow-xs">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-            Avg Unit Price
-          </div>
-          <div className="text-xl sm:text-2xl font-extrabold text-emerald-400 font-mono">
-            ${metrics.avgPrice}
-          </div>
-          <div className="text-[11px] text-slate-400">
-            Across active catalog
-          </div>
-        </div>
-
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-1 shadow-xs">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-            Stock Availability
-          </div>
-          <div className="text-xl sm:text-2xl font-extrabold text-sky-400 font-mono">
-            {metrics.inStock} / {products.length}
-          </div>
-          <div className="text-[11px] text-slate-400">Readily dispatchable</div>
-        </div>
-
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-1 shadow-xs">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-            Custom Gateway
-          </div>
-          <div className="text-xl sm:text-2xl font-extrabold text-amber-400 font-mono flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
-            Dynamic
-          </div>
-          <div className="text-[11px] text-slate-400">REST overlay CRUD</div>
-        </div>
-      </div>
+// 2. Create custom product in your sandbox
+await fetch('https://playground-api-xi.vercel.app/api/v1/custom/products', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  credentials: 'include',
+  body: JSON.stringify({
+    name: 'Wireless Noise-Canceling Headphones',
+    price: 199.99,
+    category: 'Audio',
+    inStock: true,
+  }),
+});`}
+        payloadExample={{
+          name: "Wireless Noise-Canceling Headphones",
+          price: 199.99,
+          category: "Audio",
+          stock: 30,
+          rating: 4.9,
+        }}
+      />
 
       {/* ── Filter & Search Toolbar ── */}
-      <div className="p-4 sm:p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-3.5 shadow-sm">
+      <div className="p-4 sm:p-5 rounded-2xl bg-[#12151d] border border-[rgba(255,255,255,0.08)] space-y-3.5 shadow-sm">
         {/* Top Controls Row */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           {/* Search Input */}
@@ -581,7 +518,7 @@ const Products = () => {
                   setSortOrder("asc");
                   setPage(1);
                 }}
-                className="px-2.5 py-1.5 rounded-xl bg-[#080e1a] hover:bg-rose-500/10 text-rose-400 hover:text-rose-300 border border-[#1e293b] hover:border-rose-500/30 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5"
+                className="px-2.5 py-1.5 rounded-xl bg-[#0c0e14] hover:bg-rose-500/10 text-rose-400 hover:text-rose-300 border border-[rgba(255,255,255,0.08)] hover:border-rose-500/30 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5"
                 title="Reset all filters"
               >
                 <span>✕</span>
@@ -605,7 +542,7 @@ const Products = () => {
                   }
                   setPage(1);
                 }}
-                className="bg-[#080e1a] border border-[#1e293b] text-slate-300 hover:text-white text-xs rounded-xl px-3 py-2 pr-7 focus:outline-none focus:border-amber-500 font-medium cursor-pointer transition-colors appearance-none"
+                className="bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] text-slate-300 hover:text-white text-xs rounded-xl px-3 py-2 pr-7 focus:outline-none focus:border-emerald-500 font-medium cursor-pointer transition-colors appearance-none"
               >
                 <option value="">Default Sorting</option>
                 <option value="price_asc">Price: Low to High</option>
@@ -631,13 +568,13 @@ const Products = () => {
             </div>
 
             {/* View Mode Segmented Control */}
-            <div className="flex p-1 rounded-xl bg-[#080e1a] border border-[#1e293b]">
+            <div className="flex p-1 rounded-xl bg-black/40 border border-white/10">
               <button
                 type="button"
                 onClick={() => setViewMode("grid")}
                 className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                   viewMode === "grid"
-                    ? "bg-amber-500 text-slate-950 shadow-xs"
+                    ? "bg-emerald-600 text-white shadow-xs"
                     : "text-slate-400 hover:text-white"
                 }`}
                 title="Grid View"
@@ -662,7 +599,7 @@ const Products = () => {
                 onClick={() => setViewMode("table")}
                 className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                   viewMode === "table"
-                    ? "bg-amber-500 text-slate-950 shadow-xs"
+                    ? "bg-emerald-600 text-white shadow-xs"
                     : "text-slate-400 hover:text-white"
                 }`}
                 title="Table View"
@@ -687,21 +624,8 @@ const Products = () => {
         </div>
 
         {/* Category Segmented Scroll Track */}
-        <div className="pt-2.5 border-t border-[#1e293b]/70 flex items-center gap-2 overflow-x-auto scrollbar-none [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden py-0.5">
+        <div className="pt-2.5 border-t border-white/10 flex items-center gap-2 overflow-x-auto scrollbar-none py-0.5">
           <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 shrink-0 mr-1 flex items-center gap-1.5">
-            <svg
-              className="w-3.5 h-3.5 text-amber-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
-              />
-            </svg>
             Categories:
           </span>
 
@@ -717,8 +641,8 @@ const Products = () => {
                 }}
                 className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer shrink-0 flex items-center gap-1.5 select-none ${
                   isSelected
-                    ? "bg-linear-to-r from-amber-500 to-amber-400 text-slate-950 font-extrabold shadow-md shadow-amber-500/20 border border-amber-300 scale-[1.02]"
-                    : "bg-[#080e1a] text-slate-300 hover:text-white hover:bg-[#131d33] border border-[#1e293b] hover:border-slate-600"
+                    ? "bg-emerald-600 text-white font-bold shadow-xs border border-emerald-500"
+                    : "bg-white/5 text-slate-300 hover:text-white hover:bg-white/10 border border-white/10"
                 }`}
               >
                 <span>{cat.icon}</span>
@@ -731,8 +655,8 @@ const Products = () => {
 
       {/* ── Empty State Banner with 1-Click Seed ── */}
       {!loading && products.length === 0 && (
-        <div className="p-8 sm:p-12 rounded-2xl bg-[#0f172a] border border-[#1e293b] text-center space-y-4 shadow-xl">
-          <div className="w-16 h-16 mx-auto rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-2xl">
+        <div className="p-8 sm:p-12 rounded-2xl bg-[#12151d] border border-[rgba(255,255,255,0.08)] text-center space-y-4 shadow-xl">
+          <div className="w-16 h-16 mx-auto rounded-2xl bg-amber-500/10 border border-emerald-500/25 flex items-center justify-center text-2xl">
             📦
           </div>
           <div className="space-y-1">
@@ -749,7 +673,7 @@ const Products = () => {
             type="button"
             onClick={handleSeedStore}
             disabled={seeding}
-            className="px-5 py-2.5 rounded-xl bg-linear-to-r from-amber-500 to-amber-400 hover:brightness-110 text-slate-950 font-bold text-xs transition-all shadow-md shadow-amber-500/20 cursor-pointer inline-flex items-center gap-2"
+            className="px-5 py-2.5 rounded-xl bg-linear-to-r bg-emerald-600 hover:bg-emerald-500 text-white hover:brightness-110 font-bold text-xs transition-all shadow-md shadow-emerald-600/20 cursor-pointer inline-flex items-center gap-2"
           >
             {seeding ? "Seeding Catalog..." : "⚡ Seed E-Commerce Catalog Now"}
           </button>
@@ -784,11 +708,11 @@ const Products = () => {
               return (
                 <div
                   key={p.id}
-                  className="p-4 rounded-2xl bg-[#0f172a] border border-[#1e293b] hover:border-amber-500/40 transition-all flex flex-col justify-between space-y-3 group shadow-md"
+                  className="p-4 rounded-2xl bg-[#12151d] border border-[rgba(255,255,255,0.08)] hover:border-emerald-500/40 transition-all flex flex-col justify-between space-y-3 group shadow-md"
                 >
                   <div className="space-y-3">
                     {/* Thumbnail */}
-                    <div className="rounded-xl overflow-hidden border border-[#1e293b] relative group-hover:shadow-lg transition-all">
+                    <div className="rounded-xl overflow-hidden border border-[rgba(255,255,255,0.08)] relative group-hover:shadow-lg transition-all">
                       <img
                         src={imgUrl}
                         alt={displayName}
@@ -827,7 +751,7 @@ const Products = () => {
 
                     {/* Category & Badge */}
                     <div className="flex items-center justify-between">
-                      <span className="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-300 text-[10px] font-bold font-mono uppercase tracking-wider">
+                      <span className="px-2 py-0.5 rounded-md bg-amber-500/10 text-emerald-300 text-[10px] font-bold font-mono uppercase tracking-wider">
                         {p.category || "General"}
                       </span>
                       <span
@@ -835,7 +759,7 @@ const Products = () => {
                           qty > 10
                             ? "text-emerald-400"
                             : qty > 0
-                              ? "text-amber-400"
+                              ? "text-emerald-400"
                               : "text-rose-400"
                         }`}
                       >
@@ -845,7 +769,7 @@ const Products = () => {
 
                     {/* Title & Desc */}
                     <div className="space-y-1">
-                      <h4 className="text-sm font-bold text-white line-clamp-1 group-hover:text-amber-300 transition-colors">
+                      <h4 className="text-sm font-bold text-white line-clamp-1 group-hover:text-emerald-300 transition-colors">
                         {displayName}
                       </h4>
                       <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">
@@ -856,9 +780,9 @@ const Products = () => {
                   </div>
 
                   {/* Card Footer */}
-                  <div className="pt-3 border-t border-[#1e293b] space-y-2.5">
+                  <div className="pt-3 border-t border-[rgba(255,255,255,0.08)] space-y-2.5">
                     <div className="flex items-center justify-between">
-                      <div className="text-xs text-amber-400 font-mono">
+                      <div className="text-xs text-emerald-400 font-mono">
                         {"★".repeat(Math.round(p.rating || 5))}{" "}
                         <span className="text-slate-400">
                           ({p.rating || 5}.0)
@@ -869,7 +793,7 @@ const Products = () => {
                         <button
                           type="button"
                           onClick={() => setInspectingProduct(p)}
-                          className="p-1.5 rounded-lg bg-[#080e1a] hover:bg-[#131d33] text-slate-300 hover:text-white border border-[#1e293b] text-xs transition-colors cursor-pointer"
+                          className="p-1.5 rounded-lg bg-[#0c0e14] hover:bg-[#131d33] text-slate-300 hover:text-white border border-[rgba(255,255,255,0.08)] text-xs transition-colors cursor-pointer"
                           title="Inspect JSON"
                         >
                           👁️
@@ -877,7 +801,7 @@ const Products = () => {
                         <button
                           type="button"
                           onClick={() => openEditModal(p)}
-                          className="p-1.5 rounded-lg bg-[#080e1a] hover:bg-amber-500/10 text-amber-400 border border-[#1e293b] hover:border-amber-500/30 text-xs transition-colors cursor-pointer"
+                          className="p-1.5 rounded-lg bg-[#0c0e14] hover:bg-amber-500/10 text-emerald-400 border border-[rgba(255,255,255,0.08)] hover:border-emerald-500/30 text-xs transition-colors cursor-pointer"
                           title="Edit"
                         >
                           ✏️
@@ -885,7 +809,7 @@ const Products = () => {
                         <button
                           type="button"
                           onClick={() => setDeletingProduct(p)}
-                          className="p-1.5 rounded-lg bg-[#080e1a] hover:bg-rose-500/10 text-rose-400 border border-[#1e293b] hover:border-rose-500/30 text-xs transition-colors cursor-pointer"
+                          className="p-1.5 rounded-lg bg-[#0c0e14] hover:bg-rose-500/10 text-rose-400 border border-[rgba(255,255,255,0.08)] hover:border-rose-500/30 text-xs transition-colors cursor-pointer"
                           title="Delete"
                         >
                           🗑️
@@ -909,8 +833,8 @@ const Products = () => {
                             qty <= 0
                               ? "bg-slate-800/50 text-slate-500 border border-slate-700/30 cursor-not-allowed"
                               : cartCount > 0
-                                ? "bg-amber-500/15 text-amber-300 border border-amber-500/40 hover:bg-amber-500 hover:text-slate-950"
-                                : "bg-[#080e1a] hover:bg-amber-500 hover:text-slate-950 text-slate-200 border border-[#1e293b] hover:border-amber-400 shadow-xs"
+                                ? "bg-amber-500/15 text-emerald-300 border border-emerald-500/40 hover:bg-amber-500 hover:text-white"
+                                : "bg-[#0c0e14] hover:bg-amber-500 hover:text-white text-slate-200 border border-[rgba(255,255,255,0.08)] hover:border-emerald-400 shadow-xs"
                           }`}
                         >
                           <span>🛒</span>
@@ -958,8 +882,8 @@ const Products = () => {
       {/* ── Create / Edit Product Modal ── */}
       {(isCreateModalOpen || editingProduct) && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in">
-          <div className="w-full max-w-lg p-6 sm:p-8 rounded-2xl bg-[#0f172a] border border-[#1e293b] shadow-2xl space-y-6">
-            <div className="flex items-center justify-between border-b border-[#1e293b] pb-4">
+          <div className="w-full max-w-lg p-6 sm:p-8 rounded-2xl bg-[#12151d] border border-[rgba(255,255,255,0.08)] shadow-2xl space-y-6">
+            <div className="flex items-center justify-between border-b border-[rgba(255,255,255,0.08)] pb-4">
               <div>
                 <h3 className="text-lg font-bold text-white">
                   {editingProduct
@@ -988,7 +912,7 @@ const Products = () => {
             >
               <div className="space-y-1.5">
                 <label className="text-xs font-semibold text-slate-300">
-                  Product Title <span className="text-amber-400">*</span>
+                  Product Title <span className="text-emerald-400">*</span>
                 </label>
                 <input
                   type="text"
@@ -998,14 +922,14 @@ const Products = () => {
                     setFormData({ ...formData, title: e.target.value })
                   }
                   placeholder="e.g. Wireless Noise-Cancelling Headphones"
-                  className="w-full bg-[#080e1a] border border-[#1e293b] rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors"
+                  className="w-full bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition-colors"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <label className="text-xs font-semibold text-slate-300">
-                    Unit Price ($) <span className="text-amber-400">*</span>
+                    Unit Price ($) <span className="text-emerald-400">*</span>
                   </label>
                   <input
                     type="number"
@@ -1015,7 +939,7 @@ const Products = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, price: e.target.value })
                     }
-                    className="w-full bg-[#080e1a] border border-[#1e293b] rounded-xl px-3.5 py-2.5 text-sm text-white font-mono focus:outline-none focus:border-amber-500 transition-colors"
+                    className="w-full bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] rounded-xl px-3.5 py-2.5 text-sm text-white font-mono focus:outline-none focus:border-emerald-500 transition-colors"
                   />
                 </div>
 
@@ -1028,7 +952,7 @@ const Products = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, category: e.target.value })
                     }
-                    className="w-full bg-[#080e1a] border border-[#1e293b] rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors cursor-pointer"
+                    className="w-full bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition-colors cursor-pointer"
                   >
                     {CATEGORIES.filter((c) => c.id !== "all").map((c) => (
                       <option key={c.id} value={c.id}>
@@ -1051,7 +975,7 @@ const Products = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, stock: e.target.value })
                     }
-                    className="w-full bg-[#080e1a] border border-[#1e293b] rounded-xl px-3.5 py-2.5 text-sm text-white font-mono focus:outline-none focus:border-amber-500 transition-colors"
+                    className="w-full bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] rounded-xl px-3.5 py-2.5 text-sm text-white font-mono focus:outline-none focus:border-emerald-500 transition-colors"
                   />
                 </div>
 
@@ -1068,7 +992,7 @@ const Products = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, rating: e.target.value })
                     }
-                    className="w-full bg-[#080e1a] border border-[#1e293b] rounded-xl px-3.5 py-2.5 text-sm text-white font-mono focus:outline-none focus:border-amber-500 transition-colors"
+                    className="w-full bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] rounded-xl px-3.5 py-2.5 text-sm text-white font-mono focus:outline-none focus:border-emerald-500 transition-colors"
                   />
                 </div>
               </div>
@@ -1084,25 +1008,25 @@ const Products = () => {
                     setFormData({ ...formData, description: e.target.value })
                   }
                   placeholder="Detailed product highlights and tech specs..."
-                  className="w-full bg-[#080e1a] border border-[#1e293b] rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-500 transition-colors resize-none"
+                  className="w-full bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500 transition-colors resize-none"
                 />
               </div>
 
-              <div className="pt-4 border-t border-[#1e293b] flex items-center justify-end gap-3">
+              <div className="pt-4 border-t border-[rgba(255,255,255,0.08)] flex items-center justify-end gap-3">
                 <button
                   type="button"
                   onClick={() => {
                     setIsCreateModalOpen(false);
                     setEditingProduct(null);
                   }}
-                  className="px-4 py-2.5 rounded-xl bg-[#080e1a] hover:bg-[#131d33] border border-[#1e293b] text-slate-300 text-xs font-semibold transition-colors cursor-pointer"
+                  className="px-4 py-2.5 rounded-xl bg-[#0c0e14] hover:bg-[#131d33] border border-[rgba(255,255,255,0.08)] text-slate-300 text-xs font-semibold transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={mutating}
-                  className="px-5 py-2.5 rounded-xl bg-linear-to-r from-amber-500 to-amber-400 hover:brightness-110 text-slate-950 font-bold text-xs transition-all shadow-md shadow-amber-500/20 cursor-pointer disabled:opacity-50 flex items-center gap-2"
+                  className="px-5 py-2.5 rounded-xl bg-linear-to-r bg-emerald-600 hover:bg-emerald-500 text-white hover:brightness-110 font-bold text-xs transition-all shadow-md shadow-emerald-600/20 cursor-pointer disabled:opacity-50 flex items-center gap-2"
                 >
                   {mutating
                     ? "Saving Product..."
@@ -1119,7 +1043,7 @@ const Products = () => {
       {/* ── Delete Confirmation Modal ── */}
       {deletingProduct && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in">
-          <div className="w-full max-w-md p-6 rounded-2xl bg-[#0f172a] border border-rose-500/30 shadow-2xl space-y-5">
+          <div className="w-full max-w-md p-6 rounded-2xl bg-[#12151d] border border-rose-500/30 shadow-2xl space-y-5">
             <div className="flex items-center gap-3 text-rose-400">
               <span className="text-2xl">⚠️</span>
               <h3 className="text-base font-bold text-white">
@@ -1137,7 +1061,7 @@ const Products = () => {
               <button
                 type="button"
                 onClick={() => setDeletingProduct(null)}
-                className="px-4 py-2 rounded-xl bg-[#080e1a] text-slate-300 text-xs font-semibold border border-[#1e293b]"
+                className="px-4 py-2 rounded-xl bg-[#0c0e14] text-slate-300 text-xs font-semibold border border-[rgba(255,255,255,0.08)]"
               >
                 Cancel
               </button>
@@ -1157,9 +1081,9 @@ const Products = () => {
       {/* ── Inspect Product Drawer ── */}
       {inspectingProduct && (
         <div className="fixed inset-0 z-50 flex justify-end bg-slate-950/60 backdrop-blur-xs animate-in fade-in">
-          <div className="w-full max-w-md bg-[#0f172a] border-l border-[#1e293b] h-full overflow-y-auto p-6 space-y-6 shadow-2xl flex flex-col justify-between">
+          <div className="w-full max-w-md bg-[#12151d] border-l border-[rgba(255,255,255,0.08)] h-full overflow-y-auto p-6 space-y-6 shadow-2xl flex flex-col justify-between">
             <div className="space-y-6">
-              <div className="flex items-start justify-between gap-3 border-b border-[#1e293b] pb-4">
+              <div className="flex items-start justify-between gap-3 border-b border-[rgba(255,255,255,0.08)] pb-4">
                 <div className="space-y-1 min-w-0 flex-1">
                   <div className="flex items-center gap-2 flex-wrap">
                     <h3 className="text-base font-bold text-white leading-tight">
@@ -1170,7 +1094,7 @@ const Products = () => {
                     </span>
                   </div>
                   <p
-                    className="text-[11px] font-mono text-amber-400/90 truncate"
+                    className="text-[11px] font-mono text-emerald-400/90 truncate"
                     title={String(inspectingProduct.id)}
                   >
                     ID: #{String(inspectingProduct.id)}
@@ -1179,7 +1103,7 @@ const Products = () => {
                 <button
                   type="button"
                   onClick={() => setInspectingProduct(null)}
-                  className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-[#1e293b] transition-colors cursor-pointer shrink-0"
+                  className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-[rgba(255,255,255,0.08)] transition-colors cursor-pointer shrink-0"
                 >
                   ✕
                 </button>
@@ -1199,7 +1123,7 @@ const Products = () => {
                     },
                   )}
                   alt={inspectingProduct.name || inspectingProduct.title}
-                  className="w-full h-44 rounded-xl object-cover border border-[#1e293b]"
+                  className="w-full h-44 rounded-xl object-cover border border-[rgba(255,255,255,0.08)]"
                 />
 
                 <div className="space-y-1">
@@ -1212,7 +1136,7 @@ const Products = () => {
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 text-xs font-mono">
-                  <div className="p-3 rounded-xl bg-[#080e1a] border border-[#1e293b]">
+                  <div className="p-3 rounded-xl bg-[#0c0e14] border border-[rgba(255,255,255,0.08)]">
                     <span className="text-slate-500 text-[10px] block">
                       Price
                     </span>
@@ -1220,11 +1144,11 @@ const Products = () => {
                       ${Number(inspectingProduct.price || 0).toFixed(2)}
                     </span>
                   </div>
-                  <div className="p-3 rounded-xl bg-[#080e1a] border border-[#1e293b]">
+                  <div className="p-3 rounded-xl bg-[#0c0e14] border border-[rgba(255,255,255,0.08)]">
                     <span className="text-slate-500 text-[10px] block">
                       Stock
                     </span>
-                    <span className="text-amber-400 font-bold">
+                    <span className="text-emerald-400 font-bold">
                       {inspectingProduct.stock} units
                     </span>
                   </div>
@@ -1234,14 +1158,14 @@ const Products = () => {
                   <label className="text-xs font-semibold text-slate-300">
                     Raw JSON Payload
                   </label>
-                  <pre className="p-4 rounded-xl bg-[#080e1a] border border-[#1e293b] font-mono text-[11px] text-amber-300/90 overflow-x-auto whitespace-pre">
+                  <pre className="p-4 rounded-xl bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] font-mono text-[11px] text-emerald-300/90 overflow-x-auto whitespace-pre">
                     {JSON.stringify(inspectingProduct, null, 2)}
                   </pre>
                 </div>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 pt-4 border-t border-[#1e293b]">
+            <div className="flex items-center gap-2 pt-4 border-t border-[rgba(255,255,255,0.08)]">
               <button
                 type="button"
                 onClick={() => {
@@ -1255,7 +1179,7 @@ const Products = () => {
                 className={`px-3 py-2.5 rounded-xl border text-xs font-semibold transition-colors cursor-pointer flex items-center justify-center shrink-0 ${
                   isInWishlist(inspectingProduct.id)
                     ? "bg-rose-500/20 text-rose-300 border-rose-500/40"
-                    : "bg-[#080e1a] hover:bg-rose-500/10 text-slate-300 hover:text-rose-300 border-[#1e293b]"
+                    : "bg-[#0c0e14] hover:bg-rose-500/10 text-slate-300 hover:text-rose-300 border-[rgba(255,255,255,0.08)]"
                 }`}
                 title={
                   isInWishlist(inspectingProduct.id)
@@ -1270,7 +1194,7 @@ const Products = () => {
               <button
                 type="button"
                 onClick={() => setInspectingProduct(null)}
-                className="flex-1 py-2.5 rounded-xl bg-[#080e1a] hover:bg-[#131d33] border border-[#1e293b] text-slate-300 text-xs font-semibold hover:text-white transition-colors cursor-pointer"
+                className="flex-1 py-2.5 rounded-xl bg-[#0c0e14] hover:bg-[#131d33] border border-[rgba(255,255,255,0.08)] text-slate-300 text-xs font-semibold hover:text-white transition-colors cursor-pointer"
               >
                 Close
               </button>
@@ -1283,7 +1207,7 @@ const Products = () => {
                     `Added "${inspectingProduct.name || inspectingProduct.title}" to cart! 🛒`,
                   );
                 }}
-                className="flex-1 py-2.5 rounded-xl bg-linear-to-r from-amber-500 to-amber-400 hover:brightness-110 text-slate-950 font-bold text-xs transition-all shadow-md shadow-amber-500/20 cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50"
+                className="flex-1 py-2.5 rounded-xl bg-linear-to-r bg-emerald-600 hover:bg-emerald-500 text-white hover:brightness-110 font-bold text-xs transition-all shadow-md shadow-emerald-600/20 cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50"
               >
                 <span>🛒 Add to Cart</span>
               </button>

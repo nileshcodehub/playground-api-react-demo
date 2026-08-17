@@ -8,6 +8,7 @@ import ConfirmationModal from "@/components/ConfirmationModal";
 import SortDropdown from "@/components/SortDropdown";
 import SearchInput from "@/components/SearchInput";
 import { TodoCardSkeletonGrid } from "@/components/Skeletons";
+import HowItWorksBanner from "@/components/common/HowItWorksBanner";
 
 /* ─────────────────────────────────────────────────────────────── constants & helpers */
 const SORT_OPTIONS = [
@@ -27,7 +28,7 @@ function SandboxBadge({ value }) {
   if (!value) return null;
   const map = {
     created: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
-    updated: "bg-amber-500/15 text-amber-300 border-amber-500/30",
+    updated: "bg-white/10 text-white border-white/20",
   };
   return (
     <span
@@ -41,15 +42,15 @@ function SandboxBadge({ value }) {
 function StatusBadge({ completed }) {
   if (completed) {
     return (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
         <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
         Completed
       </span>
     );
   }
   return (
-    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-amber-500/15 text-amber-300 border border-amber-500/30">
-      <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-500/10 text-slate-400 border border-slate-700/40">
+      <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
       Pending
     </span>
   );
@@ -62,25 +63,15 @@ function AuthorAvatar({ name, size = "md" }) {
     .join("")
     .slice(0, 2)
     .toUpperCase();
-  const palette = [
-    "from-amber-500 to-amber-700 text-slate-950",
-    "from-sky-500 to-blue-700 text-white",
-    "from-emerald-500 to-teal-700 text-white",
-    "from-indigo-500 to-violet-700 text-white",
-    "from-rose-500 to-pink-700 text-white",
-    "from-teal-500 to-emerald-700 text-white",
-    "from-purple-500 to-indigo-700 text-white",
-  ];
-  const colour = palette[(name || "").charCodeAt(0) % palette.length];
   const sz =
     size === "lg"
-      ? "w-12 h-12 text-base"
+      ? "w-10 h-10 text-xs"
       : size === "sm"
         ? "w-6 h-6 text-[10px]"
-        : "w-8 h-8 text-xs";
+        : "w-7 h-7 text-xs";
   return (
     <div
-      className={`${sz} rounded-xl bg-linear-to-br ${colour} flex items-center justify-center font-bold shrink-0 shadow-xs ring-1 ring-white/10`}
+      className={`${sz} rounded-full bg-slate-800 text-slate-300 border border-slate-700 flex items-center justify-center font-bold shrink-0`}
     >
       {initials}
     </div>
@@ -137,7 +128,7 @@ function TodoForm({
     }));
 
   const inputCls =
-    "w-full bg-[#080e1a] border border-[#1e293b] rounded-xl px-3.5 py-2.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/30 transition-all";
+    "w-full bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] rounded-xl px-3.5 py-2.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-amber-500/30 transition-all";
 
   return (
     <form
@@ -152,7 +143,7 @@ function TodoForm({
         <div className="space-y-1.5">
           <label className="text-xs font-semibold text-slate-300 flex items-center justify-between">
             <span>
-              Task Description / Title <span className="text-amber-400">*</span>
+              Task Description / Title <span className="text-emerald-400">*</span>
             </span>
             <span className="text-[11px] text-slate-500 font-mono">
               {form.title.length} chars
@@ -172,7 +163,7 @@ function TodoForm({
         {/* Assigned Owner */}
         <div className="space-y-1.5">
           <label className="text-xs font-semibold text-slate-300">
-            Assigned Owner <span className="text-amber-400">*</span>
+            Assigned Owner <span className="text-emerald-400">*</span>
           </label>
           <select
             id="todo-form-user"
@@ -185,13 +176,13 @@ function TodoForm({
                 <option
                   key={u.id}
                   value={u.id}
-                  className="bg-[#0f172a] text-white"
+                  className="bg-[#12151d] text-white"
                 >
                   #{u.id} — {u.name} (@{u.username})
                 </option>
               ))
             ) : (
-              <option value={1} className="bg-[#0f172a] text-white">
+              <option value={1} className="bg-[#12151d] text-white">
                 User #1 (Default Assignee)
               </option>
             )}
@@ -199,7 +190,7 @@ function TodoForm({
         </div>
 
         {/* Completion Toggle */}
-        <div className="p-4 rounded-xl bg-[#080e1a] border border-[#1e293b] flex items-center justify-between">
+        <div className="p-4 rounded-xl bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] flex items-center justify-between">
           <div>
             <label
               htmlFor="todo-form-completed"
@@ -216,19 +207,19 @@ function TodoForm({
             type="checkbox"
             checked={form.completed}
             onChange={set("completed")}
-            className="w-5 h-5 accent-amber-500 rounded cursor-pointer"
+            className="w-5 h-5 accent-emerald-500 rounded cursor-pointer"
           />
         </div>
       </div>
 
-      <div className="pt-3 border-t border-[#1e293b]">
+      <div className="pt-3 border-t border-[rgba(255,255,255,0.08)]">
         <button
           id="todo-form-submit"
           type="submit"
           disabled={loading || !form.title.trim()}
-          className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 disabled:opacity-60 disabled:cursor-not-allowed text-slate-950 text-sm font-bold transition-all shadow-md shadow-amber-500/10 cursor-pointer"
+          className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 disabled:opacity-60 disabled:cursor-not-allowed text-white text-sm font-bold transition-all shadow-md shadow-emerald-600/10 cursor-pointer"
         >
-          {loading && <Spinner className="w-4 h-4 text-slate-950" />}
+          {loading && <Spinner className="w-4 h-4 text-white" />}
           {submitLabel}
         </button>
       </div>
@@ -264,23 +255,23 @@ function TodoInspectorDrawer({
       />
 
       {/* Drawer Container */}
-      <div className="relative w-full max-w-xl bg-[#0f172a] border-l border-[#1e293b] h-full shadow-2xl z-10 flex flex-col animate-in slide-in-from-right duration-300">
+      <div className="relative w-full max-w-xl bg-[#12151d] border-l border-[rgba(255,255,255,0.08)] h-full shadow-2xl z-10 flex flex-col animate-in slide-in-from-right duration-300">
         {/* Header Strip */}
-        <div className="p-6 border-b border-[#1e293b] bg-[#080e1a] shrink-0">
+        <div className="p-6 border-b border-[rgba(255,255,255,0.08)] bg-[#0c0e14] shrink-0">
           <div className="flex items-start justify-between gap-4 mb-4">
             <div className="flex items-start gap-3.5">
               <div
                 className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-xl shrink-0 border ${
                   todo.completed
                     ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
-                    : "bg-amber-500/10 text-amber-400 border-amber-500/30"
+                    : "bg-amber-500/10 text-emerald-400 border-emerald-500/30"
                 }`}
               >
                 {todo.completed ? "✓" : "⏳"}
               </div>
               <div className="min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-[#0f172a] text-slate-300 border border-[#1e293b]">
+                  <span className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-[#12151d] text-slate-300 border border-[rgba(255,255,255,0.08)]">
                     #TSK-{String(todo.id).padStart(4, "0")}
                   </span>
                   <StatusBadge completed={todo.completed} />
@@ -294,7 +285,7 @@ function TodoInspectorDrawer({
             <button
               type="button"
               onClick={onClose}
-              className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-[#1e293b] transition-colors cursor-pointer shrink-0"
+              className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-[rgba(255,255,255,0.08)] transition-colors cursor-pointer shrink-0"
             >
               <svg
                 className="w-5 h-5"
@@ -313,7 +304,7 @@ function TodoInspectorDrawer({
           </div>
 
           {/* Quick Toggle Banner */}
-          <div className="p-3 rounded-xl bg-[#0f172a] border border-[#1e293b] flex items-center justify-between">
+          <div className="p-3 rounded-xl bg-[#12151d] border border-[rgba(255,255,255,0.08)] flex items-center justify-between">
             <span className="text-xs text-slate-300 font-medium">
               Quick Status Action:
             </span>
@@ -322,8 +313,8 @@ function TodoInspectorDrawer({
               onClick={() => onToggle(todo)}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                 todo.completed
-                  ? "bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30"
-                  : "bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-xs"
+                  ? "bg-amber-500/10 hover:bg-amber-500/20 text-emerald-300 border border-emerald-500/30"
+                  : "bg-emerald-500 hover:bg-emerald-400 text-white shadow-xs"
               }`}
             >
               {todo.completed ? "Mark as Pending" : "Mark as Completed ✓"}
@@ -334,7 +325,7 @@ function TodoInspectorDrawer({
         {/* Drawer Body */}
         <div className="p-6 overflow-y-auto flex-1 space-y-6">
           {/* Task Info Dossier */}
-          <div className="p-5 rounded-2xl bg-[#080e1a] border border-[#1e293b] space-y-3">
+          <div className="p-5 rounded-2xl bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] space-y-3">
             <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
               Task Scope
             </span>
@@ -345,7 +336,7 @@ function TodoInspectorDrawer({
 
           {/* Assignee Box */}
           {author && (
-            <div className="p-4 rounded-2xl bg-[#080e1a] border border-[#1e293b] space-y-2.5">
+            <div className="p-4 rounded-2xl bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] space-y-2.5">
               <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
                 Assigned Contributor
               </span>
@@ -359,8 +350,8 @@ function TodoInspectorDrawer({
                 </div>
               </div>
               {author.company?.name && (
-                <div className="text-xs text-slate-400 pt-1 border-t border-[#1e293b] flex items-center gap-1.5">
-                  <span className="text-amber-400">🏢</span>
+                <div className="text-xs text-slate-400 pt-1 border-t border-[rgba(255,255,255,0.08)] flex items-center gap-1.5">
+                  <span className="text-emerald-400">🏢</span>
                   <span>{author.company.name}</span>
                 </div>
               )}
@@ -368,13 +359,13 @@ function TodoInspectorDrawer({
           )}
 
           {/* Sandbox Context */}
-          <div className="p-4 rounded-2xl bg-[#080e1a] border border-[#1e293b] space-y-1.5">
+          <div className="p-4 rounded-2xl bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] space-y-1.5">
             <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
               Isolation Context
             </span>
             <p className="text-xs text-slate-400 leading-relaxed">
               Task ID{" "}
-              <span className="font-mono text-amber-300">{todo.id}</span> is
+              <span className="font-mono text-emerald-300">{todo.id}</span> is
               isolated to your current browser session sandbox.
             </p>
           </div>
@@ -388,30 +379,30 @@ function TodoInspectorDrawer({
               <button
                 type="button"
                 onClick={handleCopyJson}
-                className="px-2.5 py-1 rounded-lg bg-[#1e293b] hover:bg-[#283852] text-xs font-mono text-slate-300 hover:text-white transition-colors cursor-pointer flex items-center gap-1.5"
+                className="px-2.5 py-1 rounded-lg bg-[rgba(255,255,255,0.08)] hover:bg-[#1a202c] text-xs font-mono text-slate-300 hover:text-white transition-colors cursor-pointer flex items-center gap-1.5"
               >
                 {copied ? "✓ Copied" : "Copy Payload"}
               </button>
             </div>
-            <div className="p-4 rounded-2xl bg-[#080e1a] border border-[#1e293b] font-mono text-xs text-amber-200/90 overflow-x-auto leading-relaxed max-h-60">
+            <div className="p-4 rounded-2xl bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] font-mono text-xs text-amber-200/90 overflow-x-auto leading-relaxed max-h-60">
               <pre>{JSON.stringify(todo, null, 2)}</pre>
             </div>
           </div>
         </div>
 
         {/* Drawer Footer Actions */}
-        <div className="p-4 border-t border-[#1e293b] bg-[#080e1a] flex gap-3 shrink-0">
+        <div className="p-4 border-t border-[rgba(255,255,255,0.08)] bg-[#0c0e14] flex gap-3 shrink-0">
           <button
             type="button"
             onClick={() => onEdit(todo)}
-            className="flex-1 py-2.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm transition-all shadow-xs cursor-pointer flex items-center justify-center gap-2"
+            className="flex-1 py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm transition-all shadow-xs cursor-pointer flex items-center justify-center gap-2"
           >
             Edit Task
           </button>
           <button
             type="button"
             onClick={() => onDelete(todo)}
-            className="py-2.5 px-4 rounded-xl bg-[#1e293b] hover:bg-rose-900/40 border border-[#1e293b] hover:border-rose-700/50 text-slate-300 hover:text-rose-300 font-semibold text-sm transition-colors cursor-pointer flex items-center gap-1.5"
+            className="py-2.5 px-4 rounded-xl bg-[rgba(255,255,255,0.08)] hover:bg-rose-900/40 border border-[rgba(255,255,255,0.08)] hover:border-rose-700/50 text-slate-300 hover:text-rose-300 font-semibold text-sm transition-colors cursor-pointer flex items-center gap-1.5"
           >
             Delete
           </button>
@@ -639,64 +630,65 @@ const Todos = () => {
     () => todos.filter((t) => t._sandbox).length,
     [todos],
   );
-  const completedInView = useMemo(
-    () => todos.filter((t) => t.completed).length,
-    [todos],
-  );
 
   return (
     <div className="space-y-6">
-      {/* ── Executive Metric Strip ── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-1 shadow-xs">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-            Total Tasks
+      {/* ── Sleek Unified Page Header ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+              Task Board & Engine
+            </h1>
+            <span className="px-2 py-0.5 rounded-md text-[11px] font-mono font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              /todos
+            </span>
           </div>
-          <div className="text-xl sm:text-2xl font-extrabold text-white font-mono">
-            {pagination.total ?? 0}
-          </div>
-          <div className="text-[11px] text-slate-400">
-            Across all session views
-          </div>
+          <p className="text-xs sm:text-sm text-slate-400">
+            Checklist manager with stateful PATCH completion toggles and owner filters.
+          </p>
         </div>
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-1 shadow-xs">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-            Completed Rate
-          </div>
-          <div className="text-xl sm:text-2xl font-extrabold text-emerald-400 font-mono">
-            {pagination.total
-              ? `${Math.round((completedInView / todos.length) * 100 || 0)}%`
-              : "0%"}
-          </div>
-          <div className="text-[11px] text-slate-400">In current page set</div>
-        </div>
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-1 shadow-xs">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-            Session Overlays
-          </div>
-          <div className="text-xl sm:text-2xl font-extrabold text-amber-400 font-mono">
-            {mutatedCount} Active
-          </div>
-          <div className="text-[11px] text-slate-400">
-            Local browser mutations
-          </div>
-        </div>
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-1 shadow-xs">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-            Gateway Status
-          </div>
-          <div className="text-xl sm:text-2xl font-extrabold text-emerald-400 font-mono flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-            100% Synced
-          </div>
-          <div className="text-[11px] text-slate-400">
-            REST v1 schema connected
-          </div>
+
+        <div className="flex items-center gap-2.5 shrink-0">
+          <button
+            type="button"
+            onClick={() => setModal({ type: "create" })}
+            className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-md shadow-emerald-600/20 cursor-pointer flex items-center gap-1.5"
+          >
+            <span>+</span>
+            <span>New Task</span>
+          </button>
         </div>
       </div>
 
+      {/* ── API Feature Explainer Banner ── */}
+      <HowItWorksBanner
+        title="Task Engine & Live Status Mutations (/todos)"
+        subtitle="Clicking the checkbox on any task immediately fires a PATCH request to Playground API. The task status toggles and persists in your private session sandbox overlay."
+        badge="Stateful Mutations"
+        endpoint="PATCH /api/v1/todos/:id"
+        codeSnippet={`// 1. Fetch filtered tasks (e.g. pending vs completed)
+const res = await fetch('https://playground-api-xi.vercel.app/api/v1/todos?completed=false&_sort=id&_order=desc', {
+  credentials: 'include',
+});
+const { data } = await res.json();
+
+// 2. Toggle task completion status in your sandbox
+await fetch('https://playground-api-xi.vercel.app/api/v1/todos/1', {
+  method: 'PATCH',
+  headers: { 'Content-Type': 'application/json' },
+  credentials: 'include',
+  body: JSON.stringify({ completed: true }),
+});`}
+        payloadExample={{
+          title: "delectus aut autem",
+          completed: true,
+          user_id: 1
+        }}
+      />
+
       {/* ── Toolbar: Search, Filters, View Switcher & Action ── */}
-      <div className="p-4 rounded-2xl bg-[#0f172a] border border-[#1e293b] shadow-md space-y-4">
+      <div className="p-4 rounded-2xl bg-[#12151d] border border-[rgba(255,255,255,0.08)] shadow-md space-y-4">
         <div className="flex flex-col lg:flex-row gap-3 items-stretch lg:items-center justify-between">
           {/* Search + Status Filter + Author Filter + Sort */}
           <div className="flex flex-col sm:flex-row gap-3 flex-1">
@@ -716,7 +708,7 @@ const Todos = () => {
                 setPage(1);
                 setStatusFilter(e.target.value);
               }}
-              className="bg-[#080e1a] border border-[#1e293b] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500 cursor-pointer min-w-32.5"
+              className="bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 cursor-pointer min-w-32.5"
             >
               <option value="">All Statuses</option>
               <option value="false">⏳ Pending</option>
@@ -731,7 +723,7 @@ const Todos = () => {
                 setPage(1);
                 setAuthorFilter(e.target.value);
               }}
-              className="bg-[#080e1a] border border-[#1e293b] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500 cursor-pointer min-w-35"
+              className="bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 cursor-pointer min-w-35"
             >
               <option value="">All Assignees</option>
               {users.map((u) => (
@@ -752,13 +744,13 @@ const Todos = () => {
           {/* Right Controls: View Switcher & Create Button */}
           <div className="flex items-center gap-2.5 shrink-0">
             {/* View Switcher Segmented Control */}
-            <div className="flex items-center p-1 rounded-xl bg-[#080e1a] border border-[#1e293b]">
+            <div className="flex items-center p-1 rounded-xl bg-black/40 border border-white/10">
               <button
                 type="button"
                 onClick={() => setViewMode("table")}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer flex items-center gap-1.5 ${
                   viewMode === "table"
-                    ? "bg-amber-500 text-slate-950 font-bold shadow-xs"
+                    ? "bg-white/10 text-white font-bold"
                     : "text-slate-400 hover:text-white"
                 }`}
                 title="Data Table View"
@@ -781,9 +773,9 @@ const Todos = () => {
               <button
                 type="button"
                 onClick={() => setViewMode("cards")}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer flex items-center gap-1.5 ${
                   viewMode === "cards"
-                    ? "bg-amber-500 text-slate-950 font-bold shadow-xs"
+                    ? "bg-white/10 text-white font-bold"
                     : "text-slate-400 hover:text-white"
                 }`}
                 title="Card Grid View"
@@ -809,7 +801,7 @@ const Todos = () => {
             <button
               id="btn-create-todo"
               onClick={() => setModal({ type: "create" })}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-sm font-bold transition-all shadow-md shadow-amber-500/10 shrink-0 cursor-pointer"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-md shadow-emerald-600/20 shrink-0 cursor-pointer"
             >
               <svg
                 className="w-4 h-4"
@@ -830,7 +822,7 @@ const Todos = () => {
         </div>
 
         {/* Filter Chips Bar */}
-        <div className="flex items-center gap-2 pt-2 border-t border-[#1e293b] text-xs">
+        <div className="flex items-center gap-2 pt-2 border-t border-white/10 text-xs">
           <span className="text-slate-500 font-semibold uppercase text-[10px] tracking-wider mr-1">
             Filter:
           </span>
@@ -845,8 +837,8 @@ const Todos = () => {
               onClick={() => setFilterMode(chip.key)}
               className={`px-3 py-1 rounded-lg transition-colors cursor-pointer font-medium ${
                 filterMode === chip.key
-                  ? "bg-amber-500/15 text-amber-300 border border-amber-500/30 font-semibold"
-                  : "text-slate-400 hover:text-white bg-[#080e1a] border border-[#1e293b]"
+                  ? "bg-white/10 text-white border border-white/20 font-semibold"
+                  : "text-slate-400 hover:text-white bg-transparent border border-white/5"
               }`}
             >
               {chip.label}
@@ -877,7 +869,7 @@ const Todos = () => {
                     title={
                       todo.completed ? "Mark as pending" : "Mark as completed"
                     }
-                    className="w-4 h-4 accent-amber-500 rounded cursor-pointer shrink-0"
+                    className="w-4 h-4 accent-emerald-500 rounded cursor-pointer shrink-0"
                   />
                   <button
                     id={`view-todo-${todo.id}`}
@@ -888,9 +880,9 @@ const Todos = () => {
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
                         <p
-                          className={`text-sm font-bold truncate leading-snug group-hover:text-amber-400 transition-colors ${
+                          className={`text-sm font-semibold truncate leading-snug group-hover:text-emerald-400 transition-colors ${
                             todo.completed
-                              ? "line-through text-slate-400"
+                              ? "line-through text-slate-500"
                               : "text-white"
                           }`}
                         >
@@ -951,7 +943,7 @@ const Todos = () => {
                     id={`inspect-todo-${todo.id}`}
                     title="Inspect Task Sheet"
                     onClick={() => handleOpenDrawer(todo)}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors cursor-pointer"
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-emerald-400 hover:bg-amber-500/10 transition-colors cursor-pointer"
                   >
                     <svg
                       className="w-4 h-4"
@@ -976,7 +968,7 @@ const Todos = () => {
                     id={`edit-todo-${todo.id}`}
                     title="Edit Task"
                     onClick={() => setModal({ type: "edit", todo })}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors cursor-pointer"
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-emerald-400 hover:bg-amber-500/10 transition-colors cursor-pointer"
                   >
                     <svg
                       className="w-4 h-4"
@@ -1020,7 +1012,7 @@ const Todos = () => {
       ) : loading ? (
         <TodoCardSkeletonGrid count={pagination.limit ?? 10} />
       ) : displayedTodos.length === 0 ? (
-        <div className="p-12 rounded-2xl bg-[#0f172a] border border-[#1e293b] text-center text-slate-400 text-sm">
+        <div className="p-12 rounded-2xl bg-[#12151d] border border-[rgba(255,255,255,0.08)] text-center text-slate-400 text-sm">
           No task assignment records matching the query.
         </div>
       ) : (
@@ -1031,10 +1023,10 @@ const Todos = () => {
             return (
               <div
                 key={todo.id}
-                className={`p-5 rounded-2xl bg-[#0f172a] border transition-all shadow-md flex flex-col justify-between space-y-4 group ${
+                className={`p-5 rounded-2xl bg-[#12151d] border transition-all shadow-md flex flex-col justify-between space-y-4 group ${
                   todo.completed
                     ? "border-emerald-500/30 hover:border-emerald-500/60 bg-[#0d1c28]"
-                    : "border-[#1e293b] hover:border-amber-500/50 hover:bg-[#131d33]"
+                    : "border-[rgba(255,255,255,0.08)] hover:border-emerald-500/50 hover:bg-[#131d33]"
                 }`}
               >
                 <div className="space-y-3">
@@ -1045,14 +1037,14 @@ const Todos = () => {
                         type="checkbox"
                         checked={Boolean(todo.completed)}
                         onChange={() => handleToggle(todo)}
-                        className="w-4 h-4 accent-amber-500 rounded cursor-pointer shrink-0"
+                        className="w-4 h-4 accent-emerald-500 rounded cursor-pointer shrink-0"
                       />
                       <AuthorAvatar
                         name={author?.name || `User ${todo.user_id}`}
                         size="sm"
                       />
                       <div className="min-w-0">
-                        <p className="text-xs font-bold text-white truncate group-hover:text-amber-400 transition-colors">
+                        <p className="text-xs font-bold text-white truncate group-hover:text-emerald-400 transition-colors">
                           {author?.name || `Assignee #${todo.user_id}`}
                         </p>
                         <p className="text-[11px] text-slate-400 font-mono">
@@ -1069,7 +1061,7 @@ const Todos = () => {
                       className={`font-bold text-sm leading-snug ${
                         todo.completed
                           ? "line-through text-slate-400"
-                          : "text-white group-hover:text-amber-400"
+                          : "text-white group-hover:text-emerald-400"
                       }`}
                     >
                       {todo.title}
@@ -1081,11 +1073,11 @@ const Todos = () => {
                 </div>
 
                 {/* Card Bottom Actions */}
-                <div className="pt-3 border-t border-[#1e293b] flex items-center justify-between gap-2 text-xs">
+                <div className="pt-3 border-t border-[rgba(255,255,255,0.08)] flex items-center justify-between gap-2 text-xs">
                   <button
                     type="button"
                     onClick={() => handleOpenDrawer(todo)}
-                    className="px-3 py-1.5 rounded-lg bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 font-semibold transition-colors cursor-pointer flex items-center gap-1.5"
+                    className="px-3 py-1.5 rounded-lg bg-amber-500/10 text-emerald-300 hover:bg-amber-500/20 font-semibold transition-colors cursor-pointer flex items-center gap-1.5"
                   >
                     <span>Inspect</span>
                     <span>→</span>
@@ -1094,7 +1086,7 @@ const Todos = () => {
                     <button
                       type="button"
                       onClick={() => setModal({ type: "edit", todo })}
-                      className="p-1.5 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-[#1e293b] transition-colors cursor-pointer"
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-emerald-400 hover:bg-[rgba(255,255,255,0.08)] transition-colors cursor-pointer"
                       title="Edit"
                     >
                       <svg
@@ -1114,7 +1106,7 @@ const Todos = () => {
                     <button
                       type="button"
                       onClick={() => setModal({ type: "delete", todo })}
-                      className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-[#1e293b] transition-colors cursor-pointer"
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-[rgba(255,255,255,0.08)] transition-colors cursor-pointer"
                       title="Delete"
                     >
                       <svg

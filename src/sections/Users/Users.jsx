@@ -7,6 +7,7 @@ import ConfirmationModal from "@/components/ConfirmationModal";
 import SortDropdown from "@/components/SortDropdown";
 import SearchInput from "@/components/SearchInput";
 import { UserCardSkeletonGrid } from "@/components/Skeletons";
+import HowItWorksBanner from "@/components/common/HowItWorksBanner";
 
 /* ─────────────────────────────────────────────────────────────── constants & helpers */
 const SORT_OPTIONS = [
@@ -53,7 +54,7 @@ function SandboxBadge({ value }) {
   if (!value) return null;
   const map = {
     created: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
-    updated: "bg-amber-500/15 text-amber-300 border-amber-500/30",
+    updated: "bg-white/10 text-white border-white/20",
   };
   return (
     <span
@@ -72,7 +73,7 @@ function Avatar({ name, size = "md" }) {
     .slice(0, 2)
     .toUpperCase();
   const palette = [
-    "from-amber-500 to-amber-700 text-slate-950",
+    "from-amber-500 to-amber-700 text-white",
     "from-sky-500 to-blue-700 text-white",
     "from-emerald-500 to-teal-700 text-white",
     "from-indigo-500 to-violet-700 text-white",
@@ -138,7 +139,7 @@ function UserForm({
   ];
 
   const inputCls =
-    "w-full bg-[#080e1a] border border-[#1e293b] rounded-xl px-3.5 py-2.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/30 transition-all";
+    "w-full bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] rounded-xl px-3.5 py-2.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-amber-500/30 transition-all";
 
   return (
     <form
@@ -150,7 +151,7 @@ function UserForm({
     >
       {SECTIONS.map(({ title, fields }) => (
         <div key={title} className="space-y-3">
-          <p className="text-[11px] font-bold uppercase tracking-wider text-amber-400 border-b border-[#1e293b] pb-1.5 flex items-center gap-2">
+          <p className="text-[11px] font-bold uppercase tracking-wider text-emerald-400 border-b border-[rgba(255,255,255,0.08)] pb-1.5 flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
             {title}
           </p>
@@ -159,7 +160,7 @@ function UserForm({
               <div key={key} className={`space-y-1 ${key === "name" || key === "company_catchPhrase" ? "sm:col-span-2" : ""}`}>
                 <label className="text-xs font-semibold text-slate-300">
                   {label}
-                  {required && <span className="text-amber-400 ml-1">*</span>}
+                  {required && <span className="text-emerald-400 ml-1">*</span>}
                 </label>
                 <input
                   id={`user-form-${key}`}
@@ -175,14 +176,14 @@ function UserForm({
           </div>
         </div>
       ))}
-      <div className="pt-3 border-t border-[#1e293b]">
+      <div className="pt-3 border-t border-[rgba(255,255,255,0.08)]">
         <button
           id="user-form-submit"
           type="submit"
           disabled={loading}
-          className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 disabled:opacity-60 disabled:cursor-not-allowed text-slate-950 text-sm font-bold transition-all shadow-md shadow-amber-500/10 cursor-pointer"
+          className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 disabled:opacity-60 disabled:cursor-not-allowed text-white text-sm font-bold transition-all shadow-md shadow-emerald-600/10 cursor-pointer"
         >
-          {loading && <Spinner className="w-4 h-4 text-slate-950" />}
+          {loading && <Spinner className="w-4 h-4 text-white" />}
           {submitLabel}
         </button>
       </div>
@@ -214,9 +215,9 @@ function UserInspectorDrawer({ user, onClose, onEdit, onDelete }) {
       />
 
       {/* Drawer Container */}
-      <div className="relative w-full max-w-xl bg-[#0f172a] border-l border-[#1e293b] h-full shadow-2xl z-10 flex flex-col animate-in slide-in-from-right duration-300">
+      <div className="relative w-full max-w-xl bg-[#12151d] border-l border-[rgba(255,255,255,0.08)] h-full shadow-2xl z-10 flex flex-col animate-in slide-in-from-right duration-300">
         {/* Header Strip */}
-        <div className="p-6 border-b border-[#1e293b] bg-[#080e1a] shrink-0">
+        <div className="p-6 border-b border-[rgba(255,255,255,0.08)] bg-[#0c0e14] shrink-0">
           <div className="flex items-start justify-between gap-4 mb-4">
             <div className="flex items-center gap-3.5">
               {avatarSrc ? (
@@ -238,7 +239,7 @@ function UserInspectorDrawer({ user, onClose, onEdit, onDelete }) {
                 <div className="flex items-center gap-2 mt-0.5">
                   <span className="text-xs text-slate-400 font-mono">@{user.username}</span>
                   <span className="text-slate-600">•</span>
-                  <span className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-[#0f172a] text-slate-300 border border-[#1e293b]">
+                  <span className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-[#12151d] text-slate-300 border border-[rgba(255,255,255,0.08)]">
                     #USR-{String(user.id).padStart(4, "0")}
                   </span>
                   {user._sandbox && <SandboxBadge value={user._sandbox} />}
@@ -248,7 +249,7 @@ function UserInspectorDrawer({ user, onClose, onEdit, onDelete }) {
             <button
               type="button"
               onClick={onClose}
-              className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-[#1e293b] transition-colors cursor-pointer"
+              className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-[rgba(255,255,255,0.08)] transition-colors cursor-pointer"
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -257,7 +258,7 @@ function UserInspectorDrawer({ user, onClose, onEdit, onDelete }) {
           </div>
 
           {/* Tab Navigation */}
-          <div className="flex items-center gap-2 border-t border-[#1e293b] pt-3">
+          <div className="flex items-center gap-2 border-t border-[rgba(255,255,255,0.08)] pt-3">
             {[
               { key: "overview", label: "Profile Info" },
               { key: "company", label: "Company & Address" },
@@ -269,8 +270,8 @@ function UserInspectorDrawer({ user, onClose, onEdit, onDelete }) {
                 onClick={() => setActiveTab(tab.key)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                   activeTab === tab.key
-                    ? "bg-amber-500 text-slate-950 font-bold shadow-xs"
-                    : "text-slate-400 hover:text-white hover:bg-[#1e293b]"
+                    ? "bg-white/10 text-white font-bold shadow-xs"
+                    : "text-slate-400 hover:text-white hover:bg-[rgba(255,255,255,0.08)]"
                 }`}
               >
                 {tab.label}
@@ -283,16 +284,16 @@ function UserInspectorDrawer({ user, onClose, onEdit, onDelete }) {
         <div className="p-6 overflow-y-auto flex-1 space-y-6">
           {activeTab === "overview" && (
             <div className="space-y-4">
-              <div className="p-4 rounded-2xl bg-[#080e1a] border border-[#1e293b] space-y-3">
+              <div className="p-4 rounded-2xl bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] space-y-3">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Communication Channels</span>
                 <div className="space-y-2 text-sm">
-                  <div className="flex items-center justify-between py-1.5 border-b border-[#1e293b]">
+                  <div className="flex items-center justify-between py-1.5 border-b border-[rgba(255,255,255,0.08)]">
                     <span className="text-slate-400">Email Address</span>
-                    <a href={`mailto:${user.email}`} className="text-amber-400 hover:underline font-mono text-xs">
+                    <a href={`mailto:${user.email}`} className="text-emerald-400 hover:underline font-mono text-xs">
                       {user.email}
                     </a>
                   </div>
-                  <div className="flex items-center justify-between py-1.5 border-b border-[#1e293b]">
+                  <div className="flex items-center justify-between py-1.5 border-b border-[rgba(255,255,255,0.08)]">
                     <span className="text-slate-400">Direct Phone</span>
                     <span className="text-slate-200 font-mono text-xs">{user.phone || "Not specified"}</span>
                   </div>
@@ -314,10 +315,10 @@ function UserInspectorDrawer({ user, onClose, onEdit, onDelete }) {
                 </div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-[#080e1a] border border-[#1e293b] space-y-2">
+              <div className="p-4 rounded-2xl bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] space-y-2">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Sandbox Isolation Context</span>
                 <p className="text-xs text-slate-400 leading-relaxed">
-                  Record ID <span className="font-mono text-amber-300">{user.id}</span> is maintained within your browser session token overlay.
+                  Record ID <span className="font-mono text-emerald-300">{user.id}</span> is maintained within your browser session token overlay.
                 </p>
               </div>
             </div>
@@ -325,30 +326,30 @@ function UserInspectorDrawer({ user, onClose, onEdit, onDelete }) {
 
           {activeTab === "company" && (
             <div className="space-y-4">
-              <div className="p-4 rounded-2xl bg-[#080e1a] border border-[#1e293b] space-y-2.5">
+              <div className="p-4 rounded-2xl bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] space-y-2.5">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Corporate Affiliation</span>
                 <div className="text-base font-bold text-white">
                   {user.company?.name || "Independent Professional"}
                 </div>
                 {user.company?.catchPhrase && (
-                  <p className="text-xs text-amber-300/90 italic bg-amber-500/5 p-3 rounded-xl border border-amber-500/20">
+                  <p className="text-xs text-emerald-300/90 italic bg-amber-500/5 p-3 rounded-xl border border-emerald-500/20">
                     "{user.company.catchPhrase}"
                   </p>
                 )}
               </div>
 
-              <div className="p-4 rounded-2xl bg-[#080e1a] border border-[#1e293b] space-y-3">
+              <div className="p-4 rounded-2xl bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] space-y-3">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Location Coordinates</span>
                 <div className="grid grid-cols-2 gap-3 text-xs">
-                  <div className="p-3 rounded-xl bg-[#0f172a] border border-[#1e293b]">
+                  <div className="p-3 rounded-xl bg-[#12151d] border border-[rgba(255,255,255,0.08)]">
                     <span className="text-slate-500 block mb-1">Street</span>
                     <span className="font-semibold text-slate-200">{user.address?.street || "N/A"}</span>
                   </div>
-                  <div className="p-3 rounded-xl bg-[#0f172a] border border-[#1e293b]">
+                  <div className="p-3 rounded-xl bg-[#12151d] border border-[rgba(255,255,255,0.08)]">
                     <span className="text-slate-500 block mb-1">City</span>
                     <span className="font-semibold text-slate-200">{user.address?.city || "N/A"}</span>
                   </div>
-                  <div className="col-span-2 p-3 rounded-xl bg-[#0f172a] border border-[#1e293b]">
+                  <div className="col-span-2 p-3 rounded-xl bg-[#12151d] border border-[rgba(255,255,255,0.08)]">
                     <span className="text-slate-500 block mb-1">Postal Zipcode</span>
                     <span className="font-mono text-slate-200">{user.address?.zipcode || "N/A"}</span>
                   </div>
@@ -364,12 +365,12 @@ function UserInspectorDrawer({ user, onClose, onEdit, onDelete }) {
                 <button
                   type="button"
                   onClick={handleCopyJson}
-                  className="px-2.5 py-1 rounded-lg bg-[#1e293b] hover:bg-[#283852] text-xs font-mono text-slate-300 hover:text-white transition-colors cursor-pointer flex items-center gap-1.5"
+                  className="px-2.5 py-1 rounded-lg bg-[rgba(255,255,255,0.08)] hover:bg-[#1a202c] text-xs font-mono text-slate-300 hover:text-white transition-colors cursor-pointer flex items-center gap-1.5"
                 >
                   {copied ? "✓ Copied" : "Copy Payload"}
                 </button>
               </div>
-              <div className="p-4 rounded-2xl bg-[#080e1a] border border-[#1e293b] font-mono text-xs text-amber-200/90 overflow-x-auto leading-relaxed max-h-96">
+              <div className="p-4 rounded-2xl bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] font-mono text-xs text-amber-200/90 overflow-x-auto leading-relaxed max-h-96">
                 <pre>{JSON.stringify(user, null, 2)}</pre>
               </div>
             </div>
@@ -377,18 +378,18 @@ function UserInspectorDrawer({ user, onClose, onEdit, onDelete }) {
         </div>
 
         {/* Drawer Footer Actions */}
-        <div className="p-4 border-t border-[#1e293b] bg-[#080e1a] flex gap-3 shrink-0">
+        <div className="p-4 border-t border-[rgba(255,255,255,0.08)] bg-[#0c0e14] flex gap-3 shrink-0">
           <button
             type="button"
             onClick={() => onEdit(user)}
-            className="flex-1 py-2.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm transition-all shadow-xs cursor-pointer flex items-center justify-center gap-2"
+            className="flex-1 py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm transition-all shadow-xs cursor-pointer flex items-center justify-center gap-2"
           >
             Edit Record
           </button>
           <button
             type="button"
             onClick={() => onDelete(user)}
-            className="py-2.5 px-4 rounded-xl bg-[#1e293b] hover:bg-rose-900/40 border border-[#1e293b] hover:border-rose-700/50 text-slate-300 hover:text-rose-300 font-semibold text-sm transition-colors cursor-pointer flex items-center gap-1.5"
+            className="py-2.5 px-4 rounded-xl bg-[rgba(255,255,255,0.08)] hover:bg-rose-900/40 border border-[rgba(255,255,255,0.08)] hover:border-rose-700/50 text-slate-300 hover:text-rose-300 font-semibold text-sm transition-colors cursor-pointer flex items-center gap-1.5"
           >
             Delete
           </button>
@@ -559,42 +560,63 @@ const Users = () => {
   }, [users, filterMode]);
 
   const mutatedCount = useMemo(() => users.filter((u) => u._sandbox).length, [users]);
-  const uniqueCompanies = useMemo(() => {
-    const set = new Set(users.map((u) => u.company?.name).filter(Boolean));
-    return set.size;
-  }, [users]);
 
   return (
     <div className="space-y-6">
-      {/* ── Executive Metric Strip ── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-1 shadow-xs">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Total Registry</div>
-          <div className="text-xl sm:text-2xl font-extrabold text-white font-mono">{pagination.total ?? 0}</div>
-          <div className="text-[11px] text-slate-400">Global & overlay base</div>
-        </div>
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-1 shadow-xs">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Session Overlays</div>
-          <div className="text-xl sm:text-2xl font-extrabold text-amber-400 font-mono">{mutatedCount} Active</div>
-          <div className="text-[11px] text-slate-400">Local browser mutations</div>
-        </div>
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-1 shadow-xs">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Organizations</div>
-          <div className="text-xl sm:text-2xl font-extrabold text-sky-400 font-mono">{uniqueCompanies} Entities</div>
-          <div className="text-[11px] text-slate-400">Represented in dataset</div>
-        </div>
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-1 shadow-xs">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Gateway Status</div>
-          <div className="text-xl sm:text-2xl font-extrabold text-emerald-400 font-mono flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-            100% Synced
+      {/* ── Sleek Unified Page Header ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+              Team & User Directory
+            </h1>
+            <span className="px-2 py-0.5 rounded-md text-[11px] font-mono font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              /users
+            </span>
           </div>
-          <div className="text-[11px] text-slate-400">REST v1 schema connected</div>
+          <p className="text-xs sm:text-sm text-slate-400">
+            Search 25+ user profiles with deterministic vector SVG avatars and relational lookups.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2.5 shrink-0">
+          <button
+            type="button"
+            onClick={() => setModal({ type: "create" })}
+            className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-md shadow-emerald-600/20 cursor-pointer flex items-center gap-1.5"
+          >
+            <span>+</span>
+            <span>New User</span>
+          </button>
         </div>
       </div>
 
+      {/* ── API Feature Explainer Banner ── */}
+      <HowItWorksBanner
+        title="Team Directory & Dynamic SVG Avatars (/users & /avatars/:seed)"
+        subtitle="Demonstrates full-text fuzzy search across user profiles, relational data querying, and deterministic vector SVG avatar generation with zero external asset dependencies."
+        badge="Search & Avatar Engine"
+        endpoint="GET /api/v1/users?q=Bret"
+        codeSnippet={`// 1. Search users by query or sort by name
+const res = await fetch('https://playground-api-xi.vercel.app/api/v1/users?q=Bret&_sort=name&_order=asc', {
+  credentials: 'include',
+});
+const { data } = await res.json();
+
+// 2. Render deterministic vector SVG avatar for any username
+const avatarUrl = 'https://playground-api-xi.vercel.app/api/v1/avatars/' + encodeURIComponent(user.username);
+// <img src={avatarUrl} alt={user.name} />`}
+        payloadExample={{
+          name: "Leanne Graham",
+          username: "Bret",
+          email: "Sincere@april.biz",
+          phone: "1-770-736-8031",
+          company: { name: "Romaguera-Crona" }
+        }}
+      />
+
       {/* ── Toolbar: Search, Filters, View Switcher & Action ── */}
-      <div className="p-4 rounded-2xl bg-[#0f172a] border border-[#1e293b] shadow-md space-y-4">
+      <div className="p-4 rounded-2xl bg-[#12151d] border border-[rgba(255,255,255,0.08)] shadow-md space-y-4">
         <div className="flex flex-col lg:flex-row gap-3 items-stretch lg:items-center justify-between">
           {/* Search + Sort */}
           <div className="flex flex-col sm:flex-row gap-3 flex-1">
@@ -616,13 +638,13 @@ const Users = () => {
           {/* Right Controls: View Switcher & Create Button */}
           <div className="flex items-center gap-2.5 shrink-0">
             {/* View Switcher Segmented Control */}
-            <div className="flex items-center p-1 rounded-xl bg-[#080e1a] border border-[#1e293b]">
+            <div className="flex items-center p-1 rounded-xl bg-[#0c0e14] border border-[rgba(255,255,255,0.08)]">
               <button
                 type="button"
                 onClick={() => setViewMode("table")}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer flex items-center gap-1.5 ${
                   viewMode === "table"
-                    ? "bg-amber-500 text-slate-950 font-bold shadow-xs"
+                    ? "bg-white/10 text-white font-bold shadow-xs"
                     : "text-slate-400 hover:text-white"
                 }`}
                 title="Data Table View"
@@ -637,7 +659,7 @@ const Users = () => {
                 onClick={() => setViewMode("cards")}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer flex items-center gap-1.5 ${
                   viewMode === "cards"
-                    ? "bg-amber-500 text-slate-950 font-bold shadow-xs"
+                    ? "bg-white/10 text-white font-bold shadow-xs"
                     : "text-slate-400 hover:text-white"
                 }`}
                 title="Card Grid View"
@@ -653,7 +675,7 @@ const Users = () => {
             <button
               id="btn-create-user"
               onClick={() => setModal({ type: "create" })}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-sm font-bold transition-all shadow-md shadow-amber-500/10 shrink-0 cursor-pointer"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold transition-all shadow-md shadow-emerald-600/10 shrink-0 cursor-pointer"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -664,7 +686,7 @@ const Users = () => {
         </div>
 
         {/* Filter Chips Bar */}
-        <div className="flex items-center gap-2 pt-2 border-t border-[#1e293b] text-xs">
+        <div className="flex items-center gap-2 pt-2 border-t border-[rgba(255,255,255,0.08)] text-xs">
           <span className="text-slate-500 font-semibold uppercase text-[10px] tracking-wider mr-1">Filter:</span>
           {[
             { key: "all", label: `All Profiles (${pagination.total ?? 0})` },
@@ -677,8 +699,8 @@ const Users = () => {
               onClick={() => setFilterMode(chip.key)}
               className={`px-3 py-1 rounded-lg transition-colors cursor-pointer font-medium ${
                 filterMode === chip.key
-                  ? "bg-amber-500/15 text-amber-300 border border-amber-500/30 font-semibold"
-                  : "text-slate-400 hover:text-white bg-[#080e1a] border border-[#1e293b]"
+                  ? "bg-amber-500/15 text-emerald-300 border border-emerald-500/30 font-semibold"
+                  : "text-slate-400 hover:text-white bg-[#0c0e14] border border-[rgba(255,255,255,0.08)]"
               }`}
             >
               {chip.label}
@@ -719,7 +741,7 @@ const Users = () => {
                     <Avatar name={user.name} />
                   )}
                   <div className="min-w-0">
-                    <p className="text-sm font-bold text-white truncate leading-snug group-hover:text-amber-400 transition-colors">
+                    <p className="text-sm font-bold text-white truncate leading-snug group-hover:text-emerald-400 transition-colors">
                       {user.name}
                     </p>
                     <p className="text-[11px] text-slate-400 font-mono truncate">
@@ -766,7 +788,7 @@ const Users = () => {
                     id={`inspect-user-${user.id}`}
                     title="Inspect Profile Sheet"
                     onClick={() => handleOpenDrawer(user)}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors cursor-pointer"
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-emerald-400 hover:bg-amber-500/10 transition-colors cursor-pointer"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -777,7 +799,7 @@ const Users = () => {
                     id={`edit-user-${user.id}`}
                     title="Edit Record"
                     onClick={() => setModal({ type: "edit", user })}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors cursor-pointer"
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-emerald-400 hover:bg-amber-500/10 transition-colors cursor-pointer"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -801,7 +823,7 @@ const Users = () => {
       ) : loading ? (
         <UserCardSkeletonGrid count={pagination.limit ?? 10} />
       ) : displayedUsers.length === 0 ? (
-        <div className="p-12 rounded-2xl bg-[#0f172a] border border-[#1e293b] text-center text-slate-400 text-sm">
+        <div className="p-12 rounded-2xl bg-[#12151d] border border-[rgba(255,255,255,0.08)] text-center text-slate-400 text-sm">
           No profile records matching the query.
         </div>
       ) : (
@@ -810,7 +832,7 @@ const Users = () => {
           {displayedUsers.map((user) => (
             <div
               key={user.id}
-              className="p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] hover:border-amber-500/50 hover:bg-[#131d33] transition-all shadow-md flex flex-col justify-between space-y-4 group"
+              className="p-5 rounded-2xl bg-[#12151d] border border-[rgba(255,255,255,0.08)] hover:border-emerald-500/50 hover:bg-[#131d33] transition-all shadow-md flex flex-col justify-between space-y-4 group"
             >
               <div className="space-y-3">
                 {/* Card Top Strip */}
@@ -826,7 +848,7 @@ const Users = () => {
                       <Avatar name={user.name} size="md" />
                     )}
                     <div className="min-w-0">
-                      <h3 className="font-bold text-white text-base truncate group-hover:text-amber-400 transition-colors">
+                      <h3 className="font-bold text-white text-base truncate group-hover:text-emerald-400 transition-colors">
                         {user.name}
                       </h3>
                       <p className="text-xs text-slate-400 font-mono">@{user.username}</p>
@@ -838,7 +860,7 @@ const Users = () => {
                 {/* Company & Location Badges */}
                 <div className="space-y-1.5 text-xs">
                   <div className="flex items-center gap-1.5 text-slate-300 truncate">
-                    <span className="text-amber-400 font-bold">🏢</span>
+                    <span className="text-emerald-400 font-bold">🏢</span>
                     <span className="font-semibold truncate">{user.company?.name || "Independent"}</span>
                   </div>
                   <div className="flex items-center gap-1.5 text-slate-400 font-mono truncate">
@@ -853,11 +875,11 @@ const Users = () => {
               </div>
 
               {/* Card Bottom Actions */}
-              <div className="pt-3 border-t border-[#1e293b] flex items-center justify-between gap-2 text-xs">
+              <div className="pt-3 border-t border-[rgba(255,255,255,0.08)] flex items-center justify-between gap-2 text-xs">
                 <button
                   type="button"
                   onClick={() => handleOpenDrawer(user)}
-                  className="px-3 py-1.5 rounded-lg bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 font-semibold transition-colors cursor-pointer"
+                  className="px-3 py-1.5 rounded-lg bg-amber-500/10 text-emerald-300 hover:bg-amber-500/20 font-semibold transition-colors cursor-pointer"
                 >
                   Inspect Sheet →
                 </button>
@@ -865,7 +887,7 @@ const Users = () => {
                   <button
                     type="button"
                     onClick={() => setModal({ type: "edit", user })}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-[#1e293b] transition-colors cursor-pointer"
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-emerald-400 hover:bg-[rgba(255,255,255,0.08)] transition-colors cursor-pointer"
                     title="Edit"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -875,7 +897,7 @@ const Users = () => {
                   <button
                     type="button"
                     onClick={() => setModal({ type: "delete", user })}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-[#1e293b] transition-colors cursor-pointer"
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-[rgba(255,255,255,0.08)] transition-colors cursor-pointer"
                     title="Delete"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

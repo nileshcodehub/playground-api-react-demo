@@ -11,6 +11,7 @@ import {
   PostCardSkeletonGrid,
   CommentsSkeletonList,
 } from "@/components/Skeletons";
+import HowItWorksBanner from "@/components/common/HowItWorksBanner";
 
 /* ─────────────────────────────────────────────────────────────── constants & helpers */
 const SORT_OPTIONS = [
@@ -29,7 +30,7 @@ function SandboxBadge({ value }) {
   if (!value) return null;
   const map = {
     created: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
-    updated: "bg-amber-500/15 text-amber-300 border-amber-500/30",
+    updated: "bg-white/10 text-white border-white/20",
   };
   return (
     <span
@@ -47,26 +48,15 @@ function AuthorAvatar({ name, size = "md" }) {
     .join("")
     .slice(0, 2)
     .toUpperCase();
-  const palette = [
-    "from-amber-500 to-amber-700 text-slate-950",
-    "from-sky-500 to-blue-700 text-white",
-    "from-emerald-500 to-teal-700 text-white",
-    "from-indigo-500 to-violet-700 text-white",
-    "from-rose-500 to-pink-700 text-white",
-    "from-teal-500 to-emerald-700 text-white",
-    "from-purple-500 to-indigo-700 text-white",
-    "from-cyan-500 to-blue-700 text-white",
-  ];
-  const colour = palette[(name || "").charCodeAt(0) % palette.length];
   const sz =
     size === "lg"
-      ? "w-12 h-12 text-base"
+      ? "w-10 h-10 text-xs"
       : size === "sm"
         ? "w-6 h-6 text-[10px]"
-        : "w-8 h-8 text-xs";
+        : "w-7 h-7 text-xs";
   return (
     <div
-      className={`${sz} rounded-xl bg-linear-to-br ${colour} flex items-center justify-center font-bold shrink-0 shadow-xs ring-1 ring-white/10`}
+      className={`${sz} rounded-full bg-slate-800 text-slate-300 border border-slate-700 flex items-center justify-center font-bold shrink-0`}
     >
       {initials}
     </div>
@@ -118,7 +108,7 @@ function PostForm({
     }));
 
   const inputCls =
-    "w-full bg-[#080e1a] border border-[#1e293b] rounded-xl px-3.5 py-2.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/30 transition-all";
+    "w-full bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] rounded-xl px-3.5 py-2.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-amber-500/30 transition-all";
 
   return (
     <form
@@ -133,7 +123,7 @@ function PostForm({
         <div className="space-y-1.5">
           <label className="text-xs font-semibold text-slate-300 flex items-center justify-between">
             <span>
-              Article Title <span className="text-amber-400">*</span>
+              Article Title <span className="text-emerald-400">*</span>
             </span>
             <span className="text-[11px] text-slate-500 font-mono">
               {form.title.length} chars
@@ -153,7 +143,7 @@ function PostForm({
         {/* Author / User Selection */}
         <div className="space-y-1.5">
           <label className="text-xs font-semibold text-slate-300">
-            Author Attribution <span className="text-amber-400">*</span>
+            Author Attribution <span className="text-emerald-400">*</span>
           </label>
           <select
             id="post-form-author"
@@ -166,13 +156,13 @@ function PostForm({
                 <option
                   key={u.id}
                   value={u.id}
-                  className="bg-[#0f172a] text-white"
+                  className="bg-[#12151d] text-white"
                 >
                   #{u.id} — {u.name} (@{u.username})
                 </option>
               ))
             ) : (
-              <option value={1} className="bg-[#0f172a] text-white">
+              <option value={1} className="bg-[#12151d] text-white">
                 User #1 (Default Author)
               </option>
             )}
@@ -184,7 +174,7 @@ function PostForm({
           <label className="text-xs font-semibold text-slate-300 flex items-center justify-between">
             <span>
               Publication Content / Body{" "}
-              <span className="text-amber-400">*</span>
+              <span className="text-emerald-400">*</span>
             </span>
             <span className="text-[11px] text-slate-500 font-mono">
               {form.body.split(/\s+/).filter(Boolean).length} words
@@ -202,14 +192,14 @@ function PostForm({
         </div>
       </div>
 
-      <div className="pt-3 border-t border-[#1e293b]">
+      <div className="pt-3 border-t border-[rgba(255,255,255,0.08)]">
         <button
           id="post-form-submit"
           type="submit"
           disabled={loading || !form.title.trim() || !form.body.trim()}
-          className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 disabled:opacity-60 disabled:cursor-not-allowed text-slate-950 text-sm font-bold transition-all shadow-md shadow-amber-500/10 cursor-pointer"
+          className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 disabled:opacity-60 disabled:cursor-not-allowed text-white text-sm font-bold transition-all shadow-md shadow-emerald-600/10 cursor-pointer"
         >
-          {loading && <Spinner className="w-4 h-4 text-slate-950" />}
+          {loading && <Spinner className="w-4 h-4 text-white" />}
           {submitLabel}
         </button>
       </div>
@@ -269,17 +259,17 @@ function PostInspectorDrawer({ post, author, onClose, onEdit, onDelete }) {
       />
 
       {/* Drawer Container */}
-      <div className="relative w-full max-w-xl bg-[#0f172a] border-l border-[#1e293b] h-full shadow-2xl z-10 flex flex-col animate-in slide-in-from-right duration-300">
+      <div className="relative w-full max-w-xl bg-[#12151d] border-l border-[rgba(255,255,255,0.08)] h-full shadow-2xl z-10 flex flex-col animate-in slide-in-from-right duration-300">
         {/* Header Strip */}
-        <div className="p-6 border-b border-[#1e293b] bg-[#080e1a] shrink-0">
+        <div className="p-6 border-b border-[rgba(255,255,255,0.08)] bg-[#0c0e14] shrink-0">
           <div className="flex items-start justify-between gap-4 mb-4">
             <div className="flex items-start gap-3.5">
-              <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold text-lg shrink-0">
+              <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold text-lg shrink-0">
                 📄
               </div>
               <div className="min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-[#0f172a] text-slate-300 border border-[#1e293b]">
+                  <span className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-[#12151d] text-slate-300 border border-[rgba(255,255,255,0.08)]">
                     #PST-{String(post.id).padStart(4, "0")}
                   </span>
                   {post._sandbox && <SandboxBadge value={post._sandbox} />}
@@ -292,7 +282,7 @@ function PostInspectorDrawer({ post, author, onClose, onEdit, onDelete }) {
             <button
               type="button"
               onClick={onClose}
-              className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-[#1e293b] transition-colors cursor-pointer shrink-0"
+              className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-[rgba(255,255,255,0.08)] transition-colors cursor-pointer shrink-0"
             >
               <svg
                 className="w-5 h-5"
@@ -311,7 +301,7 @@ function PostInspectorDrawer({ post, author, onClose, onEdit, onDelete }) {
           </div>
 
           {/* Author Badge */}
-          <div className="flex items-center gap-2.5 p-2.5 rounded-xl bg-[#0f172a] border border-[#1e293b]">
+          <div className="flex items-center gap-2.5 p-2.5 rounded-xl bg-[#12151d] border border-[rgba(255,255,255,0.08)]">
             <AuthorAvatar
               name={author?.name || `User ${post.user_id}`}
               size="sm"
@@ -330,7 +320,7 @@ function PostInspectorDrawer({ post, author, onClose, onEdit, onDelete }) {
           </div>
 
           {/* Tab Navigation */}
-          <div className="flex items-center gap-2 border-t border-[#1e293b] pt-3 mt-4">
+          <div className="flex items-center gap-2 border-t border-[rgba(255,255,255,0.08)] pt-3 mt-4">
             {[
               { key: "overview", label: "Article Content" },
               { key: "comments", label: "Comments Thread" },
@@ -342,8 +332,8 @@ function PostInspectorDrawer({ post, author, onClose, onEdit, onDelete }) {
                 onClick={() => setActiveTab(tab.key)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                   activeTab === tab.key
-                    ? "bg-amber-500 text-slate-950 font-bold shadow-xs"
-                    : "text-slate-400 hover:text-white hover:bg-[#1e293b]"
+                    ? "bg-white/10 text-white font-bold shadow-xs"
+                    : "text-slate-400 hover:text-white hover:bg-[rgba(255,255,255,0.08)]"
                 }`}
               >
                 {tab.label}
@@ -357,8 +347,8 @@ function PostInspectorDrawer({ post, author, onClose, onEdit, onDelete }) {
           {activeTab === "overview" && (
             <div className="space-y-4">
               {/* Publication Content */}
-              <div className="p-5 rounded-2xl bg-[#080e1a] border border-[#1e293b] space-y-3">
-                <div className="flex items-center justify-between text-xs text-slate-400 border-b border-[#1e293b] pb-2.5">
+              <div className="p-5 rounded-2xl bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] space-y-3">
+                <div className="flex items-center justify-between text-xs text-slate-400 border-b border-[rgba(255,255,255,0.08)] pb-2.5">
                   <span className="font-bold uppercase tracking-wider text-[11px]">
                     Publication Body
                   </span>
@@ -375,7 +365,7 @@ function PostInspectorDrawer({ post, author, onClose, onEdit, onDelete }) {
 
               {/* Author Overview Box */}
               {author && (
-                <div className="p-4 rounded-2xl bg-[#080e1a] border border-[#1e293b] space-y-2.5">
+                <div className="p-4 rounded-2xl bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] space-y-2.5">
                   <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
                     Author Dossier
                   </span>
@@ -391,8 +381,8 @@ function PostInspectorDrawer({ post, author, onClose, onEdit, onDelete }) {
                     </div>
                   </div>
                   {author.company?.name && (
-                    <div className="text-xs text-slate-400 pt-1 border-t border-[#1e293b] flex items-center gap-1.5">
-                      <span className="text-amber-400">🏢</span>
+                    <div className="text-xs text-slate-400 pt-1 border-t border-[rgba(255,255,255,0.08)] flex items-center gap-1.5">
+                      <span className="text-emerald-400">🏢</span>
                       <span>{author.company.name}</span>
                       {author.company.catchPhrase && (
                         <span className="text-slate-500 italic truncate">
@@ -404,13 +394,13 @@ function PostInspectorDrawer({ post, author, onClose, onEdit, onDelete }) {
                 </div>
               )}
 
-              <div className="p-4 rounded-2xl bg-[#080e1a] border border-[#1e293b] space-y-1.5">
+              <div className="p-4 rounded-2xl bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] space-y-1.5">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
                   Isolation Details
                 </span>
                 <p className="text-xs text-slate-400 leading-relaxed">
                   Post record ID{" "}
-                  <span className="font-mono text-amber-300">{post.id}</span> is
+                  <span className="font-mono text-emerald-300">{post.id}</span> is
                   isolated to your active browser sandbox session.
                 </p>
               </div>
@@ -423,7 +413,7 @@ function PostInspectorDrawer({ post, author, onClose, onEdit, onDelete }) {
                 <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
                   Sub-resource: GET /posts/{post.id}/comments
                 </span>
-                <span className="text-xs font-mono text-amber-400">
+                <span className="text-xs font-mono text-emerald-400">
                   {comments.length} comments
                 </span>
               </div>
@@ -431,7 +421,7 @@ function PostInspectorDrawer({ post, author, onClose, onEdit, onDelete }) {
               {loadingComments ? (
                 <CommentsSkeletonList count={3} />
               ) : comments.length === 0 ? (
-                <div className="p-6 rounded-2xl bg-[#080e1a] border border-[#1e293b] text-center text-slate-400 text-xs">
+                <div className="p-6 rounded-2xl bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] text-center text-slate-400 text-xs">
                   No comments attached to this publication yet.
                 </div>
               ) : (
@@ -439,7 +429,7 @@ function PostInspectorDrawer({ post, author, onClose, onEdit, onDelete }) {
                   {comments.map((c) => (
                     <div
                       key={c.id}
-                      className="p-4 rounded-2xl bg-[#080e1a] border border-[#1e293b] space-y-2"
+                      className="p-4 rounded-2xl bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] space-y-2"
                     >
                       <div className="flex items-center justify-between gap-2">
                         <div className="flex items-center gap-2 min-w-0">
@@ -476,12 +466,12 @@ function PostInspectorDrawer({ post, author, onClose, onEdit, onDelete }) {
                 <button
                   type="button"
                   onClick={handleCopyJson}
-                  className="px-2.5 py-1 rounded-lg bg-[#1e293b] hover:bg-[#283852] text-xs font-mono text-slate-300 hover:text-white transition-colors cursor-pointer flex items-center gap-1.5"
+                  className="px-2.5 py-1 rounded-lg bg-[rgba(255,255,255,0.08)] hover:bg-[#1a202c] text-xs font-mono text-slate-300 hover:text-white transition-colors cursor-pointer flex items-center gap-1.5"
                 >
                   {copied ? "✓ Copied" : "Copy Payload"}
                 </button>
               </div>
-              <div className="p-4 rounded-2xl bg-[#080e1a] border border-[#1e293b] font-mono text-xs text-amber-200/90 overflow-x-auto leading-relaxed max-h-96">
+              <div className="p-4 rounded-2xl bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] font-mono text-xs text-amber-200/90 overflow-x-auto leading-relaxed max-h-96">
                 <pre>{JSON.stringify(post, null, 2)}</pre>
               </div>
             </div>
@@ -489,18 +479,18 @@ function PostInspectorDrawer({ post, author, onClose, onEdit, onDelete }) {
         </div>
 
         {/* Drawer Footer Actions */}
-        <div className="p-4 border-t border-[#1e293b] bg-[#080e1a] flex gap-3 shrink-0">
+        <div className="p-4 border-t border-[rgba(255,255,255,0.08)] bg-[#0c0e14] flex gap-3 shrink-0">
           <button
             type="button"
             onClick={() => onEdit(post)}
-            className="flex-1 py-2.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm transition-all shadow-xs cursor-pointer flex items-center justify-center gap-2"
+            className="flex-1 py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm transition-all shadow-xs cursor-pointer flex items-center justify-center gap-2"
           >
             Edit Publication
           </button>
           <button
             type="button"
             onClick={() => onDelete(post)}
-            className="py-2.5 px-4 rounded-xl bg-[#1e293b] hover:bg-rose-900/40 border border-[#1e293b] hover:border-rose-700/50 text-slate-300 hover:text-rose-300 font-semibold text-sm transition-colors cursor-pointer flex items-center gap-1.5"
+            className="py-2.5 px-4 rounded-xl bg-[rgba(255,255,255,0.08)] hover:bg-rose-900/40 border border-[rgba(255,255,255,0.08)] hover:border-rose-700/50 text-slate-300 hover:text-rose-300 font-semibold text-sm transition-colors cursor-pointer flex items-center gap-1.5"
           >
             Delete
           </button>
@@ -706,64 +696,69 @@ const Posts = () => {
     () => posts.filter((p) => p._sandbox).length,
     [posts],
   );
-  const uniqueAuthorsInPage = useMemo(() => {
-    const set = new Set(posts.map((p) => p.user_id).filter(Boolean));
-    return set.size;
-  }, [posts]);
 
   return (
     <div className="space-y-6">
-      {/* ── Executive Metric Strip ── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-1 shadow-xs">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-            Total Publications
+      {/* ── Sleek Unified Page Header ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+              Discussions & Posts
+            </h1>
+            <span className="px-2 py-0.5 rounded-md text-[11px] font-mono font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              /posts
+            </span>
           </div>
-          <div className="text-xl sm:text-2xl font-extrabold text-white font-mono">
-            {pagination.total ?? 0}
-          </div>
-          <div className="text-[11px] text-slate-400">
-            Global & overlay items
-          </div>
+          <p className="text-xs sm:text-sm text-slate-400">
+            Publish posts, inspect relational comments, and experience stateful CRUD persistence.
+          </p>
         </div>
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-1 shadow-xs">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-            Session Overlays
-          </div>
-          <div className="text-xl sm:text-2xl font-extrabold text-amber-400 font-mono">
-            {mutatedCount} Active
-          </div>
-          <div className="text-[11px] text-slate-400">
-            Local browser mutations
-          </div>
-        </div>
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-1 shadow-xs">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-            Active Authors
-          </div>
-          <div className="text-xl sm:text-2xl font-extrabold text-sky-400 font-mono">
-            {users.length || uniqueAuthorsInPage} Contributors
-          </div>
-          <div className="text-[11px] text-slate-400">
-            Relational authors linked
-          </div>
-        </div>
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-1 shadow-xs">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-            Gateway Status
-          </div>
-          <div className="text-xl sm:text-2xl font-extrabold text-emerald-400 font-mono flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-            100% Synced
-          </div>
-          <div className="text-[11px] text-slate-400">
-            REST v1 schema connected
-          </div>
+
+        <div className="flex items-center gap-2.5 shrink-0">
+          <button
+            type="button"
+            onClick={() => setModal({ type: "create" })}
+            className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-md shadow-emerald-600/20 cursor-pointer flex items-center gap-1.5"
+          >
+            <span>+</span>
+            <span>New Post</span>
+          </button>
         </div>
       </div>
 
+      {/* ── API Feature Explainer Banner ── */}
+      <HowItWorksBanner
+        title="Stateful CRUD & Relational Comments (/posts & /comments)"
+        subtitle="Creating, editing, or deleting posts here uses Playground API's persistent overlay engine. When you publish a post, it automatically appears at the top of the feed and persists across page refreshes!"
+        badge="Stateful CRUD Engine"
+        endpoint="POST /api/v1/posts"
+        codeSnippet={`// 1. Fetch paginated posts with author filter
+const res = await fetch('https://playground-api-xi.vercel.app/api/v1/posts?page=1&limit=10&_sort=id&_order=desc', {
+  credentials: 'include',
+});
+const { data, pagination } = await res.json();
+
+// 2. Create a new post (Overlaid into your private session)
+await fetch('https://playground-api-xi.vercel.app/api/v1/posts', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  credentials: 'include',
+  body: JSON.stringify({
+    title: 'Announcing Pulse Studio v2',
+    body: 'Powered by Playground API with stateful session overlays.',
+    user_id: 1,
+  }),
+});`}
+        payloadExample={{
+          title: "Announcing Pulse Studio v2",
+          body: "Powered by Playground API with stateful session overlays.",
+          user_id: 1
+        }}
+      />
+
       {/* ── Toolbar: Search, Filters, View Switcher & Action ── */}
-      <div className="p-4 rounded-2xl bg-[#0f172a] border border-[#1e293b] shadow-md space-y-4">
+      <div className="p-4 rounded-2xl bg-[#12151d] border border-[rgba(255,255,255,0.08)] shadow-md space-y-4">
         <div className="flex flex-col lg:flex-row gap-3 items-stretch lg:items-center justify-between">
           {/* Search + Author Filter + Sort */}
           <div className="flex flex-col sm:flex-row gap-3 flex-1">
@@ -783,7 +778,7 @@ const Posts = () => {
                 setPage(1);
                 setAuthorFilter(e.target.value);
               }}
-              className="bg-[#080e1a] border border-[#1e293b] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500 cursor-pointer min-w-37.5"
+              className="bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 cursor-pointer min-w-37.5"
             >
               <option value="">All Authors</option>
               {users.map((u) => (
@@ -804,13 +799,13 @@ const Posts = () => {
           {/* Right Controls: View Switcher & Create Button */}
           <div className="flex items-center gap-2.5 shrink-0">
             {/* View Switcher Segmented Control */}
-            <div className="flex items-center p-1 rounded-xl bg-[#080e1a] border border-[#1e293b]">
+            <div className="flex items-center p-1 rounded-xl bg-black/40 border border-white/10">
               <button
                 type="button"
                 onClick={() => setViewMode("table")}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer flex items-center gap-1.5 ${
                   viewMode === "table"
-                    ? "bg-amber-500 text-slate-950 font-bold shadow-xs"
+                    ? "bg-white/10 text-white font-bold"
                     : "text-slate-400 hover:text-white"
                 }`}
                 title="Data Table View"
@@ -833,9 +828,9 @@ const Posts = () => {
               <button
                 type="button"
                 onClick={() => setViewMode("cards")}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer flex items-center gap-1.5 ${
                   viewMode === "cards"
-                    ? "bg-amber-500 text-slate-950 font-bold shadow-xs"
+                    ? "bg-white/10 text-white font-bold"
                     : "text-slate-400 hover:text-white"
                 }`}
                 title="Card Grid View"
@@ -861,7 +856,7 @@ const Posts = () => {
             <button
               id="btn-create-post"
               onClick={() => setModal({ type: "create" })}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-sm font-bold transition-all shadow-md shadow-amber-500/10 shrink-0 cursor-pointer"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-md shadow-emerald-600/20 shrink-0 cursor-pointer"
             >
               <svg
                 className="w-4 h-4"
@@ -882,7 +877,7 @@ const Posts = () => {
         </div>
 
         {/* Filter Chips Bar */}
-        <div className="flex items-center gap-2 pt-2 border-t border-[#1e293b] text-xs">
+        <div className="flex items-center gap-2 pt-2 border-t border-white/10 text-xs">
           <span className="text-slate-500 font-semibold uppercase text-[10px] tracking-wider mr-1">
             Filter:
           </span>
@@ -897,8 +892,8 @@ const Posts = () => {
               onClick={() => setFilterMode(chip.key)}
               className={`px-3 py-1 rounded-lg transition-colors cursor-pointer font-medium ${
                 filterMode === chip.key
-                  ? "bg-amber-500/15 text-amber-300 border border-amber-500/30 font-semibold"
-                  : "text-slate-400 hover:text-white bg-[#080e1a] border border-[#1e293b]"
+                  ? "bg-white/10 text-white border border-white/20 font-semibold"
+                  : "text-slate-400 hover:text-white bg-transparent border border-white/5"
               }`}
             >
               {chip.label}
@@ -926,12 +921,12 @@ const Posts = () => {
                   className="flex items-start gap-3 min-w-0 text-left hover:opacity-90 transition-opacity w-full cursor-pointer group"
                   title="Inspect Publication Sheet"
                 >
-                  <div className="w-8 h-8 rounded-xl bg-[#080e1a] border border-[#1e293b] flex items-center justify-center text-amber-400 text-xs shrink-0 mt-0.5 group-hover:border-amber-500/50 transition-colors">
+                  <div className="w-7 h-7 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 text-xs shrink-0 mt-0.5 group-hover:border-white/20 transition-colors">
                     📄
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <p className="text-sm font-bold text-white truncate leading-snug group-hover:text-amber-400 transition-colors">
+                      <p className="text-sm font-semibold text-white truncate leading-snug group-hover:text-emerald-400 transition-colors">
                         {post.title}
                       </p>
                       {post._sandbox && <SandboxBadge value={post._sandbox} />}
@@ -983,7 +978,7 @@ const Posts = () => {
                     id={`inspect-post-${post.id}`}
                     title="Inspect Publication Sheet"
                     onClick={() => handleOpenDrawer(post)}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors cursor-pointer"
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-emerald-400 hover:bg-amber-500/10 transition-colors cursor-pointer"
                   >
                     <svg
                       className="w-4 h-4"
@@ -1008,7 +1003,7 @@ const Posts = () => {
                     id={`edit-post-${post.id}`}
                     title="Edit Publication"
                     onClick={() => setModal({ type: "edit", post })}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors cursor-pointer"
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-emerald-400 hover:bg-amber-500/10 transition-colors cursor-pointer"
                   >
                     <svg
                       className="w-4 h-4"
@@ -1052,7 +1047,7 @@ const Posts = () => {
       ) : loading ? (
         <PostCardSkeletonGrid count={pagination.limit ?? 10} />
       ) : displayedPosts.length === 0 ? (
-        <div className="p-12 rounded-2xl bg-[#0f172a] border border-[#1e293b] text-center text-slate-400 text-sm">
+        <div className="p-12 rounded-2xl bg-[#12151d] border border-[rgba(255,255,255,0.08)] text-center text-slate-400 text-sm">
           No publication records matching the query.
         </div>
       ) : (
@@ -1063,7 +1058,7 @@ const Posts = () => {
             return (
               <div
                 key={post.id}
-                className="p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] hover:border-amber-500/50 hover:bg-[#131d33] transition-all shadow-md flex flex-col justify-between space-y-4 group"
+                className="p-5 rounded-2xl bg-[#12151d] border border-[rgba(255,255,255,0.08)] hover:border-emerald-500/50 hover:bg-[#131d33] transition-all shadow-md flex flex-col justify-between space-y-4 group"
               >
                 <div className="space-y-3">
                   {/* Card Top Strip */}
@@ -1074,7 +1069,7 @@ const Posts = () => {
                         size="md"
                       />
                       <div className="min-w-0">
-                        <p className="text-xs font-bold text-white truncate group-hover:text-amber-400 transition-colors">
+                        <p className="text-xs font-bold text-white truncate group-hover:text-emerald-400 transition-colors">
                           {author?.name || `Author #${post.user_id}`}
                         </p>
                         <p className="text-[11px] text-slate-400 font-mono">
@@ -1087,7 +1082,7 @@ const Posts = () => {
 
                   {/* Title & Body Excerpt */}
                   <div className="space-y-1.5">
-                    <h3 className="font-bold text-white text-sm line-clamp-2 group-hover:text-amber-400 transition-colors leading-snug">
+                    <h3 className="font-bold text-white text-sm line-clamp-2 group-hover:text-emerald-400 transition-colors leading-snug">
                       {post.title}
                     </h3>
                     <p className="text-xs text-slate-400 line-clamp-3 leading-relaxed">
@@ -1097,11 +1092,11 @@ const Posts = () => {
                 </div>
 
                 {/* Card Bottom Actions */}
-                <div className="pt-3 border-t border-[#1e293b] flex items-center justify-between gap-2 text-xs">
+                <div className="pt-3 border-t border-[rgba(255,255,255,0.08)] flex items-center justify-between gap-2 text-xs">
                   <button
                     type="button"
                     onClick={() => handleOpenDrawer(post)}
-                    className="px-3 py-1.5 rounded-lg bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 font-semibold transition-colors cursor-pointer flex items-center gap-1.5"
+                    className="px-3 py-1.5 rounded-lg bg-amber-500/10 text-emerald-300 hover:bg-amber-500/20 font-semibold transition-colors cursor-pointer flex items-center gap-1.5"
                   >
                     <span>Inspect Post</span>
                     <span>→</span>
@@ -1110,7 +1105,7 @@ const Posts = () => {
                     <button
                       type="button"
                       onClick={() => setModal({ type: "edit", post })}
-                      className="p-1.5 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-[#1e293b] transition-colors cursor-pointer"
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-emerald-400 hover:bg-[rgba(255,255,255,0.08)] transition-colors cursor-pointer"
                       title="Edit"
                     >
                       <svg
@@ -1130,7 +1125,7 @@ const Posts = () => {
                     <button
                       type="button"
                       onClick={() => setModal({ type: "delete", post })}
-                      className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-[#1e293b] transition-colors cursor-pointer"
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-[rgba(255,255,255,0.08)] transition-colors cursor-pointer"
                       title="Delete"
                     >
                       <svg

@@ -3,9 +3,6 @@ import { createPortal } from "react-dom";
 
 const modalStack = [];
 
-/**
- * Reusable Modal component using React Portals.
- */
 const Modal = ({
   isOpen = true,
   onClose,
@@ -20,7 +17,6 @@ const Modal = ({
 }) => {
   const modalIdRef = useRef(Symbol("modal"));
 
-  // Handle Escape key to close (stack-aware)
   useEffect(() => {
     if (!isOpen) return;
     const modalId = modalIdRef.current;
@@ -70,44 +66,28 @@ const Modal = ({
 
   const modalContent = (
     <div className="fixed h-screen inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
-      {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/80 backdrop-blur-xs transition-opacity animate-in fade-in duration-300"
+        className="fixed inset-0 bg-black/80 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
         onClick={closeOnOverlayClick ? onClose : undefined}
       />
 
-      {/* Modal Container */}
       <div
-        className={`relative w-full bg-[#0f172a] rounded-2xl shadow-2xl border border-[#1e293b] overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 fade-in duration-300 ${
+        className={`relative w-full bg-[#12151d] rounded-3xl shadow-2xl border border-white/10 overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 fade-in duration-200 ${
           sizeStyles[size] || sizeStyles.md
         } ${containerClassName}`}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close Button */}
         <button
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-[#1e293b] transition-colors absolute right-4 top-4 z-10 opacity-75 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer"
+          className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-colors absolute right-4 top-4 z-10 cursor-pointer"
         >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
+          ✕
         </button>
 
-        {/* Modal Header */}
         {title && (
-          <div className="px-6 py-4 border-b border-[#1e293b] pr-12 shrink-0">
+          <div className="px-6 py-5 border-b border-white/10 pr-12 shrink-0">
             <div className="flex items-center gap-2.5">
               {leftIcon && (
                 <span className={`shrink-0 ${leftIconClassName}`}>
@@ -124,7 +104,6 @@ const Modal = ({
           </div>
         )}
 
-        {/* Modal Body */}
         <div
           id="modal-scroll-body"
           className="p-6 overflow-y-auto overscroll-contain flex-1"

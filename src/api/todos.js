@@ -1,23 +1,13 @@
-const BASE = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/+$/, '');
-
-const endpoint = (path = '') => {
-  const cleanPath = path.startsWith('/') ? path : `/${path}`;
-  return `${BASE}/v1${cleanPath}`;
-};
-
-const json = (res) => {
-  if (!res.ok) throw new Error(`HTTP ${res.status} – ${res.statusText}`);
-  return res.json();
-};
+import { apiRequest } from './client';
 
 export const todosApi = {
   /** GET /todos – paginated list with search, sort, user_id, and completed filters */
   list: ({
     page = 1,
-    limit = 10,
+    limit = 15,
     q = '',
-    _sort = '',
-    _order = 'asc',
+    _sort = 'id',
+    _order = 'desc',
     user_id = '',
     completed = '',
   } = {}) => {
@@ -31,45 +21,43 @@ export const todosApi = {
     if (completed !== '' && completed !== null && completed !== undefined) {
       params.set('completed', completed);
     }
-    return fetch(endpoint(`/todos?${params}`)).then(json);
+    return apiRequest(`/todos?${params}`);
   },
 
   /** GET /todos/:id */
-  getById: (id) => fetch(endpoint(`/todos/${id}`)).then(json),
+  getById: (id) => apiRequest(`/todos/${id}`),
 
   /** POST /todos */
   create: (body) =>
-    fetch(endpoint('/todos'), {
+    apiRequest('/todos', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
-    }).then(json),
+    }),
 
   /** PATCH /todos/:id */
   patch: (id, body) =>
-    fetch(endpoint(`/todos/${id}`), {
+    apiRequest(`/todos/${id}`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
-    }).then(json),
+    }),
 
   /** PUT /todos/:id */
   update: (id, body) =>
-    fetch(endpoint(`/todos/${id}`), {
+    apiRequest(`/todos/${id}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
-    }).then(json),
+    }),
 
   /** DELETE /todos/:id */
   remove: (id) =>
-    fetch(endpoint(`/todos/${id}`), { method: 'DELETE' }).then(json),
+    apiRequest(`/todos/${id}`, {
+      method: 'DELETE',
+    }),
 
   /** Quick toggle task completed state */
   toggle: (id, currentCompleted) =>
-    fetch(endpoint(`/todos/${id}`), {
+    apiRequest(`/todos/${id}`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ completed: !currentCompleted }),
-    }).then(json),
+    }),
 };

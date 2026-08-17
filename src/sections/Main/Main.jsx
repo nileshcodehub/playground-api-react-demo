@@ -1,202 +1,264 @@
-import { Link } from 'react-router';
+import { Link } from "react-router";
 
-const Main = () => {
-  const metrics = [
-    { label: 'Registered Schemas', value: '4 Resources', sub: 'Users, Posts, Comments, Todos', icon: 'M4 6h16M4 10h16M4 14h16M4 18h16' },
-    { label: 'Global Seed Data', value: '550 Records', sub: 'Pristine base dataset', icon: 'M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4' },
-    { label: 'Mutation Isolation', value: 'Per Session', sub: 'Zero shared data leaks', icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z' },
-    { label: 'Sync Response', value: '< 35ms', sub: 'Edge cache ready', icon: 'M13 10V3L4 14h7v7l9-11h-7z' },
-  ];
-
-  const modules = [
+export function Main() {
+  const showcaseModules = [
     {
-      title: 'Users Directory',
-      path: '/users',
-      count: '25 Records',
-      desc: 'Corporate user directory with avatars, contact channels, geolocation, and company intelligence.',
-      badge: 'Active Module',
-      primary: true,
+      title: "E-Commerce Store & Cart",
+      path: "/products",
+      icon: "🛍️",
+      apiFeature: "Dynamic Schema-less Collections (/custom/products)",
+      desc: "Create custom products, filter by category, sort prices, and add items to cart. Data persists in your private session overlay without schema migrations.",
+      cta: "Explore Store",
+      tag: "Dynamic Schemas",
+      tagColor: "text-purple-400 bg-purple-500/10 border-purple-500/20",
     },
     {
-      title: 'Articles & Posts',
-      path: '/posts',
-      count: '100 Records',
-      desc: 'Relational editorial items linked with user author IDs, tags, and body content payloads.',
-      badge: 'Active Module',
-      primary: true,
+      title: "Social Discussions & Feed",
+      path: "/posts",
+      icon: "💬",
+      apiFeature:
+        "Stateful CRUD & Relational Comments (/posts, /posts/:id/comments)",
+      desc: "Publish posts with instant optimistic UI updates and live comments. Created posts stay at the top across page reloads.",
+      cta: "Open Social Feed",
+      tag: "Stateful CRUD",
+      tagColor: "text-blue-400 bg-blue-500/10 border-blue-500/20",
     },
     {
-      title: 'Comments Moderation',
-      path: '/users',
-      count: '300 Records',
-      desc: 'Feedback entries and conversational threads tied directly to parent publication records.',
-      badge: 'Relational',
-      primary: false,
+      title: "Team & User Directory",
+      path: "/users",
+      icon: "👥",
+      apiFeature:
+        "Universal Full-Text Search & SVG Avatars (/users, /avatars/:seed)",
+      desc: "Search 25+ global user profiles in real time, view address details, and render deterministic vector SVG avatar placeholders.",
+      cta: "View Directory",
+      tag: "Search & Avatars",
+      tagColor: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
     },
     {
-      title: 'Task & Todo Engine',
-      path: '/todos',
-      count: '125 Records',
-      desc: 'Task assignment records with binary completion flags, user ownership, and category tags.',
-      badge: 'Active Module',
-      primary: true,
+      title: "Task Engine & Kanban",
+      path: "/todos",
+      icon: "✅",
+      apiFeature: "Stateful Checklist Toggling & Status Filters (/todos)",
+      desc: "Interactive todo manager. Toggle task completion with instant server synchronization in your private session sandbox.",
+      cta: "Open Task Board",
+      tag: "Live Mutations",
+      tagColor: "text-emerald-400 bg-amber-500/10 border-emerald-500/20",
     },
     {
-      title: 'Media & Avatar Studio',
-      path: '/media',
-      count: 'Vector Engine',
-      desc: 'Dynamic procedural SVG avatar & landscape cover thumbnail generator with gradient hashing.',
-      badge: 'Active Module',
-      primary: true,
+      title: "JWT Authentication Hub",
+      path: "/auth",
+      icon: "🔐",
+      apiFeature: "Stateless Fake JWT Auth Loops (/auth/login, /auth/me)",
+      desc: "Simulate access and refresh token rotation, inspect claims payloads, and access Bearer token protected routes.",
+      cta: "Test Auth Loop",
+      tag: "Security & JWT",
+      tagColor: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20",
     },
     {
-      title: 'Authentication Gateway',
-      path: '/auth',
-      count: 'JWT Gate',
-      desc: 'Stateless JWT simulation with 1-click test personas, token rotation, and claims inspection.',
-      badge: 'Auth Hub',
-      primary: true,
-    },
-    {
-      title: 'E-Commerce Products Hub',
-      path: '/products',
-      count: 'Custom API',
-      desc: 'Protected dynamic custom resource catalog with 1-click store seeding, inventory, and full CRUD.',
-      badge: 'Protected',
-      primary: true,
+      title: "Vector Media Studio",
+      path: "/media",
+      icon: "🎨",
+      apiFeature:
+        "Dynamic Procedural SVG Avatar & Thumbnail Generator (/avatars, /thumbnails)",
+      desc: "Generate deterministic vector graphics on the fly for user profile cards, cover thumbnails, and social sharing banners.",
+      cta: "Launch Media Studio",
+      tag: "SVG Generation",
+      tagColor: "text-rose-400 bg-rose-500/10 border-rose-500/20",
     },
   ];
 
   return (
-    <div className="space-y-8">
-      {/* ── Executive Header Banner ── */}
-      <div className="p-6 sm:p-8 rounded-2xl bg-[#0f172a] border border-[#1e293b] shadow-xl relative overflow-hidden">
-        {/* Subtle accent bar at top */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-amber-500 via-sky-500 to-amber-500 opacity-80" />
-        
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-          <div className="max-w-2xl space-y-3">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-amber-500/10 border border-amber-500/25 text-amber-400 text-xs font-semibold">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-              Executive Directory & Data Console
+    <div className="space-y-10">
+      {/* ── 1. Hero Showcase Banner ── */}
+      <div className="p-6 sm:p-10 rounded-3xl bg-linear-to-br from-[#12151d] via-[#161a25] to-[#12151d] border border-white/10 shadow-2xl relative overflow-hidden">
+        {/* Glow Ambient Decoration */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 blur-3xl pointer-events-none rounded-full" />
+        <div className="absolute bottom-0 left-1/3 w-64 h-64 bg-cyan-500/5 blur-3xl pointer-events-none rounded-full" />
+
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 relative z-10">
+          <div className="max-w-3xl space-y-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-bold font-mono">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Real-World Playground API Showcase</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
-              Enterprise React Client Workspace
+
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
+              Build Production-Grade Apps with a{" "}
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-400 to-cyan-400">
+                Stateful Mock Backend
+              </span>
+              .
             </h1>
-            <p className="text-slate-300 text-sm leading-relaxed">
-              A high-precision client implementation demonstrating stateful CRUD operations, 
-              live search filtering, relational lookups, and session sandbox mutations against Playground API.
+
+            <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+              <strong>Pulse Studio</strong> is a full-featured React 19
+              application built entirely on top of{" "}
+              <strong>Playground API</strong>. Every product created, post
+              published, task toggled, and token generated persists in your
+              private session overlay without a local database.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 shrink-0">
+          <div className="flex flex-col sm:flex-row lg:flex-col gap-3 shrink-0">
             <Link
-              to="/users"
-              className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm transition-all shadow-md shadow-amber-500/10 flex items-center gap-2 cursor-pointer"
+              to="/products"
+              className="px-6 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm transition-all shadow-lg shadow-emerald-500/20 text-center flex items-center justify-center gap-2 cursor-pointer"
             >
-              <span>Launch Users Studio</span>
+              <span>🛍️ Test E-Commerce Store</span>
               <span>→</span>
             </Link>
             <a
-              href="https://github.com/nileshcodehub/playground_api"
+              href="https://playground-api-xi.vercel.app/docs"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-4 py-2.5 rounded-xl bg-[#1e293b] hover:bg-[#283852] border border-[#283852] text-slate-200 text-sm font-semibold transition-colors"
+              className="px-6 py-3.5 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/10 text-white font-bold text-sm transition-colors text-center"
             >
-              API Reference
+              📚 Read API Docs
             </a>
           </div>
         </div>
       </div>
 
-      {/* ── Executive Metric Tiles ── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {metrics.map((m) => (
-          <div key={m.label} className="p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-2 shadow-sm">
-            <div className="flex items-center justify-between text-slate-400">
-              <span className="text-xs font-semibold uppercase tracking-wider">{m.label}</span>
-              <svg className="w-4 h-4 text-amber-400/80" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                <path strokeLinecap="round" strokeLinejoin="round" d={m.icon} />
-              </svg>
-            </div>
-            <div className="text-xl sm:text-2xl font-extrabold text-white font-mono">{m.value}</div>
-            <div className="text-[11px] text-slate-400">{m.sub}</div>
+      {/* ── 2. How Playground API Powers This Application (3 Pillar Cards) ── */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div className="p-5 rounded-2xl bg-[#12151d] border border-white/10 space-y-2">
+          <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold text-lg">
+            🧠
           </div>
-        ))}
-      </div>
-
-      {/* ── Active Modules Grid ── */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-bold text-white tracking-tight">
-            Data Collections & Modules
-          </h2>
-          <span className="text-xs text-slate-400 font-mono">REST v1 Schema</span>
+          <h3 className="text-base font-bold text-white">
+            1. Stateful Session Overlays
+          </h3>
+          <p className="text-xs text-slate-400 leading-relaxed">
+            When you create a post or product, Playground API stores it in your
+            private session sandbox overlay. Subsequent{" "}
+            <code className="text-emerald-400 font-mono">GET</code> calls return
+            your new item at the top!
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {modules.map((item) => (
+        <div className="p-5 rounded-2xl bg-[#12151d] border border-white/10 space-y-2">
+          <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center font-bold text-lg">
+            🛡️
+          </div>
+          <h3 className="text-base font-bold text-white">
+            2. Zero Database Collisions
+          </h3>
+          <p className="text-xs text-slate-400 leading-relaxed">
+            Global seed data (100 posts, 25 users, 300 comments) is strictly
+            read-only. Your mutations never overwrite or leak into another
+            user's session.
+          </p>
+        </div>
+
+        <div className="p-5 rounded-2xl bg-[#12151d] border border-white/10 space-y-2">
+          <div className="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center font-bold text-lg">
+            📡
+          </div>
+          <h3 className="text-base font-bold text-white">
+            3. Live Request Inspector
+          </h3>
+          <p className="text-xs text-slate-400 leading-relaxed">
+            Watch real-time HTTP requests, response times, and payloads stream
+            directly into the floating dock at the bottom of the screen as you
+            interact with the UI.
+          </p>
+        </div>
+      </div>
+
+      {/* ── 3. Interactive Showcase Modules Grid ── */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-white tracking-tight">
+              Interactive Application Modules
+            </h2>
+            <p className="text-xs text-slate-400">
+              Click any module to experience real-time CRUD and state
+              persistence in action:
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {showcaseModules.map((m) => (
             <Link
-              key={item.title}
-              to={item.path}
-              className={`p-6 rounded-2xl bg-[#0f172a] border transition-all group block shadow-md ${
-                item.primary
-                  ? 'border-amber-500/40 hover:border-amber-500 hover:bg-[#131d33]'
-                  : 'border-[#1e293b] hover:border-slate-600 hover:bg-[#131d33]'
-              }`}
+              key={m.title}
+              to={m.path}
+              className="p-6 rounded-2xl bg-[#12151d] border border-white/10 hover:border-white/20 hover:bg-[#151923] transition-all group flex flex-col justify-between space-y-4 shadow-md"
             >
-              <div className="flex items-center justify-between gap-2 mb-2.5">
-                <div className="flex items-center gap-2.5">
-                  <h3 className="font-bold text-base text-white group-hover:text-amber-400 transition-colors">
-                    {item.title}
-                  </h3>
-                  <span className="text-xs font-mono px-2 py-0.5 rounded-md bg-[#080e1a] text-slate-300 border border-[#1e293b]">
-                    {item.count}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-2xl">{m.icon}</span>
+                  <span
+                    className={`px-2 py-0.5 rounded-md text-[10px] font-mono font-bold border ${m.tagColor}`}
+                  >
+                    {m.tag}
                   </span>
                 </div>
-                <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-300 border border-amber-500/25">
-                  {item.badge}
-                </span>
+
+                <div>
+                  <h3 className="text-base font-bold text-white group-hover:text-emerald-400 transition-colors">
+                    {m.title}
+                  </h3>
+                  <code className="text-[11px] text-slate-400 font-mono block mt-1">
+                    {m.apiFeature}
+                  </code>
+                </div>
+
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  {m.desc}
+                </p>
               </div>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                {item.desc}
-              </p>
+
+              <div className="pt-3 border-t border-white/5 flex items-center justify-between text-xs font-bold text-emerald-400 group-hover:translate-x-0.5 transition-transform">
+                <span>{m.cta}</span>
+                <span>→</span>
+              </div>
             </Link>
           ))}
         </div>
       </div>
 
-      {/* ── Architecture & Integration Code ── */}
-      <div className="p-6 rounded-2xl bg-[#0f172a] border border-[#1e293b] shadow-lg space-y-4">
+      {/* ── 4. Quick React Integration Snippet ── */}
+      <div className="p-6 sm:p-8 rounded-3xl bg-[#12151d] border border-white/10 space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-base font-bold text-white flex items-center gap-2">
-            <svg className="w-5 h-5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-            </svg>
-            Zero-Config Client Integration
-          </h2>
-          <span className="text-xs text-slate-400 font-mono">React 19 / Vite</span>
+          <div className="space-y-1">
+            <h3 className="text-base font-bold text-white flex items-center gap-2">
+              <span>⚡</span>
+              <span>How We Integrated Playground API with React 19</span>
+            </h3>
+            <p className="text-xs text-slate-400">
+              Zero configuration: Just fetch from the endpoint and include
+              cookies to preserve private state.
+            </p>
+          </div>
+          <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20">
+            fetch() + credentials
+          </span>
         </div>
 
-        <div className="p-4 rounded-xl bg-[#080e1a] border border-[#1e293b] font-mono text-xs text-slate-300 overflow-x-auto leading-relaxed">
-          <pre>{`// Seamless REST Integration with Stateful Overlay Persistence
-import { useEffect, useState } from 'react';
-import { usersApi } from '@/api/users';
+        <pre className="p-4 rounded-2xl bg-[#090b10] border border-white/10 font-mono text-xs text-slate-200 overflow-x-auto leading-relaxed">
+          <code>{`// 1. Fetch posts with persistent session cookies
+const res = await fetch('https://playground-api-xi.vercel.app/api/v1/posts', {
+  credentials: 'include', // Preserves your private session sandbox
+});
+const { data } = await res.json();
 
-export function UserDirectory() {
-  const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    // Automatically inherits browser session sandbox token
-    usersApi.list({ page: 1, limit: 10, _sort: 'name', _order: 'asc' })
-      .then((res) => setUsers(res.data));
-  }, []);
-
-  return <div>{users.map(u => <div key={u.id}>{u.name} ({u.email})</div>)}</div>;
-}`}</pre>
-        </div>
+// 2. Create a custom post (Persists across page refreshes!)
+await fetch('https://playground-api-xi.vercel.app/api/v1/posts', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  credentials: 'include',
+  body: JSON.stringify({
+    title: 'New Post from React App',
+    body: 'This post is overlaid on top of the baseline dataset!',
+    user_id: 1,
+  }),
+});`}</code>
+        </pre>
       </div>
     </div>
   );
-};
+}
+
 export default Main;

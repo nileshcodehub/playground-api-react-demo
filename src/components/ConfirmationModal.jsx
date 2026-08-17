@@ -1,8 +1,5 @@
 import Modal from "./Modal";
 
-/**
- * Reusable Confirmation Dialog Modal Component
- */
 const ConfirmationModal = ({
   isOpen = true,
   onClose,
@@ -32,12 +29,11 @@ const ConfirmationModal = ({
     onAccept?.();
   };
 
-  // Resolve color based on variant or acceptColor prop
   const variantStyles = {
-    danger: "bg-rose-600 hover:bg-rose-500 text-white shadow-xs shadow-rose-600/20",
-    warning: "bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold shadow-xs shadow-amber-500/20",
-    primary: "bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold shadow-xs shadow-amber-500/20",
-    success: "bg-emerald-600 hover:bg-emerald-500 text-white shadow-xs shadow-emerald-600/20",
+    danger: "bg-rose-600 hover:bg-rose-500 text-white shadow-xs",
+    warning: "bg-emerald-600 hover:bg-emerald-500 text-white font-bold shadow-xs",
+    primary: "bg-emerald-600 hover:bg-emerald-500 text-white font-bold shadow-xs",
+    success: "bg-emerald-600 hover:bg-emerald-500 text-white shadow-xs",
   };
 
   const buttonColorClass = acceptColor || variantStyles[variant] || variantStyles.danger;
@@ -50,24 +46,21 @@ const ConfirmationModal = ({
       size={size}
     >
       <div className="space-y-5">
-        {/* Optional custom child content (e.g. user card) */}
         {children}
 
-        {/* Description */}
         {description && (
           <div className="text-sm text-slate-300 leading-relaxed">
             {typeof description === "string" ? <p>{description}</p> : description}
           </div>
         )}
 
-        {/* Action Buttons */}
         <div className="flex gap-3 pt-2">
           <button
             type="button"
             id="confirm-modal-accept"
             onClick={handleAccept}
             disabled={isLoading}
-            className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl font-semibold text-sm transition-colors shadow-sm disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer ${buttonColorClass}`}
+            className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl font-semibold text-xs sm:text-sm transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer ${buttonColorClass}`}
           >
             {isLoading && (
               <svg className="w-4 h-4 animate-spin text-current" viewBox="0 0 24 24" fill="none">
@@ -82,7 +75,7 @@ const ConfirmationModal = ({
             id="confirm-modal-cancel"
             onClick={handleCancel}
             disabled={isLoading}
-            className="flex-1 py-2.5 px-4 rounded-xl bg-[#1e293b] hover:bg-[#283852] disabled:opacity-60 disabled:cursor-not-allowed text-slate-200 text-sm font-semibold transition-colors border border-[#283852] cursor-pointer"
+            className="flex-1 py-2.5 px-4 rounded-xl bg-white/5 hover:bg-white/10 disabled:opacity-60 disabled:cursor-not-allowed text-slate-200 text-xs sm:text-sm font-semibold transition-colors border border-white/10 cursor-pointer"
           >
             {cancelLabel}
           </button>

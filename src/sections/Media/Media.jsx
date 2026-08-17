@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { mediaApi } from "@/api/media";
+import HowItWorksBanner from "@/components/common/HowItWorksBanner";
 
 const AVATAR_PRESETS = [
   "alex.dev",
@@ -84,7 +85,7 @@ function Toast({ message, type = "success", onClose }) {
   const bg =
     type === "success"
       ? "bg-emerald-500/20 border-emerald-500/40 text-emerald-300"
-      : "bg-amber-500/20 border-amber-500/40 text-amber-300";
+      : "bg-amber-500/20 border-emerald-500/40 text-emerald-300";
 
   return (
     <div
@@ -118,7 +119,9 @@ const Media = () => {
 
   // Thumbnail state: Draft vs Committed
   const [thumbDraftSeed, setThumbDraftSeed] = useState("react-19-mastery");
-  const [thumbDraftText, setThumbDraftText] = useState("React 19 Server Components");
+  const [thumbDraftText, setThumbDraftText] = useState(
+    "React 19 Server Components",
+  );
   const [thumbDraftDescription, setThumbDraftDescription] = useState(
     "Comprehensive guide to fullstack architecture & state machines",
   );
@@ -148,9 +151,12 @@ const Media = () => {
 
   // Generate / Apply Actions
   const handleGenerateAvatar = (customSeed, customSize, customRounded) => {
-    const nextSeed = (customSeed !== undefined ? customSeed : avatarDraftSeed).trim() || "user";
+    const nextSeed =
+      (customSeed !== undefined ? customSeed : avatarDraftSeed).trim() ||
+      "user";
     const nextSize = customSize !== undefined ? customSize : avatarDraftSize;
-    const nextRounded = customRounded !== undefined ? customRounded : avatarDraftRounded;
+    const nextRounded =
+      customRounded !== undefined ? customRounded : avatarDraftRounded;
 
     setAvatarDraftSeed(nextSeed);
     setAvatarDraftSize(nextSize);
@@ -163,12 +169,21 @@ const Media = () => {
     showToast("Avatar generated!");
   };
 
-  const handleGenerateThumbnail = (customSeed, customText, customDesc, customWidth, customHeight) => {
-    const nextSeed = (customSeed !== undefined ? customSeed : thumbDraftSeed).trim() || "post";
+  const handleGenerateThumbnail = (
+    customSeed,
+    customText,
+    customDesc,
+    customWidth,
+    customHeight,
+  ) => {
+    const nextSeed =
+      (customSeed !== undefined ? customSeed : thumbDraftSeed).trim() || "post";
     const nextText = customText !== undefined ? customText : thumbDraftText;
-    const nextDesc = customDesc !== undefined ? customDesc : thumbDraftDescription;
+    const nextDesc =
+      customDesc !== undefined ? customDesc : thumbDraftDescription;
     const nextWidth = customWidth !== undefined ? customWidth : thumbDraftWidth;
-    const nextHeight = customHeight !== undefined ? customHeight : thumbDraftHeight;
+    const nextHeight =
+      customHeight !== undefined ? customHeight : thumbDraftHeight;
 
     setThumbDraftSeed(nextSeed);
     setThumbDraftText(nextText);
@@ -283,95 +298,61 @@ const Media = () => {
   };
 
   return (
-    <div className="space-y-8">
-      {/* ── Executive Header Banner ── */}
-      <div className="p-6 sm:p-8 rounded-2xl bg-[#0f172a] border border-[#1e293b] shadow-xl relative overflow-hidden">
-        <div className="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-amber-500 via-purple-500 to-sky-500 opacity-80" />
-
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-          <div className="max-w-2xl space-y-2.5">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-amber-500/10 border border-amber-500/25 text-amber-400 text-xs font-semibold">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-              Dynamic Vector Asset Engine
-            </div>
+    <div className="space-y-6">
+      {/* ── Sleek Unified Page Header ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
-              Media & Dynamic Avatar Studio
+              Vector Media Studio
             </h1>
-            <p className="text-sm text-slate-400 leading-relaxed">
-              Generate crisp, scalable vector SVG avatars and landscape cover
-              thumbnails with deterministic gradient color hashing, zero
-              external dependencies, and edge cache headers.
-            </p>
+            <span className="px-2 py-0.5 rounded-md text-[11px] font-mono font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              /avatars & /thumbnails
+            </span>
           </div>
+          <p className="text-xs sm:text-sm text-slate-400">
+            Generate deterministic vector SVG avatar placeholders and landscape
+            thumbnails on the fly.
+          </p>
+        </div>
 
-          {/* Quick Action Badges */}
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="px-3 py-1.5 rounded-xl bg-[#080e1a] border border-[#1e293b] text-xs font-mono text-slate-300 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-400" />
-              image/svg+xml
-            </span>
-            <span className="px-3 py-1.5 rounded-xl bg-[#080e1a] border border-[#1e293b] text-xs font-mono text-amber-300">
-              ⚡ Edge Cached 86400s
-            </span>
-          </div>
+        <div className="flex items-center gap-2.5 shrink-0">
+          <span className="px-3 py-1.5 rounded-xl bg-black/40 border border-white/10 text-xs font-mono text-emerald-400 flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span>Procedural SVG Engine Active</span>
+          </span>
         </div>
       </div>
 
-      {/* ── Executive Metric Strip ── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-1 shadow-xs">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-            Vector Precision
-          </div>
-          <div className="text-xl sm:text-2xl font-extrabold text-white font-mono">
-            100% SVG
-          </div>
-          <div className="text-[11px] text-slate-400">
-            Infinite crisp scaling
-          </div>
-        </div>
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-1 shadow-xs">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-            Color Hashing
-          </div>
-          <div className="text-xl sm:text-2xl font-extrabold text-amber-400 font-mono">
-            Deterministic
-          </div>
-          <div className="text-[11px] text-slate-400">Stable seed palettes</div>
-        </div>
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-1 shadow-xs">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-            Render Latency
-          </div>
-          <div className="text-xl sm:text-2xl font-extrabold text-sky-400 font-mono">
-            &lt; 5ms
-          </div>
-          <div className="text-[11px] text-slate-400">
-            Pure procedural generation
-          </div>
-        </div>
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-1 shadow-xs">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-            Gateway Endpoints
-          </div>
-          <div className="text-xl sm:text-2xl font-extrabold text-emerald-400 font-mono flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-            2 Generators
-          </div>
-          <div className="text-[11px] text-slate-400">
-            /avatars & /thumbnails
-          </div>
-        </div>
-      </div>
+      {/* ── API Feature Explainer Banner ── */}
+      <HowItWorksBanner
+        title="Vector Media Studio & Deterministic SVG Engine (/avatars & /thumbnails)"
+        subtitle="Generate beautiful procedural SVG avatars, card cover images, and social sharing banners on the fly with zero external CDNs or graphic design tools. Pass any seed string to generate consistent, deterministic SVG graphics."
+        badge="Procedural SVG API"
+        endpoint="GET /api/v1/avatars/:seed"
+        codeSnippet={`// 1. Generate direct avatar URL for any seed
+const avatarUrl = 'https://playground-api-xi.vercel.app/api/v1/avatars/alex.dev?size=128&rounded=true';
+// <img src={avatarUrl} alt="Avatar" />
+
+// 2. Generate custom thumbnail banner SVG
+const thumbUrl = 'https://playground-api-xi.vercel.app/api/v1/thumbnails/react-19?width=1200&height=630&text=React+19+Guide';
+// <img src={thumbUrl} alt="Cover" />`}
+        payloadExample={{
+          seed: "alex.dev",
+          size: 128,
+          rounded: true,
+          format: "image/svg+xml",
+        }}
+      />
 
       {/* ── Studio Navigation Tabs ── */}
-      <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-[#0f172a] border border-[#1e293b] w-fit">
+      <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-black/40 border border-white/10 w-fit">
         <button
           type="button"
           onClick={() => setActiveTab("avatars")}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
             activeTab === "avatars"
-              ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/10"
+              ? "bg-emerald-600 text-white shadow-xs"
               : "text-slate-400 hover:text-white"
           }`}
         >
@@ -384,7 +365,7 @@ const Media = () => {
           onClick={() => setActiveTab("thumbnails")}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
             activeTab === "thumbnails"
-              ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/10"
+              ? "bg-white/10 text-white shadow-md shadow-emerald-600/10"
               : "text-slate-400 hover:text-white"
           }`}
         >
@@ -397,7 +378,7 @@ const Media = () => {
           onClick={() => setActiveTab("gallery")}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
             activeTab === "gallery"
-              ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/10"
+              ? "bg-white/10 text-white shadow-md shadow-emerald-600/10"
               : "text-slate-400 hover:text-white"
           }`}
         >
@@ -410,7 +391,7 @@ const Media = () => {
           onClick={() => setActiveTab("specs")}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
             activeTab === "specs"
-              ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/10"
+              ? "bg-white/10 text-white shadow-md shadow-emerald-600/10"
               : "text-slate-400 hover:text-white"
           }`}
         >
@@ -423,8 +404,8 @@ const Media = () => {
       {activeTab === "avatars" && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Controls Form */}
-          <div className="lg:col-span-5 space-y-6 p-6 rounded-2xl bg-[#0f172a] border border-[#1e293b] shadow-xl">
-            <div className="border-b border-[#1e293b] pb-4 flex items-center justify-between">
+          <div className="lg:col-span-5 space-y-6 p-6 rounded-2xl bg-[#12151d] border border-[rgba(255,255,255,0.08)] shadow-xl">
+            <div className="border-b border-[rgba(255,255,255,0.08)] pb-4 flex items-center justify-between">
               <div>
                 <h2 className="text-base font-bold text-white flex items-center gap-2">
                   <span>🎨</span>
@@ -437,7 +418,7 @@ const Media = () => {
               <span
                 className={`px-2.5 py-1 rounded-lg text-xs font-mono font-semibold flex items-center gap-1.5 ${
                   isAvatarDirty
-                    ? "bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse"
+                    ? "bg-amber-500/20 text-emerald-300 border border-emerald-500/30 animate-pulse"
                     : "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
                 }`}
               >
@@ -455,12 +436,12 @@ const Media = () => {
               <div className="flex items-center justify-between">
                 <label className="text-xs font-semibold text-slate-300">
                   Seed String / Identifier{" "}
-                  <span className="text-amber-400">*</span>
+                  <span className="text-emerald-400">*</span>
                 </label>
                 <button
                   type="button"
                   onClick={rollRandomAvatarSeed}
-                  className="text-[11px] text-amber-400 hover:text-amber-300 font-semibold cursor-pointer flex items-center gap-1"
+                  className="text-[11px] text-emerald-400 hover:text-emerald-300 font-semibold cursor-pointer flex items-center gap-1"
                 >
                   <span>🎲 Roll Random</span>
                 </button>
@@ -473,10 +454,11 @@ const Media = () => {
                   if (e.key === "Enter") handleGenerateAvatar();
                 }}
                 placeholder="e.g. bret, alice, user-10"
-                className="w-full bg-[#080e1a] border border-[#1e293b] rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500 font-mono transition-colors"
+                className="w-full bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 font-mono transition-colors"
               />
               <p className="text-[11px] text-slate-500">
-                Determines deterministic gradient hash and rendered initials. Press Enter to generate.
+                Determines deterministic gradient hash and rendered initials.
+                Press Enter to generate.
               </p>
             </div>
 
@@ -490,11 +472,17 @@ const Media = () => {
                   <button
                     key={preset}
                     type="button"
-                    onClick={() => handleGenerateAvatar(preset, avatarDraftSize, avatarDraftRounded)}
+                    onClick={() =>
+                      handleGenerateAvatar(
+                        preset,
+                        avatarDraftSize,
+                        avatarDraftRounded,
+                      )
+                    }
                     className={`px-2 py-1 rounded-lg text-xs font-mono transition-colors cursor-pointer ${
                       avatarSeed === preset
-                        ? "bg-amber-500/20 text-amber-300 border border-amber-500/40"
-                        : "bg-[#080e1a] text-slate-400 hover:text-white border border-[#1e293b]"
+                        ? "bg-amber-500/20 text-emerald-300 border border-emerald-500/40"
+                        : "bg-[#0c0e14] text-slate-400 hover:text-white border border-[rgba(255,255,255,0.08)]"
                     }`}
                   >
                     {preset}
@@ -504,12 +492,12 @@ const Media = () => {
             </div>
 
             {/* Size Slider & Presets */}
-            <div className="space-y-2 pt-2 border-t border-[#1e293b]">
+            <div className="space-y-2 pt-2 border-t border-[rgba(255,255,255,0.08)]">
               <div className="flex items-center justify-between text-xs">
                 <label className="font-semibold text-slate-300">
                   Dimension Size
                 </label>
-                <span className="font-mono text-amber-400 font-bold">
+                <span className="font-mono text-emerald-400 font-bold">
                   {avatarDraftSize} × {avatarDraftSize} px
                 </span>
               </div>
@@ -520,18 +508,24 @@ const Media = () => {
                 step="8"
                 value={avatarDraftSize}
                 onChange={(e) => setAvatarDraftSize(Number(e.target.value))}
-                className="w-full accent-amber-500 cursor-pointer"
+                className="w-full accent-emerald-500 cursor-pointer"
               />
               <div className="flex items-center gap-1.5 pt-1">
                 {SIZE_PRESETS.map((sz) => (
                   <button
                     key={sz}
                     type="button"
-                    onClick={() => handleGenerateAvatar(avatarDraftSeed, sz, avatarDraftRounded)}
+                    onClick={() =>
+                      handleGenerateAvatar(
+                        avatarDraftSeed,
+                        sz,
+                        avatarDraftRounded,
+                      )
+                    }
                     className={`flex-1 py-1 rounded-lg text-[11px] font-mono transition-colors cursor-pointer ${
                       avatarDraftSize === sz
-                        ? "bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold"
-                        : "bg-[#080e1a] text-slate-400 hover:text-white border border-[#1e293b]"
+                        ? "bg-amber-500/20 text-emerald-300 border border-emerald-500/40 font-bold"
+                        : "bg-[#0c0e14] text-slate-400 hover:text-white border border-[rgba(255,255,255,0.08)]"
                     }`}
                   >
                     {sz}
@@ -541,7 +535,7 @@ const Media = () => {
             </div>
 
             {/* Shape Toggle */}
-            <div className="space-y-2 pt-2 border-t border-[#1e293b]">
+            <div className="space-y-2 pt-2 border-t border-[rgba(255,255,255,0.08)]">
               <label className="text-xs font-semibold text-slate-300">
                 Avatar Border Shape
               </label>
@@ -551,8 +545,8 @@ const Media = () => {
                   onClick={() => setAvatarDraftRounded(true)}
                   className={`p-3 rounded-xl border text-xs font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer ${
                     avatarDraftRounded
-                      ? "bg-amber-500/15 border-amber-500/40 text-amber-300 font-bold shadow-xs"
-                      : "bg-[#080e1a] border-[#1e293b] text-slate-400 hover:text-white"
+                      ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-400 font-bold shadow-xs"
+                      : "bg-[#0c0e14] border-[rgba(255,255,255,0.08)] text-slate-400 hover:text-white"
                   }`}
                 >
                   <span className="w-4 h-4 rounded-full border-2 border-current" />
@@ -563,8 +557,8 @@ const Media = () => {
                   onClick={() => setAvatarDraftRounded(false)}
                   className={`p-3 rounded-xl border text-xs font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer ${
                     !avatarDraftRounded
-                      ? "bg-amber-500/15 border-amber-500/40 text-amber-300 font-bold shadow-xs"
-                      : "bg-[#080e1a] border-[#1e293b] text-slate-400 hover:text-white"
+                      ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-400 font-bold shadow-xs"
+                      : "bg-[#0c0e14] border-[rgba(255,255,255,0.08)] text-slate-400 hover:text-white"
                   }`}
                 >
                   <span className="w-4 h-4 rounded-md border-2 border-current" />
@@ -574,15 +568,15 @@ const Media = () => {
             </div>
 
             {/* Actions Bar */}
-            <div className="pt-4 border-t border-[#1e293b] space-y-3">
+            <div className="pt-4 border-t border-[rgba(255,255,255,0.08)] space-y-3">
               {/* On-Demand Generate Button */}
               <button
                 type="button"
                 onClick={() => handleGenerateAvatar()}
                 className={`w-full py-3 px-4 rounded-xl text-xs font-bold transition-all shadow-lg cursor-pointer flex items-center justify-center gap-2 ${
                   isAvatarDirty
-                    ? "bg-linear-to-r from-amber-500 to-amber-400 text-slate-950 shadow-amber-500/20 hover:brightness-110 ring-2 ring-amber-400/50"
-                    : "bg-slate-800 text-slate-200 hover:bg-slate-700 border border-[#1e293b]"
+                    ? "bg-linear-to-r bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-600/20 hover:brightness-110 ring-2 ring-emerald-500/30"
+                    : "bg-slate-800 text-slate-200 hover:bg-slate-700 border border-[rgba(255,255,255,0.08)]"
                 }`}
               >
                 <span>⚡</span>
@@ -596,15 +590,17 @@ const Media = () => {
               <div className="flex items-center gap-3">
                 <button
                   type="button"
-                  onClick={() => copyToClipboard(avatarUrl, "Direct Avatar URL")}
-                  className="flex-1 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition-all shadow-md shadow-amber-500/10 cursor-pointer flex items-center justify-center gap-2"
+                  onClick={() =>
+                    copyToClipboard(avatarUrl, "Direct Avatar URL")
+                  }
+                  className="flex-1 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-md shadow-emerald-600/10 cursor-pointer flex items-center justify-center gap-2"
                 >
                   <span>🔗 Copy Direct URL</span>
                 </button>
                 <button
                   type="button"
                   onClick={handleDownloadAvatar}
-                  className="px-4 py-2.5 rounded-xl bg-[#080e1a] hover:bg-[#131d33] border border-[#1e293b] text-slate-200 text-xs font-semibold transition-colors cursor-pointer flex items-center gap-1.5"
+                  className="px-4 py-2.5 rounded-xl bg-[#0c0e14] hover:bg-[#131d33] border border-[rgba(255,255,255,0.08)] text-slate-200 text-xs font-semibold transition-colors cursor-pointer flex items-center gap-1.5"
                   title="Download SVG"
                 >
                   <span>⬇ Download SVG</span>
@@ -616,7 +612,7 @@ const Media = () => {
           {/* Live Preview & Code Generator */}
           <div className="lg:col-span-7 space-y-6">
             {/* Live Canvas Box */}
-            <div className="p-6 sm:p-8 rounded-2xl bg-[#0f172a] border border-[#1e293b] shadow-xl flex flex-col items-center justify-center min-h-80 relative overflow-hidden group">
+            <div className="p-6 sm:p-8 rounded-2xl bg-[#12151d] border border-[rgba(255,255,255,0.08)] shadow-xl flex flex-col items-center justify-center min-h-80 relative overflow-hidden group">
               {/* Subtle background grid pattern */}
               <div
                 className="absolute inset-0 opacity-10 pointer-events-none"
@@ -628,7 +624,7 @@ const Media = () => {
               />
 
               <div className="relative z-10 flex flex-col items-center gap-4">
-                <div className="p-2 rounded-3xl bg-[#080e1a] border border-[#1e293b] shadow-2xl transition-transform duration-300 group-hover:scale-105">
+                <div className="p-2 rounded-3xl bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] shadow-2xl transition-transform duration-300 group-hover:scale-105">
                   <img
                     src={avatarUrl}
                     alt={avatarSeed}
@@ -655,8 +651,8 @@ const Media = () => {
             </div>
 
             {/* Code Snippets Panel */}
-            <div className="p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-3">
-              <div className="flex items-center justify-between border-b border-[#1e293b] pb-3">
+            <div className="p-5 rounded-2xl bg-[#12151d] border border-[rgba(255,255,255,0.08)] space-y-3">
+              <div className="flex items-center justify-between border-b border-[rgba(255,255,255,0.08)] pb-3">
                 <div className="flex items-center gap-1.5">
                   {[
                     { key: "url", label: "Direct URL" },
@@ -671,7 +667,7 @@ const Media = () => {
                       onClick={() => setAvatarCodeTab(tab.key)}
                       className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                         avatarCodeTab === tab.key
-                          ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
+                          ? "bg-amber-500/20 text-emerald-300 border border-emerald-500/30"
                           : "text-slate-400 hover:text-white"
                       }`}
                     >
@@ -695,14 +691,14 @@ const Media = () => {
                     }
                     copyToClipboard(code, "Snippet");
                   }}
-                  className="text-xs font-semibold text-amber-400 hover:text-amber-300 cursor-pointer flex items-center gap-1"
+                  className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 cursor-pointer flex items-center gap-1"
                 >
                   <span>📋 Copy Code</span>
                 </button>
               </div>
 
               {/* Code output area */}
-              <div className="p-4 rounded-xl bg-[#080e1a] border border-[#1e293b] font-mono text-xs text-amber-300/90 overflow-x-auto whitespace-pre">
+              <div className="p-4 rounded-xl bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] font-mono text-xs text-emerald-300/90 overflow-x-auto whitespace-pre">
                 {avatarCodeTab === "url" && avatarUrl}
                 {avatarCodeTab === "jsx" &&
                   `<img src="${avatarUrl}" alt="${avatarSeed}" width={${avatarSize}} height={${avatarSize}} />`}
@@ -722,8 +718,8 @@ const Media = () => {
       {activeTab === "thumbnails" && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Controls Form */}
-          <div className="lg:col-span-5 space-y-6 p-6 rounded-2xl bg-[#0f172a] border border-[#1e293b] shadow-xl">
-            <div className="border-b border-[#1e293b] pb-4 flex items-center justify-between">
+          <div className="lg:col-span-5 space-y-6 p-6 rounded-2xl bg-[#12151d] border border-[rgba(255,255,255,0.08)] shadow-xl">
+            <div className="border-b border-[rgba(255,255,255,0.08)] pb-4 flex items-center justify-between">
               <div>
                 <h2 className="text-base font-bold text-white flex items-center gap-2">
                   <span>🖼️</span>
@@ -737,7 +733,7 @@ const Media = () => {
               <span
                 className={`px-2.5 py-1 rounded-lg text-xs font-mono font-semibold flex items-center gap-1.5 ${
                   isThumbDirty
-                    ? "bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse"
+                    ? "bg-amber-500/20 text-emerald-300 border border-emerald-500/30 animate-pulse"
                     : "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
                 }`}
               >
@@ -753,7 +749,7 @@ const Media = () => {
             {/* Seed Input */}
             <div className="space-y-2">
               <label className="text-xs font-semibold text-slate-300">
-                Seed Identifier <span className="text-amber-400">*</span>
+                Seed Identifier <span className="text-emerald-400">*</span>
               </label>
               <input
                 type="text"
@@ -763,7 +759,7 @@ const Media = () => {
                   if (e.key === "Enter") handleGenerateThumbnail();
                 }}
                 placeholder="e.g. post-1, react-course, rust-engine"
-                className="w-full bg-[#080e1a] border border-[#1e293b] rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500 font-mono transition-colors"
+                className="w-full bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 font-mono transition-colors"
               />
               <p className="text-[11px] text-slate-500">
                 Controls background linear gradient color palette hashing.
@@ -783,7 +779,7 @@ const Media = () => {
                   if (e.key === "Enter") handleGenerateThumbnail();
                 }}
                 placeholder="e.g. Building Modern Fullstack Apps"
-                className="w-full bg-[#080e1a] border border-[#1e293b] rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500 transition-colors"
+                className="w-full bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition-colors"
               />
               <p className="text-[11px] text-slate-500">
                 Multilined automatically with smart word-wrapping.
@@ -806,15 +802,16 @@ const Media = () => {
                   }
                 }}
                 placeholder="e.g. Comprehensive walkthrough of server components and edge computing"
-                className="w-full bg-[#080e1a] border border-[#1e293b] rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-amber-500 transition-colors resize-none"
+                className="w-full bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 transition-colors resize-none"
               />
               <p className="text-[11px] text-slate-500">
-                Rendered beneath title in elegant secondary typography. Press Enter to generate.
+                Rendered beneath title in elegant secondary typography. Press
+                Enter to generate.
               </p>
             </div>
 
             {/* Dimension Presets */}
-            <div className="space-y-2 pt-2 border-t border-[#1e293b]">
+            <div className="space-y-2 pt-2 border-t border-[rgba(255,255,255,0.08)]">
               <label className="text-xs font-semibold text-slate-300">
                 Aspect Ratio & Dimension Presets
               </label>
@@ -833,9 +830,10 @@ const Media = () => {
                       );
                     }}
                     className={`p-2.5 rounded-xl border text-left text-xs font-medium transition-all cursor-pointer ${
-                      thumbDraftWidth === dp.width && thumbDraftHeight === dp.height
-                        ? "bg-amber-500/15 border-amber-500/40 text-amber-300 font-bold"
-                        : "bg-[#080e1a] border-[#1e293b] text-slate-400 hover:text-white"
+                      thumbDraftWidth === dp.width &&
+                      thumbDraftHeight === dp.height
+                        ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-400 font-bold"
+                        : "bg-[#0c0e14] border-[rgba(255,255,255,0.08)] text-slate-400 hover:text-white"
                     }`}
                   >
                     <div className="text-white font-semibold">
@@ -850,11 +848,11 @@ const Media = () => {
             </div>
 
             {/* Custom Width & Height Sliders */}
-            <div className="grid grid-cols-2 gap-4 pt-2 border-t border-[#1e293b]">
+            <div className="grid grid-cols-2 gap-4 pt-2 border-t border-[rgba(255,255,255,0.08)]">
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-semibold text-slate-400">Width</span>
-                  <span className="font-mono text-amber-400">
+                  <span className="font-mono text-emerald-400">
                     {thumbDraftWidth}px
                   </span>
                 </div>
@@ -865,13 +863,13 @@ const Media = () => {
                   step="20"
                   value={thumbDraftWidth}
                   onChange={(e) => setThumbDraftWidth(Number(e.target.value))}
-                  className="w-full accent-amber-500 cursor-pointer"
+                  className="w-full accent-emerald-500 cursor-pointer"
                 />
               </div>
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-semibold text-slate-400">Height</span>
-                  <span className="font-mono text-amber-400">
+                  <span className="font-mono text-emerald-400">
                     {thumbDraftHeight}px
                   </span>
                 </div>
@@ -882,21 +880,21 @@ const Media = () => {
                   step="20"
                   value={thumbDraftHeight}
                   onChange={(e) => setThumbDraftHeight(Number(e.target.value))}
-                  className="w-full accent-amber-500 cursor-pointer"
+                  className="w-full accent-emerald-500 cursor-pointer"
                 />
               </div>
             </div>
 
             {/* Actions Bar */}
-            <div className="pt-4 border-t border-[#1e293b] space-y-3">
+            <div className="pt-4 border-t border-[rgba(255,255,255,0.08)] space-y-3">
               {/* On-Demand Generate Button */}
               <button
                 type="button"
                 onClick={() => handleGenerateThumbnail()}
                 className={`w-full py-3 px-4 rounded-xl text-xs font-bold transition-all shadow-lg cursor-pointer flex items-center justify-center gap-2 ${
                   isThumbDirty
-                    ? "bg-linear-to-r from-amber-500 to-amber-400 text-slate-950 shadow-amber-500/20 hover:brightness-110 ring-2 ring-amber-400/50"
-                    : "bg-slate-800 text-slate-200 hover:bg-slate-700 border border-[#1e293b]"
+                    ? "bg-linear-to-r bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-600/20 hover:brightness-110 ring-2 ring-emerald-500/30"
+                    : "bg-slate-800 text-slate-200 hover:bg-slate-700 border border-[rgba(255,255,255,0.08)]"
                 }`}
               >
                 <span>⚡</span>
@@ -913,14 +911,14 @@ const Media = () => {
                   onClick={() =>
                     copyToClipboard(thumbUrl, "Direct Thumbnail URL")
                   }
-                  className="flex-1 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition-all shadow-md shadow-amber-500/10 cursor-pointer flex items-center justify-center gap-2"
+                  className="flex-1 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-md shadow-emerald-600/10 cursor-pointer flex items-center justify-center gap-2"
                 >
                   <span>🔗 Copy Direct URL</span>
                 </button>
                 <button
                   type="button"
                   onClick={handleDownloadThumbnail}
-                  className="px-4 py-2.5 rounded-xl bg-[#080e1a] hover:bg-[#131d33] border border-[#1e293b] text-slate-200 text-xs font-semibold transition-colors cursor-pointer flex items-center gap-1.5"
+                  className="px-4 py-2.5 rounded-xl bg-[#0c0e14] hover:bg-[#131d33] border border-[rgba(255,255,255,0.08)] text-slate-200 text-xs font-semibold transition-colors cursor-pointer flex items-center gap-1.5"
                 >
                   <span>⬇ Download SVG</span>
                 </button>
@@ -931,8 +929,8 @@ const Media = () => {
           {/* Live Preview & Code Generator */}
           <div className="lg:col-span-7 space-y-6">
             {/* Live Canvas Box */}
-            <div className="p-6 rounded-2xl bg-[#0f172a] border border-[#1e293b] shadow-xl flex flex-col items-center justify-center relative overflow-hidden group">
-              <div className="w-full max-w-xl rounded-2xl overflow-hidden shadow-2xl border border-[#1e293b] transition-transform duration-300 group-hover:scale-[1.02]">
+            <div className="p-6 rounded-2xl bg-[#12151d] border border-[rgba(255,255,255,0.08)] shadow-xl flex flex-col items-center justify-center relative overflow-hidden group">
+              <div className="w-full max-w-xl rounded-2xl overflow-hidden shadow-2xl border border-[rgba(255,255,255,0.08)] transition-transform duration-300 group-hover:scale-[1.02]">
                 <img
                   src={thumbUrl}
                   alt={thumbSeed}
@@ -950,8 +948,8 @@ const Media = () => {
             </div>
 
             {/* Code Snippets Panel */}
-            <div className="p-5 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-3">
-              <div className="flex items-center justify-between border-b border-[#1e293b] pb-3">
+            <div className="p-5 rounded-2xl bg-[#12151d] border border-[rgba(255,255,255,0.08)] space-y-3">
+              <div className="flex items-center justify-between border-b border-[rgba(255,255,255,0.08)] pb-3">
                 <div className="flex items-center gap-1.5">
                   {[
                     { key: "url", label: "Direct URL" },
@@ -966,7 +964,7 @@ const Media = () => {
                       onClick={() => setThumbCodeTab(tab.key)}
                       className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                         thumbCodeTab === tab.key
-                          ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
+                          ? "bg-amber-500/20 text-emerald-300 border border-emerald-500/30"
                           : "text-slate-400 hover:text-white"
                       }`}
                     >
@@ -990,14 +988,14 @@ const Media = () => {
                     }
                     copyToClipboard(code, "Snippet");
                   }}
-                  className="text-xs font-semibold text-amber-400 hover:text-amber-300 cursor-pointer flex items-center gap-1"
+                  className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 cursor-pointer flex items-center gap-1"
                 >
                   <span>📋 Copy Code</span>
                 </button>
               </div>
 
               {/* Code output area */}
-              <div className="p-4 rounded-xl bg-[#080e1a] border border-[#1e293b] font-mono text-xs text-amber-300/90 overflow-x-auto whitespace-pre">
+              <div className="p-4 rounded-xl bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] font-mono text-xs text-emerald-300/90 overflow-x-auto whitespace-pre">
                 {thumbCodeTab === "url" && thumbUrl}
                 {thumbCodeTab === "jsx" &&
                   `<img src="${thumbUrl}" alt="${thumbText || thumbSeed}" width={${thumbWidth}} height={${thumbHeight}} />`}
@@ -1028,7 +1026,7 @@ const Media = () => {
                   suites.
                 </p>
               </div>
-              <span className="text-xs font-mono text-amber-400">
+              <span className="text-xs font-mono text-emerald-400">
                 {AVATAR_PRESETS.length} Personas
               </span>
             </div>
@@ -1042,7 +1040,7 @@ const Media = () => {
                 return (
                   <div
                     key={preset}
-                    className="p-4 rounded-2xl bg-[#0f172a] border border-[#1e293b] hover:border-amber-500/40 transition-all flex flex-col items-center justify-between text-center space-y-3 group"
+                    className="p-4 rounded-2xl bg-[#12151d] border border-[rgba(255,255,255,0.08)] hover:border-emerald-500/40 transition-all flex flex-col items-center justify-between text-center space-y-3 group"
                   >
                     <img
                       src={url}
@@ -1057,21 +1055,25 @@ const Media = () => {
                         128 × 128
                       </p>
                     </div>
-                    <div className="w-full flex items-center gap-1 pt-1 border-t border-[#1e293b]">
+                    <div className="w-full flex items-center gap-1 pt-1 border-t border-[rgba(255,255,255,0.08)]">
                       <button
                         type="button"
                         onClick={() => {
-                          handleGenerateAvatar(preset, avatarDraftSize, avatarDraftRounded);
+                          handleGenerateAvatar(
+                            preset,
+                            avatarDraftSize,
+                            avatarDraftRounded,
+                          );
                           setActiveTab("avatars");
                         }}
-                        className="flex-1 py-1 rounded-md bg-[#080e1a] text-slate-300 hover:text-amber-300 text-[11px] font-semibold transition-colors cursor-pointer"
+                        className="flex-1 py-1 rounded-md bg-[#0c0e14] text-slate-300 hover:text-emerald-300 text-[11px] font-semibold transition-colors cursor-pointer"
                       >
                         Inspect
                       </button>
                       <button
                         type="button"
                         onClick={() => copyToClipboard(url, preset)}
-                        className="p-1 rounded-md bg-[#080e1a] text-slate-400 hover:text-white text-[11px] transition-colors cursor-pointer"
+                        className="p-1 rounded-md bg-[#0c0e14] text-slate-400 hover:text-white text-[11px] transition-colors cursor-pointer"
                         title="Copy Link"
                       >
                         🔗
@@ -1084,7 +1086,7 @@ const Media = () => {
           </div>
 
           {/* Landscape Thumbnail Gallery */}
-          <div className="space-y-4 pt-6 border-t border-[#1e293b]">
+          <div className="space-y-4 pt-6 border-t border-[rgba(255,255,255,0.08)]">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-base font-bold text-white">
@@ -1095,7 +1097,7 @@ const Media = () => {
                   headers.
                 </p>
               </div>
-              <span className="text-xs font-mono text-amber-400">
+              <span className="text-xs font-mono text-emerald-400">
                 {THUMBNAIL_PRESETS.length} Covers
               </span>
             </div>
@@ -1111,9 +1113,9 @@ const Media = () => {
                 return (
                   <div
                     key={item.seed}
-                    className="p-4 rounded-2xl bg-[#0f172a] border border-[#1e293b] hover:border-amber-500/40 transition-all flex flex-col justify-between space-y-3 group"
+                    className="p-4 rounded-2xl bg-[#12151d] border border-[rgba(255,255,255,0.08)] hover:border-emerald-500/40 transition-all flex flex-col justify-between space-y-3 group"
                   >
-                    <div className="rounded-xl overflow-hidden border border-[#1e293b]">
+                    <div className="rounded-xl overflow-hidden border border-[rgba(255,255,255,0.08)]">
                       <img
                         src={url}
                         alt={item.text}
@@ -1133,7 +1135,7 @@ const Media = () => {
                         {item.width} × {item.height} px · seed: {item.seed}
                       </p>
                     </div>
-                    <div className="flex items-center justify-between pt-2 border-t border-[#1e293b]">
+                    <div className="flex items-center justify-between pt-2 border-t border-[rgba(255,255,255,0.08)]">
                       <button
                         type="button"
                         onClick={() => {
@@ -1146,14 +1148,14 @@ const Media = () => {
                           );
                           setActiveTab("thumbnails");
                         }}
-                        className="text-xs text-amber-400 hover:text-amber-300 font-semibold cursor-pointer"
+                        className="text-xs text-emerald-400 hover:text-emerald-300 font-semibold cursor-pointer"
                       >
                         Customize in Studio →
                       </button>
                       <button
                         type="button"
                         onClick={() => copyToClipboard(url, item.text)}
-                        className="px-2.5 py-1 rounded-lg bg-[#080e1a] text-slate-300 hover:text-white text-xs font-mono transition-colors cursor-pointer"
+                        className="px-2.5 py-1 rounded-lg bg-[#0c0e14] text-slate-300 hover:text-white text-xs font-mono transition-colors cursor-pointer"
                       >
                         Copy URL
                       </button>
@@ -1169,7 +1171,7 @@ const Media = () => {
       {/* ───────────────────────────────────────────────────────── TAB 4: API SPECIFICATION */}
       {activeTab === "specs" && (
         <div className="space-y-6">
-          <div className="p-6 rounded-2xl bg-[#0f172a] border border-[#1e293b] space-y-4">
+          <div className="p-6 rounded-2xl bg-[#12151d] border border-[rgba(255,255,255,0.08)] space-y-4">
             <h3 className="text-base font-bold text-white flex items-center gap-2">
               <span>⚡</span>
               <span>Vector Media REST Endpoints Specification</span>
@@ -1181,7 +1183,7 @@ const Media = () => {
 
             <div className="space-y-4 pt-2">
               {/* Endpoint 1 */}
-              <div className="p-5 rounded-2xl bg-[#080e1a] border border-[#1e293b] space-y-3">
+              <div className="p-5 rounded-2xl bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] space-y-3">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-2.5">
                     <span className="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 font-bold font-mono text-xs border border-emerald-500/30">
@@ -1200,19 +1202,19 @@ const Media = () => {
                   initials based on the provided string seed.
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2 text-xs font-mono">
-                  <div className="p-2.5 rounded-xl bg-[#0f172a] border border-[#1e293b]">
-                    <span className="text-amber-400 font-bold">:seed</span>
+                  <div className="p-2.5 rounded-xl bg-[#12151d] border border-[rgba(255,255,255,0.08)]">
+                    <span className="text-emerald-400 font-bold">:seed</span>
                     <p className="text-slate-400 text-[11px] font-sans mt-0.5">
                       Required URL parameter
                     </p>
                   </div>
-                  <div className="p-2.5 rounded-xl bg-[#0f172a] border border-[#1e293b]">
+                  <div className="p-2.5 rounded-xl bg-[#12151d] border border-[rgba(255,255,255,0.08)]">
                     <span className="text-sky-400 font-bold">?size=128</span>
                     <p className="text-slate-400 text-[11px] font-sans mt-0.5">
                       Integer pixels (default: 128)
                     </p>
                   </div>
-                  <div className="p-2.5 rounded-xl bg-[#0f172a] border border-[#1e293b]">
+                  <div className="p-2.5 rounded-xl bg-[#12151d] border border-[rgba(255,255,255,0.08)]">
                     <span className="text-purple-400 font-bold">
                       ?rounded=true
                     </span>
@@ -1224,7 +1226,7 @@ const Media = () => {
               </div>
 
               {/* Endpoint 2 */}
-              <div className="p-5 rounded-2xl bg-[#080e1a] border border-[#1e293b] space-y-3">
+              <div className="p-5 rounded-2xl bg-[#0c0e14] border border-[rgba(255,255,255,0.08)] space-y-3">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-2.5">
                     <span className="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 font-bold font-mono text-xs border border-emerald-500/30">
@@ -1244,31 +1246,31 @@ const Media = () => {
                   subtitle/description typography.
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-5 gap-3 pt-2 text-xs font-mono">
-                  <div className="p-2.5 rounded-xl bg-[#0f172a] border border-[#1e293b]">
-                    <span className="text-amber-400 font-bold">:seed</span>
+                  <div className="p-2.5 rounded-xl bg-[#12151d] border border-[rgba(255,255,255,0.08)]">
+                    <span className="text-emerald-400 font-bold">:seed</span>
                     <p className="text-slate-400 text-[11px] font-sans mt-0.5">
                       Required URL seed
                     </p>
                   </div>
-                  <div className="p-2.5 rounded-xl bg-[#0f172a] border border-[#1e293b]">
+                  <div className="p-2.5 rounded-xl bg-[#12151d] border border-[rgba(255,255,255,0.08)]">
                     <span className="text-sky-400 font-bold">?width=600</span>
                     <p className="text-slate-400 text-[11px] font-sans mt-0.5">
                       Width in px (default: 600)
                     </p>
                   </div>
-                  <div className="p-2.5 rounded-xl bg-[#0f172a] border border-[#1e293b]">
+                  <div className="p-2.5 rounded-xl bg-[#12151d] border border-[rgba(255,255,255,0.08)]">
                     <span className="text-sky-400 font-bold">?height=400</span>
                     <p className="text-slate-400 text-[11px] font-sans mt-0.5">
                       Height in px (default: 400)
                     </p>
                   </div>
-                  <div className="p-2.5 rounded-xl bg-[#0f172a] border border-[#1e293b]">
+                  <div className="p-2.5 rounded-xl bg-[#12151d] border border-[rgba(255,255,255,0.08)]">
                     <span className="text-purple-400 font-bold">?text=...</span>
                     <p className="text-slate-400 text-[11px] font-sans mt-0.5">
                       Multiline wrapped title
                     </p>
                   </div>
-                  <div className="p-2.5 rounded-xl bg-[#0f172a] border border-[#1e293b]">
+                  <div className="p-2.5 rounded-xl bg-[#12151d] border border-[rgba(255,255,255,0.08)]">
                     <span className="text-emerald-400 font-bold">
                       ?description=...
                     </span>

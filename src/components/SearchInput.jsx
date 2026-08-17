@@ -1,18 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { useDebounce } from "@/hooks/useDebounce";
 
-/**
- * Reusable SearchInput Component
- *
- * Manages local typing state for snappy responsiveness, while returning
- * the debounced value to the parent component via `onSearch` or `onChange`.
- */
 const SearchInput = ({
   value,
   defaultValue = "",
   onSearch,
   onChange,
-  delay = 350,
+  delay = 300,
   placeholder = "Search records…",
   className = "",
   inputClassName = "",
@@ -26,7 +20,6 @@ const SearchInput = ({
   );
   const [prevControlledValue, setPrevControlledValue] = useState(value);
 
-  // Sync external controlled value during rendering without an effect
   if (isControlled && value !== prevControlledValue) {
     setPrevControlledValue(value);
     setSearchTerm(value);
@@ -42,7 +35,6 @@ const SearchInput = ({
     callbackRef.current = onSearch || onChange;
   });
 
-  // Trigger callback only when debounced term actually changes
   useEffect(() => {
     if (isInitialMount.current) {
       isInitialMount.current = false;
@@ -79,9 +71,8 @@ const SearchInput = ({
 
   return (
     <div className={`relative flex items-center ${className}`}>
-      {/* Search Icon */}
       <svg
-        className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none transition-colors peer-focus:text-amber-400"
+        className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none transition-colors peer-focus:text-emerald-400"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -94,7 +85,6 @@ const SearchInput = ({
         />
       </svg>
 
-      {/* Input */}
       <input
         ref={inputRef}
         id={id}
@@ -106,17 +96,16 @@ const SearchInput = ({
         placeholder={placeholder}
         disabled={disabled}
         autoFocus={autoFocus}
-        className={`peer w-full bg-[#0f172a] border border-[#1e293b] rounded-xl pl-10 pr-10 py-2.5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${inputClassName}`}
+        className={`peer w-full bg-[#12151d] border border-white/10 rounded-xl pl-10 pr-10 py-2.5 text-xs sm:text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${inputClassName}`}
       />
 
-      {/* Clear Button */}
       {searchTerm && !disabled && (
         <button
           type="button"
           onClick={handleClear}
           title="Clear search"
           aria-label="Clear search"
-          className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-md text-slate-400 hover:text-white hover:bg-[#1e293b] transition-colors focus:outline-none focus:ring-1 focus:ring-amber-500"
+          className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-md text-slate-400 hover:text-white hover:bg-white/10 transition-colors focus:outline-none"
         >
           <svg
             className="w-3.5 h-3.5"

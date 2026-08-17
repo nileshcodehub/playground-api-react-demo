@@ -1,30 +1,14 @@
-const BASE = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/+$/, '');
-const cleanBase = `${BASE}/v1`;
+import { apiRequest } from './client';
 
 export const productsApi = {
-  /**
-   * POST /custom/seed?template=ecommerce
-   * Seeds 10 realistic e-commerce products into the session sandbox overlay.
-   */
+  /** POST /custom/seed?template=ecommerce */
   seedStore: async (template = 'ecommerce') => {
-    const res = await fetch(`${cleanBase}/custom/seed?template=${template}`, {
+    return apiRequest(`/custom/seed?template=${template}`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
     });
-
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      throw new Error(data.message || `Failed to seed template (HTTP ${res.status})`);
-    }
-    return data;
   },
 
-  /**
-   * GET /custom/products
-   * Fetches paginated products with optional search, category filtering, and sorting.
-   */
+  /** GET /custom/products */
   getAll: async ({ page = 1, limit = 10, search = '', category = '', sort = '', order = 'asc' } = {}) => {
     const params = new URLSearchParams({
       page: String(page),
@@ -38,77 +22,34 @@ export const productsApi = {
       params.set('_order', order);
     }
 
-    const res = await fetch(`${cleanBase}/custom/products?${params.toString()}`);
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      throw new Error(data.message || `Failed to fetch products (HTTP ${res.status})`);
-    }
-    return data;
+    return apiRequest(`/custom/products?${params.toString()}`);
   },
 
-  /**
-   * GET /custom/products/:id
-   */
+  /** GET /custom/products/:id */
   getById: async (id) => {
-    const res = await fetch(`${cleanBase}/custom/products/${id}`);
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      throw new Error(data.message || `Product #${id} not found`);
-    }
-    return data;
+    return apiRequest(`/custom/products/${id}`);
   },
 
-  /**
-   * POST /custom/products
-   * Creates a new custom product in the session overlay.
-   */
+  /** POST /custom/products */
   create: async (productData) => {
-    const res = await fetch(`${cleanBase}/custom/products`, {
+    return apiRequest('/custom/products', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify(productData),
     });
-
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      throw new Error(data.message || `Failed to create product (HTTP ${res.status})`);
-    }
-    return data;
   },
 
-  /**
-   * PUT /custom/products/:id
-   */
+  /** PUT /custom/products/:id */
   update: async (id, productData) => {
-    const res = await fetch(`${cleanBase}/custom/products/${id}`, {
+    return apiRequest(`/custom/products/${id}`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify(productData),
     });
-
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      throw new Error(data.message || `Failed to update product #${id} (HTTP ${res.status})`);
-    }
-    return data;
   },
 
-  /**
-   * DELETE /custom/products/:id
-   */
+  /** DELETE /custom/products/:id */
   delete: async (id) => {
-    const res = await fetch(`${cleanBase}/custom/products/${id}`, {
+    return apiRequest(`/custom/products/${id}`, {
       method: 'DELETE',
     });
-
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      throw new Error(data.message || `Failed to delete product #${id} (HTTP ${res.status})`);
-    }
-    return data;
   },
 };
